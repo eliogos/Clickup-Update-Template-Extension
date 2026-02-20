@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ClickUp --update Modal
 // @namespace    clickup-update-modal
-// @version      0.9.0
+// @version      0.9.1
 // @description  Insert update template in ClickUp
 // @match        https://app.clickup.com/*
 // @grant        GM_getResourceText
