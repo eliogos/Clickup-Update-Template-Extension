@@ -2,6 +2,7 @@
   "use strict";
 
   const app = (global.ClickUpUpdateApp = global.ClickUpUpdateApp || {});
+  const FALLBACK_TEMPLATE = "<div class=\"modal\" id=\"modal\" popover=\"manual\">\n  <section class=\"modal-card\" role=\"dialog\" aria-modal=\"true\" aria-label=\"Insert Update Template\">\n    <div class=\"card-header-row\">\n      <p class=\"title\">Insert Update Template</p>\n      <div class=\"card-header-actions\">\n        <button class=\"btn btn-optional settings-toggle is-active\" id=\"settings-toggle\" type=\"button\" aria-expanded=\"true\" aria-pressed=\"true\" aria-controls=\"settings-sidebar\">\n          Settings Panel\n        </button>\n        <button class=\"icon-close-btn\" id=\"close-modal\" type=\"button\" aria-label=\"Close modal\">&times;</button>\n      </div>\n    </div>\n\n    <div class=\"modal-body-layout\" id=\"modal-body-layout\">\n      <aside class=\"settings-sidebar\" id=\"settings-sidebar\" aria-label=\"Modal pages\">\n        <div class=\"settings-sidebar-inner\">\n          <nav class=\"sidebar-nav\" id=\"sidebar-nav\" aria-label=\"Modal pages\">\n            <button class=\"sidebar-page-btn is-active\" type=\"button\" data-page-target=\"editor\">Editor</button>\n            <button class=\"sidebar-page-btn\" type=\"button\" data-page-target=\"settings\">Settings</button>\n            <button class=\"sidebar-page-btn\" type=\"button\" data-page-target=\"variables\">Variables</button>\n            <button class=\"sidebar-page-btn\" type=\"button\" data-page-target=\"about\">About</button>\n          </nav>\n        </div>\n      </aside>\n\n      <div class=\"modal-main\" id=\"modal-main\">\n        <section class=\"page-panel\" data-page=\"editor\" id=\"page-editor\">\n          <div class=\"top-section\">\n            <label class=\"group-label top-section-label\" for=\"banner-trigger\">Banner</label>\n            <div class=\"row-inline row-top banner-main-row\">\n              <div class=\"banner-picker\">\n                <button class=\"field banner-trigger\" id=\"banner-trigger\" type=\"button\" popovertarget=\"banner-popover\" aria-label=\"Banner color\">\n                  <span class=\"banner-preview {{DEFAULT_BANNER_COLOR}}\" id=\"banner-preview\" aria-hidden=\"true\"></span>\n                  <span class=\"select-icon\" aria-hidden=\"true\"></span>\n                </button>\n                <div class=\"banner-popover\" id=\"banner-popover\" popover=\"auto\" aria-label=\"Banner palette\"></div>\n              </div>\n              <div class=\"field-stack label-stack\">\n                <input class=\"field label-input\" id=\"label\" value=\"{{DEFAULT_LABEL}}\" aria-describedby=\"label-error\" />\n                <p class=\"field-subtext field-subtext-error\" id=\"label-error\" hidden>Label is required.</p>\n                <div class=\"label-suggestions\" aria-label=\"Label suggestions\">\n                  <span class=\"field-subtext\">Suggestions:</span>\n                  <div class=\"label-chip-row\">\n                    {{LABEL_SUGGESTION_CHIPS}}\n                  </div>\n                </div>\n              </div>\n              <div class=\"field-stack number-stack\">\n                <div class=\"num-controls\" id=\"num-controls\" aria-label=\"Update number\">\n                  <button class=\"num-btn\" id=\"dec\" type=\"button\">-</button>\n                  <input class=\"num-input\" id=\"number\" value=\"{{DEFAULT_NUMBER}}\" inputmode=\"numeric\" aria-describedby=\"number-error\" />\n                  <button class=\"num-btn\" id=\"inc\" type=\"button\">+</button>\n                </div>\n                <p class=\"field-subtext field-subtext-error\" id=\"number-error\" hidden>Update number is required.</p>\n                <label class=\"append-number-wrap\" for=\"append-number\">\n                  <input type=\"checkbox\" id=\"append-number\" checked />\n                  <span>Append Number Suffix</span>\n                </label>\n              </div>\n            </div>\n          </div>\n\n          <div class=\"group\">\n            <label class=\"group-label\">Status<span class=\"req\">*</span></label><br/>\n            <div class=\"select-wrap status-select-wrap\">\n              <select class=\"field status-select\" id=\"status\">\n                <option>Not Started</option>\n                <option selected>In Progress</option>\n                <option>For QA</option>\n                <option>Completed</option>\n              </select>\n              <span class=\"select-icon\" aria-hidden=\"true\"></span>\n            </div>\n          </div>\n\n          <div class=\"group\">\n            <label class=\"group-label\">Accomplishments<span class=\"req\">*</span></label>\n            <textarea class=\"field\" id=\"acc\" aria-describedby=\"acc-error\"></textarea>\n            <p class=\"field-subtext field-subtext-error\" id=\"acc-error\" hidden>Accomplishments is required.</p>\n          </div>\n\n          <div class=\"group\">\n            <label class=\"group-label\">Blockers</label>\n            <textarea class=\"field\" id=\"block\"></textarea>\n          </div>\n\n          <div class=\"group\">\n            <label class=\"group-label\">Current Focus</label>\n            <textarea class=\"field\" id=\"focus\"></textarea>\n          </div>\n\n          <div class=\"group optional-add-wrap\">\n            <button class=\"btn btn-optional\" id=\"add-notes\" type=\"button\">Add Notes</button>\n          </div>\n\n          <div class=\"group\" id=\"notes-group\" hidden>\n            <label class=\"group-label\">Notes</label>\n            <textarea class=\"field\" id=\"notes\"></textarea>\n          </div>\n\n          <div class=\"footer-row\">\n            <div class=\"footer-right\">\n              <div class=\"note\">You can insert Files and Mentions after inserting this template.</div>\n              <div class=\"actions\">\n                <button class=\"btn btn-primary\" id=\"insert\" type=\"button\" disabled>Insert</button>\n              </div>\n            </div>\n          </div>\n        </section>\n\n        <section class=\"page-panel\" data-page=\"settings\" id=\"page-settings\" hidden>\n          <div class=\"settings-page-content\">\n            <section class=\"settings-section\">\n              <p class=\"settings-section-title\">Appearance</p>\n\n              <div class=\"settings-field\">\n                <label class=\"settings-label\">Theme</label>\n                <div class=\"settings-segmented\" id=\"theme-group\" role=\"tablist\" aria-label=\"Theme\">\n                  <button class=\"settings-segment-btn\" type=\"button\" data-theme-option=\"light\">Light</button>\n                  <button class=\"settings-segment-btn\" type=\"button\" data-theme-option=\"auto\">Auto</button>\n                  <button class=\"settings-segment-btn\" type=\"button\" data-theme-option=\"dark\">Dark</button>\n                </div>\n              </div>\n\n              <div class=\"settings-field\">\n                <label class=\"settings-label\">Density</label>\n                <div class=\"settings-segmented\" id=\"density-group\" role=\"tablist\" aria-label=\"Density\">\n                  <button class=\"settings-segment-btn\" type=\"button\" data-density-option=\"compact\">Compact</button>\n                  <button class=\"settings-segment-btn\" type=\"button\" data-density-option=\"comfortable\">Comfortable</button>\n                  <button class=\"settings-segment-btn\" type=\"button\" data-density-option=\"spacious\">Spacious</button>\n                </div>\n              </div>\n\n              <div class=\"settings-field\">\n                <label class=\"settings-label\" for=\"color-filter-mode\">Color Blindness</label>\n                <div class=\"select-wrap settings-select-wrap\">\n                  <select class=\"field settings-select\" id=\"color-filter-mode\">\n                    <option value=\"none\">None</option>\n                    <option value=\"protanopia\">Protanopia</option>\n                    <option value=\"deuteranopia\">Deuteranopia</option>\n                    <option value=\"tritanopia\">Tritanopia</option>\n                    <option value=\"achromatopsia\">Achromatopsia</option>\n                  </select>\n                  <span class=\"select-icon\" aria-hidden=\"true\"></span>\n                </div>\n              </div>\n\n              <div class=\"settings-field\">\n                <label class=\"settings-label\" for=\"editor-font-size-input\">Editor Font Size</label>\n                <div class=\"editor-font-size-row\">\n                  <input class=\"field editor-font-size-input\" id=\"editor-font-size-input\" type=\"number\" min=\"10\" max=\"24\" step=\"any\" inputmode=\"decimal\" />\n                  <input class=\"editor-font-size-slider\" id=\"editor-font-size-slider\" type=\"range\" min=\"10\" max=\"24\" step=\"1\" />\n                </div>\n                <p class=\"field-subtext\">Slider range: 10-24px. Use the box for precise values.</p>\n              </div>\n            </section>\n          </div>\n        </section>\n\n        <section class=\"page-panel\" data-page=\"variables\" id=\"page-variables\" hidden>\n          <div class=\"settings-page-content\">\n            <section class=\"settings-section\">\n              <p class=\"settings-section-title\">Variables</p>\n              <p class=\"field-subtext\">\n                TODO: Variables replacement using <code>{var}</code> is planned while mentions and emoji formatting are finalized in the editor.\n              </p>\n            </section>\n          </div>\n        </section>\n\n        <section class=\"page-panel\" data-page=\"about\" id=\"page-about\" hidden>\n          <div class=\"settings-page-content\">\n            <section class=\"settings-section\">\n              <p class=\"settings-section-title\">Feedback</p>\n              <div class=\"note note-feedback\">\n                Have any suggestions and bug reports?\n                <a href=\"https://github.com/eliogos/clickup-task-update-template/issues\" target=\"_blank\" rel=\"noopener noreferrer\">\n                  https://github.com/eliogos/clickup-task-update-template/issues\n                </a>\n              </div>\n            </section>\n\n            <section class=\"settings-section\">\n              <p class=\"settings-section-title\">About</p>\n              <div class=\"note note-credit\">{{CREDIT_HTML}} - v{{APP_VERSION}}</div>\n            </section>\n          </div>\n        </section>\n      </div>\n    </div>\n  </section>\n</div>";
 
   function escapeAttr(value) {
     return String(value)
@@ -26,14 +27,7 @@
 
   function ensureCreditLine(source) {
     if (/class\s*=\s*["'][^"']*note-credit/.test(source)) return source;
-    return source.replace(
-      /<\/section>/i,
-      '  <div class="footer-left">\n' +
-        '    <div class="note note-credit">{{CREDIT_HTML}} - v{{APP_VERSION}}</div>\n' +
-        '    <div class="note note-feedback">Have any suggestions and bug reports? <a href="https://github.com/eliogos/clickup-task-update-template/issues" target="_blank" rel="noopener noreferrer">https://github.com/eliogos/clickup-task-update-template/issues</a></div>\n' +
-        "  </div>\n" +
-        "</section>"
-    );
+    return source;
   }
 
   function ensureValidationHelpers(source) {
@@ -82,191 +76,6 @@
     );
   }
 
-  function getFallbackTemplate() {
-    return `
-<div class="modal" id="modal" popover="manual">
-  <section class="modal-card" role="dialog" aria-modal="true" aria-label="Insert Update Template">
-    <div class="card-header-row">
-      <p class="title">Insert Update Template</p>
-      <button class="btn btn-optional settings-toggle" id="settings-toggle" type="button" aria-expanded="true" aria-controls="settings-sidebar">
-        Hide Settings
-      </button>
-    </div>
-
-    <div class="modal-body-layout" id="modal-body-layout">
-      <div class="modal-main" id="modal-main">
-        <div class="top-section">
-          <label class="field-label top-section-label" for="banner-trigger">Banner</label>
-          <div class="row-inline row-top banner-main-row">
-            <div class="banner-picker">
-              <button class="field banner-trigger" id="banner-trigger" type="button" popovertarget="banner-popover" aria-label="Banner color">
-                <span class="banner-preview {{DEFAULT_BANNER_COLOR}}" id="banner-preview" aria-hidden="true"></span>
-                <span class="select-icon" aria-hidden="true"></span>
-              </button>
-              <div class="banner-popover" id="banner-popover" popover="auto" aria-label="Banner palette"></div>
-            </div>
-            <div class="field-stack label-stack">
-              <input class="field label-input" id="label" value="{{DEFAULT_LABEL}}" aria-describedby="label-error" />
-              <p class="field-subtext field-subtext-error" id="label-error" hidden>Label is required.</p>
-              <div class="label-suggestions" aria-label="Label suggestions">
-                <span class="field-subtext">Suggestions:</span>
-                <div class="label-chip-row">
-                  {{LABEL_SUGGESTION_CHIPS}}
-                </div>
-              </div>
-            </div>
-            <div class="field-stack number-stack">
-              <div class="num-controls" id="num-controls" aria-label="Update number">
-                <button class="num-btn" id="dec" type="button">-</button>
-                <input class="num-input" id="number" value="{{DEFAULT_NUMBER}}" inputmode="numeric" aria-describedby="number-error" />
-                <button class="num-btn" id="inc" type="button">+</button>
-              </div>
-              <p class="field-subtext field-subtext-error" id="number-error" hidden>Update number is required.</p>
-              <label class="append-number-wrap" for="append-number">
-                <input type="checkbox" id="append-number" checked />
-                <span>Append Number Suffix</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="group">
-          <label>Status<span class="req">*</span></label><br/>
-          <div class="select-wrap status-select-wrap">
-            <select class="field status-select" id="status">
-              <option>Not Started</option>
-              <option selected>In Progress</option>
-              <option>For QA</option>
-              <option>Completed</option>
-            </select>
-            <span class="select-icon" aria-hidden="true"></span>
-          </div>
-        </div>
-
-        <div class="group">
-          <label>Accomplishments<span class="req">*</span></label>
-          <textarea class="field" id="acc" aria-describedby="acc-error"></textarea>
-          <p class="field-subtext field-subtext-error" id="acc-error" hidden>Accomplishments is required.</p>
-        </div>
-
-        <div class="group">
-          <label>Blockers</label>
-          <textarea class="field" id="block"></textarea>
-        </div>
-
-        <div class="group">
-          <label>Current Focus</label>
-          <textarea class="field" id="focus"></textarea>
-        </div>
-
-        <div class="group optional-add-wrap">
-          <button class="btn btn-optional" id="add-notes" type="button">Add Notes</button>
-        </div>
-
-        <div class="group" id="notes-group" hidden>
-          <label>Notes</label>
-          <textarea class="field" id="notes"></textarea>
-        </div>
-
-        <div class="footer-row">
-          <div class="footer-left"></div>
-          <div class="footer-right">
-            <div class="note">You can insert Files and Mentions after inserting this template.</div>
-            <div class="actions">
-              <button class="btn" id="cancel" type="button">Cancel</button>
-              <button class="btn btn-primary" id="insert" type="button" disabled>Insert</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <aside class="settings-sidebar" id="settings-sidebar" aria-label="Modal settings">
-        <div class="settings-sidebar-inner">
-          <p class="settings-title">Settings</p>
-
-          <section class="settings-section">
-            <p class="settings-section-title">Appearance</p>
-
-            <div class="settings-field">
-              <label class="settings-label">Theme</label>
-              <div class="settings-segmented" id="theme-group" role="tablist" aria-label="Theme">
-                <button class="settings-segment-btn" type="button" data-theme-option="light">Light</button>
-                <button class="settings-segment-btn" type="button" data-theme-option="auto">Auto</button>
-                <button class="settings-segment-btn" type="button" data-theme-option="dark">Dark</button>
-              </div>
-            </div>
-
-            <div class="settings-field">
-              <label class="settings-label">Density Scale</label>
-              <div class="settings-segmented" id="density-group" role="tablist" aria-label="Density">
-                <button class="settings-segment-btn" type="button" data-density-option="compact">Compact</button>
-                <button class="settings-segment-btn" type="button" data-density-option="comfortable">Comfortable</button>
-                <button class="settings-segment-btn" type="button" data-density-option="spacious">Spacious</button>
-                <button class="settings-segment-btn" type="button" data-density-option="custom">Custom</button>
-              </div>
-              <div class="density-custom-wrap" id="density-custom-wrap" hidden>
-                <label class="settings-label" for="density-custom-scale">Custom Scale</label>
-                <div class="density-custom-row">
-                  <input class="field density-custom-input" id="density-custom-scale" type="number" min="1" max="6" step="1" inputmode="numeric" />
-                  <span class="density-custom-suffix">x</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="settings-field">
-              <label class="settings-label" for="color-filter-mode">Color Blindness</label>
-              <div class="select-wrap settings-select-wrap">
-                <select class="field settings-select" id="color-filter-mode">
-                  <option value="none">None</option>
-                  <option value="protanopia">Protanopia</option>
-                  <option value="deuteranopia">Deuteranopia</option>
-                  <option value="tritanopia">Tritanopia</option>
-                  <option value="achromatopsia">Achromatopsia</option>
-                </select>
-                <span class="select-icon" aria-hidden="true"></span>
-              </div>
-            </div>
-
-            <div class="settings-field">
-              <label class="settings-label" for="editor-font-size-input">Editor Font Size</label>
-              <div class="editor-font-size-row">
-                <input class="field editor-font-size-input" id="editor-font-size-input" type="number" min="10" max="24" step="any" inputmode="decimal" />
-                <input class="editor-font-size-slider" id="editor-font-size-slider" type="range" min="10" max="24" step="1" />
-              </div>
-              <p class="field-subtext">Slider range: 10-24px. Use the box for precise values.</p>
-            </div>
-          </section>
-
-          <section class="settings-section">
-            <p class="settings-section-title">About</p>
-            <div class="note note-credit">{{CREDIT_HTML}} - v{{APP_VERSION}}</div>
-          </section>
-
-          <section class="settings-section">
-            <p class="settings-section-title">Feedback</p>
-            <div class="note note-feedback">
-              Have any suggestions and bug reports?
-              <a href="https://github.com/eliogos/clickup-task-update-template/issues" target="_blank" rel="noopener noreferrer">
-                https://github.com/eliogos/clickup-task-update-template/issues
-              </a>
-            </div>
-          </section>
-
-          <section class="settings-section">
-            <p class="settings-section-title">Variables</p>
-            <p class="field-subtext">
-              TODO: Variables replacement using <code>{var}</code> is planned while mentions and emoji formatting are finalized in the editor.
-            </p>
-          </section>
-        </div>
-      </aside>
-    </div>
-  </section>
-</div>
-
-`;
-  }
-
   app.createModalMarkup = function createModalMarkup() {
     const constants = app.constants || {};
     const defaultLabel = constants.defaultLabel || "Design Update";
@@ -286,13 +95,13 @@
     const template =
       typeof app.getModalTemplate === "function"
         ? app.getModalTemplate()
-        : getFallbackTemplate();
+        : FALLBACK_TEMPLATE;
     const chipsMarkup =
       typeof app.renderLabelSuggestionChips === "function"
         ? app.renderLabelSuggestionChips()
         : "";
     const source = ensureLabelSuggestionChips(
-      ensureValidationHelpers(ensureCreditLine(template || getFallbackTemplate())),
+      ensureValidationHelpers(ensureCreditLine(template || FALLBACK_TEMPLATE)),
       chipsMarkup
     );
 

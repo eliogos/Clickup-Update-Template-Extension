@@ -5,19 +5,18 @@
   const constants = app.constants || {};
   const FONT_STYLESHEET_HREF =
     "https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Geist+Mono:wght@100..900&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=National+Park:wght@200..800&family=VT323&display=swap";
-  const SETTINGS_STORAGE_KEY = "clickup-update-modal.settings.v1";
+  const SETTINGS_STORAGE_KEY = "clickup-update-modal.settings.v2";
   const FONT_SIZE_MIN = 10;
   const FONT_SIZE_MAX = 24;
+  const PAGE_OPTIONS = new Set(["editor", "settings", "variables", "about"]);
   const THEME_OPTIONS = new Set(["light", "auto", "dark"]);
-  const DENSITY_OPTIONS = new Set(["compact", "comfortable", "spacious", "custom"]);
-  const DENSITY_CUSTOM_MIN = 1;
-  const DENSITY_CUSTOM_MAX = 6;
+  const DENSITY_OPTIONS = new Set(["compact", "comfortable", "spacious"]);
   const COLOR_FILTER_OPTIONS = new Set(["none", "protanopia", "deuteranopia", "tritanopia", "achromatopsia"]);
   const DEFAULT_MODAL_SETTINGS = Object.freeze({
     sidebarCollapsed: false,
+    activePage: "editor",
     theme: "auto",
     density: "comfortable",
-    densityCustomScale: 2,
     colorFilter: "none",
     editorFontSize: 13
   });
@@ -32,25 +31,23 @@
 
   function normalizeModalSettings(input) {
     const source = input && typeof input === "object" ? input : {};
+    const activePage = PAGE_OPTIONS.has(source.activePage)
+      ? source.activePage
+      : DEFAULT_MODAL_SETTINGS.activePage;
     const theme = THEME_OPTIONS.has(source.theme) ? source.theme : DEFAULT_MODAL_SETTINGS.theme;
-    const legacyScale = Math.round(
-      clampNumber(source.densityScale, DENSITY_CUSTOM_MIN, DENSITY_CUSTOM_MAX, DEFAULT_MODAL_SETTINGS.densityCustomScale)
+    const legacyScale = clampNumber(
+      source.densityScale == null ? source.densityCustomScale : source.densityScale,
+      1,
+      6,
+      2
     );
-    const density = DENSITY_OPTIONS.has(source.density)
+    const density = DENSITY_OPTIONS.has(source.density) && source.density !== "custom"
       ? source.density
-      : legacyScale <= 1
+      : legacyScale <= 1.49
         ? "compact"
-        : legacyScale >= 3
+        : legacyScale >= 2.5
           ? "spacious"
           : "comfortable";
-    const densityCustomScale = Math.round(
-      clampNumber(
-        source.densityCustomScale == null ? legacyScale : source.densityCustomScale,
-        DENSITY_CUSTOM_MIN,
-        DENSITY_CUSTOM_MAX,
-        DEFAULT_MODAL_SETTINGS.densityCustomScale
-      )
-    );
     const colorFilter = COLOR_FILTER_OPTIONS.has(source.colorFilter)
       ? source.colorFilter
       : DEFAULT_MODAL_SETTINGS.colorFilter;
@@ -63,9 +60,9 @@
 
     return {
       sidebarCollapsed: Boolean(source.sidebarCollapsed),
+      activePage,
       theme,
       density,
-      densityCustomScale,
       colorFilter,
       editorFontSize
     };
@@ -189,7 +186,7 @@
     const insertBtn = byId("insert");
     const incBtn = byId("inc");
     const decBtn = byId("dec");
-    const cancelBtn = byId("cancel");
+    const closeBtn = byId("close-modal");
     const statusInput = byId("status");
     const statusSelectWrap = statusInput ? statusInput.closest(".status-select-wrap") : null;
     const blockInput = byId("block");
@@ -200,17 +197,17 @@
     const modalBodyLayout = byId("modal-body-layout");
     const settingsSidebar = byId("settings-sidebar");
     const settingsToggle = byId("settings-toggle");
+    const pageButtons = Array.from(shadow.querySelectorAll("[data-page-target]"));
+    const pagePanels = Array.from(shadow.querySelectorAll("[data-page]"));
     const themeButtons = Array.from(shadow.querySelectorAll("[data-theme-option]"));
     const densityButtons = Array.from(shadow.querySelectorAll("[data-density-option]"));
-    const densityCustomWrap = byId("density-custom-wrap");
-    const densityCustomScaleInput = byId("density-custom-scale");
     const colorFilterInput = byId("color-filter-mode");
     const editorFontSizeInput = byId("editor-font-size-input");
     const editorFontSizeSlider = byId("editor-font-size-slider");
 
     if (
       !modal || !labelInput || !numberInput || !accInput ||
-      !insertBtn || !incBtn || !decBtn || !cancelBtn ||
+      !insertBtn || !incBtn || !decBtn || !closeBtn ||
       !statusInput || !blockInput || !focusInput ||
       !bannerTrigger || !bannerPreview || !bannerPopover || !modalCard
     ) {
@@ -443,6 +440,29 @@
       });
     };
 
+    const setPageSelection = () => {
+      const activePage = PAGE_OPTIONS.has(settingsState.activePage)
+        ? settingsState.activePage
+        : DEFAULT_MODAL_SETTINGS.activePage;
+
+      pageButtons.forEach((button) => {
+        const page = String(button.getAttribute("data-page-target") || "").trim();
+        const isActive = page === activePage;
+        button.classList.toggle("is-active", isActive);
+        if (isActive) {
+          button.setAttribute("aria-current", "page");
+        } else {
+          button.removeAttribute("aria-current");
+        }
+      });
+
+      pagePanels.forEach((panel) => {
+        const page = String(panel.getAttribute("data-page") || "").trim();
+        const isActive = page === activePage;
+        panel.hidden = !isActive;
+      });
+    };
+
     const getResolvedTheme = () => {
       if (settingsState.theme === "auto") {
         return systemColorScheme && systemColorScheme.matches ? "dark" : "light";
@@ -456,9 +476,9 @@
       modalCard.setAttribute("data-theme", settingsState.theme);
       modalCard.setAttribute("data-resolved-theme", resolvedTheme);
       modalCard.setAttribute("data-density", settingsState.density);
+      modalCard.setAttribute("data-active-page", settingsState.activePage);
       modalCard.setAttribute("data-color-filter", settingsState.colorFilter);
       modalCard.setAttribute("data-sidebar-collapsed", settingsState.sidebarCollapsed ? "true" : "false");
-      modalCard.style.setProperty("--density-custom-scale", String(settingsState.densityCustomScale));
       modalCard.style.setProperty("--editor-font-size", `${settingsState.editorFontSize}px`);
       bannerPopover.style.filter = colorFilterCss;
 
@@ -471,20 +491,13 @@
       }
 
       if (settingsToggle) {
-        settingsToggle.textContent = settingsState.sidebarCollapsed ? "Show Settings" : "Hide Settings";
+        settingsToggle.classList.toggle("is-active", !settingsState.sidebarCollapsed);
+        settingsToggle.setAttribute("aria-pressed", settingsState.sidebarCollapsed ? "false" : "true");
         settingsToggle.setAttribute("aria-expanded", settingsState.sidebarCollapsed ? "false" : "true");
       }
 
       setSegmentedSelection(themeButtons, "data-theme-option", settingsState.theme);
       setSegmentedSelection(densityButtons, "data-density-option", settingsState.density);
-
-      if (densityCustomWrap) {
-        densityCustomWrap.hidden = settingsState.density !== "custom";
-      }
-
-      if (densityCustomScaleInput) {
-        densityCustomScaleInput.value = String(settingsState.densityCustomScale);
-      }
 
       if (colorFilterInput) {
         colorFilterInput.value = settingsState.colorFilter;
@@ -497,6 +510,8 @@
       if (editorFontSizeInput) {
         editorFontSizeInput.value = formatFontSize(settingsState.editorFontSize);
       }
+
+      setPageSelection();
     };
 
     const commitModalSettings = (updates) => {
@@ -595,6 +610,14 @@
       });
     }
 
+    pageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const value = String(button.getAttribute("data-page-target") || "").trim();
+        if (!PAGE_OPTIONS.has(value)) return;
+        commitModalSettings({ activePage: value });
+      });
+    });
+
     themeButtons.forEach((button) => {
       button.addEventListener("click", () => {
         const value = button.getAttribute("data-theme-option");
@@ -610,30 +633,6 @@
         commitModalSettings({ density: value });
       });
     });
-
-    if (densityCustomScaleInput) {
-      const applyDensityCustomScale = () => {
-        const value = Math.round(
-          clampNumber(
-            densityCustomScaleInput.value,
-            DENSITY_CUSTOM_MIN,
-            DENSITY_CUSTOM_MAX,
-            settingsState.densityCustomScale
-          )
-        );
-        commitModalSettings({ density: "custom", densityCustomScale: value });
-      };
-
-      densityCustomScaleInput.addEventListener("change", applyDensityCustomScale);
-      densityCustomScaleInput.addEventListener("blur", applyDensityCustomScale);
-      densityCustomScaleInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          applyDensityCustomScale();
-          densityCustomScaleInput.blur();
-        }
-      });
-    }
 
     if (colorFilterInput) {
       colorFilterInput.addEventListener("change", () => {
@@ -725,7 +724,9 @@
         setNotesState(false);
       });
     }
-    cancelBtn.onclick = close;
+    if (closeBtn) {
+      closeBtn.onclick = close;
+    }
 
     insertBtn.onclick = () => {
       if (typeof buildHTML !== "function" || typeof simulatePaste !== "function") return;
@@ -766,7 +767,11 @@
       modal.classList.add("is-open-fallback");
     }
 
-    labelInput.focus();
+    if (settingsState.activePage === "editor") {
+      labelInput.focus();
+    } else if (settingsToggle) {
+      settingsToggle.focus();
+    }
   };
 })(globalThis);
 

@@ -4,6 +4,21 @@ Userscript that opens a modal in ClickUp when you type `--update` and press spac
 
 ## What's New
 
+### 14.2.0 (2026-02-20)
+- Refactored modal layout into left-sidebar page navigation with 4 pages:
+  - `Editor`
+  - `Settings`
+  - `Variables`
+  - `About`
+- Added a top-right `X` close button and removed the footer `Cancel` button.
+- Updated the Settings header button to behave as a real toggle state.
+- Moved About content to the bottom-most page (`About`).
+- Simplified density controls by removing `Custom` density scale and keeping `Compact`, `Comfortable`, and `Spacious`.
+- Unified banner field label styling with the rest of the form labels.
+- Restored modal body vertical scrolling while textareas auto-grow.
+- Updated local settings storage key to `v2` to align with the new page/settings model.
+- Bumped script version to `14.2.0`.
+
 ### 14.1.0 (2026-02-20)
 - Moved label suggestion chips back into the main form below the label field.
 - Moved the feedback text/link (`Have any suggestions and bug reports?`) into the Settings sidebar.
