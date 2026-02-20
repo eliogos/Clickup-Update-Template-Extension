@@ -32,28 +32,6 @@
     return Number.isFinite(n) ? Math.max(1, n) : 1;
   }
 
-  function getBannerColorHex(name) {
-    const colorMap = {
-      "red-strong": "#E53935",
-      "orange-strong": "#FB8C00",
-      "yellow-strong": "#FDD835",
-      "blue-strong": "#1E88E5",
-      "purple-strong": "#5E35B1",
-      "pink-strong": "#EC407A",
-      "green-strong": "#43A047",
-      "grey-strong": "#616161",
-      red: "#B71C1C",
-      orange: "#8D4C00",
-      yellow: "#8D7A00",
-      blue: "#0D47A1",
-      purple: "#311B92",
-      pink: "#6A1B9A",
-      green: "#1B5E20",
-      grey: "#424242"
-    };
-    return colorMap[name] || "#666666";
-  }
-
   app.openModal = function openModal(editor) {
     if (!editor || typeof editor !== "object") return;
     if (typeof app.createModalMarkup !== "function") return;
@@ -66,10 +44,12 @@
 
     const byId = (id) => shadow.getElementById(id);
     const modal = byId("modal");
-    const bannerSelect = byId("banner-color");
+    const bannerTrigger = byId("banner-trigger");
     const bannerPreview = byId("banner-preview");
-    const paletteEl = byId("palette");
+    const bannerValue = byId("banner-value");
+    const bannerPopover = byId("banner-popover");
     const labelInput = byId("label");
+    const labelChips = Array.from(shadow.querySelectorAll(".label-chip"));
     const numberInput = byId("number");
     const numControls = byId("num-controls");
     const accInput = byId("acc");
@@ -88,7 +68,8 @@
     if (
       !modal || !labelInput || !numberInput || !accInput ||
       !insertBtn || !incBtn || !decBtn || !cancelBtn ||
-      !statusInput || !blockInput || !focusInput || (!bannerSelect && !paletteEl)
+      !statusInput || !blockInput || !focusInput ||
+      !bannerTrigger || !bannerPreview || !bannerValue || !bannerPopover
     ) {
       host.remove();
       return;
@@ -160,53 +141,51 @@
       .join(" ");
 
     const applyBannerSelection = () => {
-      if (bannerSelect) {
-        let value = bannerSelect.value || defaultBannerColor;
-        if (!allColors.includes(value)) value = defaultBannerColor;
-        selected = value;
-        bannerSelect.value = value;
-        bannerSelect.setAttribute("data-banner", value);
-      }
+      let value = selected || defaultBannerColor;
+      if (!allColors.includes(value)) value = defaultBannerColor;
+      selected = value;
+
+      bannerTrigger.setAttribute("data-banner", selected);
+      bannerValue.textContent = toDisplayLabel(selected);
 
       if (bannerPreview) {
         bannerPreview.className = `banner-preview ${selected}`;
       }
     };
 
-    const populateBannerSelect = () => {
-      if (!bannerSelect) return;
-      bannerSelect.innerHTML = "";
-
-      allColors.forEach((name) => {
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = toDisplayLabel(name);
-        option.style.setProperty("--swatch", getBannerColorHex(name));
-        bannerSelect.appendChild(option);
-      });
-
-      const initial = allColors.includes(defaultBannerColor) ? defaultBannerColor : allColors[0];
-      if (initial) bannerSelect.value = initial;
-      applyBannerSelection();
-    };
-
     const renderPalette = () => {
-      if (!paletteEl) return;
-      paletteEl.innerHTML = "";
+      bannerPopover.innerHTML = "";
       allColors.forEach((name) => {
         const sw = document.createElement("button");
         sw.type = "button";
         sw.className = `swatch ${name}${name === selected ? " selected" : ""}`;
-        sw.title = name;
-        sw.setAttribute("aria-label", name);
+        sw.title = toDisplayLabel(name);
+        sw.setAttribute("aria-label", `Set banner color to ${toDisplayLabel(name)}`);
         sw.onclick = () => {
           selected = name;
           applyBannerSelection();
           renderPalette();
+          if (typeof bannerPopover.hidePopover === "function") {
+            bannerPopover.hidePopover();
+          } else {
+            bannerPopover.classList.remove("is-open-fallback");
+          }
           validate();
         };
-        paletteEl.appendChild(sw);
+        bannerPopover.appendChild(sw);
       });
+    };
+
+    const syncBannerOpenState = () => {
+      let open = bannerPopover.classList.contains("is-open-fallback");
+      if (typeof bannerPopover.matches === "function") {
+        try {
+          open = open || bannerPopover.matches(":popover-open");
+        } catch {
+          // noop
+        }
+      }
+      bannerTrigger.classList.toggle("is-open", open);
     };
 
     const applyStatusAccent = () => {
@@ -253,14 +232,37 @@
       }
     };
 
-    if (bannerSelect) {
-      populateBannerSelect();
-      bannerSelect.addEventListener("change", () => {
-        applyBannerSelection();
-        validate();
+    const syncLabelChipState = () => {
+      const current = labelInput.value.trim().toLowerCase();
+      labelChips.forEach((chip) => {
+        const value = String(chip.getAttribute("data-label-chip") || "").trim().toLowerCase();
+        chip.classList.toggle("is-active", Boolean(current && value && current === value));
+      });
+    };
+
+    selected = allColors.includes(defaultBannerColor) ? defaultBannerColor : allColors[0];
+    renderPalette();
+
+    bannerPopover.addEventListener("toggle", syncBannerOpenState);
+
+    if (typeof bannerPopover.showPopover === "function" && typeof bannerPopover.hidePopover === "function") {
+      bannerTrigger.addEventListener("click", () => {
+        syncBannerOpenState();
       });
     } else {
-      renderPalette();
+      bannerTrigger.addEventListener("click", () => {
+        bannerPopover.classList.toggle("is-open-fallback");
+        syncBannerOpenState();
+      });
+
+      const onDocClick = (event) => {
+        if (!bannerPopover.classList.contains("is-open-fallback")) return;
+        const path = typeof event.composedPath === "function" ? event.composedPath() : [];
+        if (path.includes(bannerPopover) || path.includes(bannerTrigger)) return;
+        bannerPopover.classList.remove("is-open-fallback");
+        syncBannerOpenState();
+      };
+      shadow.addEventListener("click", onDocClick);
     }
 
     applyBannerSelection();
@@ -284,11 +286,25 @@
       validate();
     });
 
-    labelInput.addEventListener("input", validate);
+    labelInput.addEventListener("input", () => {
+      validate();
+      syncLabelChipState();
+    });
+
+    labelChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const value = chip.getAttribute("data-label-chip");
+        if (!value) return;
+        labelInput.value = value;
+        validate();
+        syncLabelChipState();
+      });
+    });
     accInput.addEventListener("input", validate);
     statusInput.addEventListener("change", applyStatusAccent);
 
     applyStatusAccent();
+    syncLabelChipState();
 
     cancelBtn.onclick = close;
 

@@ -73,16 +73,24 @@
     <p class="title">Insert Update Template</p>
     <div class="row-inline row-top">
       <div class="field-stack banner-stack">
-        <label class="field-label" for="banner-color">Banner</label>
-        <div class="select-wrap banner-select-wrap">
-          <span class="banner-preview {{DEFAULT_BANNER_COLOR}}" id="banner-preview" aria-hidden="true"></span>
-          <select class="field banner-select" id="banner-color" aria-label="Banner color"></select>
-          <span class="material-symbols-outlined select-icon" aria-hidden="true"></span>
+        <label class="field-label" for="banner-trigger">Banner</label>
+        <div class="banner-picker">
+          <button class="field banner-trigger" id="banner-trigger" type="button" popovertarget="banner-popover" aria-label="Banner color">
+            <span class="banner-preview {{DEFAULT_BANNER_COLOR}}" id="banner-preview" aria-hidden="true"></span>
+            <span class="banner-value" id="banner-value"></span>
+            <span class="select-icon" aria-hidden="true"></span>
+          </button>
+          <div class="banner-popover" id="banner-popover" popover="auto" aria-label="Banner palette"></div>
         </div>
       </div>
       <div class="field-stack label-stack">
         <input class="field label-input" id="label" value="{{DEFAULT_LABEL}}" aria-describedby="label-error" />
         <p class="field-subtext field-subtext-error" id="label-error" hidden>Label is required.</p>
+        <div class="label-suggestions" aria-label="Label suggestions">
+          <span class="field-subtext">Suggestions:</span>
+          <button class="label-chip" type="button" data-label-chip="Design Update">Design Update</button>
+          <button class="label-chip" type="button" data-label-chip="Feedback Application">Feedback Application</button>
+        </div>
       </div>
       <div class="field-stack number-stack">
         <div class="num-controls" id="num-controls" aria-label="Update number">
@@ -102,7 +110,7 @@
           <option>For QA</option>
           <option>Completed</option>
         </select>
-        <span class="material-symbols-outlined select-icon" aria-hidden="true"></span>
+        <span class="select-icon" aria-hidden="true"></span>
       </div>
     </div>
     <div class="group">

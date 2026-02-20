@@ -40,6 +40,36 @@
   max-width: 320px;
 }
 
+.label-suggestions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.label-chip {
+  border: 1px solid #3b4259;
+  background: #121826;
+  color: #d4e1ff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease;
+}
+
+.label-chip:hover {
+  border-color: #5c78b8;
+  background: #18233a;
+}
+
+.label-chip.is-active {
+  border-color: #6d95ff;
+  background: #213968;
+  color: #eef4ff;
+}
+
 .number-stack {
   min-width: 126px;
 }
