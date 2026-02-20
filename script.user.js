@@ -23,6 +23,7 @@
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/hot-reload.js
 // @updateURL    https://github.com/eliogos/clickup-task-update-template/raw/refs/heads/main/script.user.js
 // @downloadURL  https://github.com/eliogos/clickup-task-update-template/raw/refs/heads/main/script.user.js
+// @require      https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0,0
 // ==/UserScript==
 
 (function () {

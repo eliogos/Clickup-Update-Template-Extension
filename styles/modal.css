@@ -24,6 +24,8 @@
   overflow: visible;
   display: none;
   margin: 0;
+  width: stretch;
+  height: stretch;
 }
 
 .modal-card {
