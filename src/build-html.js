@@ -6,6 +6,21 @@
   const statusColor = constants.statusColor || {};
   const defaultBannerColor = constants.defaultBannerColor || "blue-strong";
 
+  function getBadgeFilterForMode(mode) {
+    switch (String(mode || "").trim()) {
+      case "protanopia":
+        return "saturate(0.72) hue-rotate(-12deg) contrast(1.04)";
+      case "deuteranopia":
+        return "saturate(0.76) hue-rotate(8deg) contrast(1.03)";
+      case "tritanopia":
+        return "saturate(0.78) hue-rotate(-28deg) contrast(1.02)";
+      case "achromatopsia":
+        return "grayscale(1) contrast(1.08)";
+      default:
+        return "";
+    }
+  }
+
   app.buildHTML = function buildHTML(data) {
     function blockSection(title, emoji, items, force) {
       if (!force && (!items || items.length === 0)) return "";
@@ -27,11 +42,13 @@
     const headingText = data.appendNumberSuffix === false
       ? labelText
       : `${labelText} ${numberText}`.trim();
+    const badgeFilter = getBadgeFilterForMode(data.colorFilterMode);
+    const badgeStyle = badgeFilter ? ` style="filter:${badgeFilter}"` : "";
 
     let html =
       `<h2 data-advanced-banner="${crypto.randomUUID()}" data-advanced-banner-color="${data.bannerColor || defaultBannerColor}"><strong>${headingText}</strong></h2>` +
       `<br/>` +
-      `<p><strong>Status:</strong> <span class="ql-badge ql-badge-${statusColor[data.status]}">${data.status}</span></p>` +
+      `<p><strong>Status:</strong> <span class="ql-badge ql-badge-${statusColor[data.status]}"${badgeStyle}>${data.status}</span></p>` +
       "<br/>";
 
     html += blockSection("Accomplishments", "\u{1F3C6}", data.accomplishments, true);

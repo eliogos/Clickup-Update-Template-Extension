@@ -4,6 +4,17 @@ Userscript that opens a modal in ClickUp when you type `--update` and press spac
 
 ## What's New
 
+### 14.0.0 (2026-02-20)
+- Fixed sidebar collapse behavior so collapsing settings now animates and the modal card resizes with it.
+- Updated density controls to integer scale options: `1x`, `2x`, `3x`.
+- Moved label suggestions into the Settings panel (`Suggestions` section).
+- Moved credit/version text into the Settings panel (`About` section).
+- Updated color-blindness mode behavior so inserted status badges are filtered consistently in generated content.
+- Refined chip scroller visuals:
+  - Transparent/un-styled chip container.
+  - Scrollbar hidden by default and visible on hover without layout shift.
+- Bumped script version to major release `14.0.0`.
+
 ### 13.0.0 (2026-02-20)
 - Added a collapsible settings sidebar directly inside the update modal.
 - Added persistent modal settings (saved in browser local storage):

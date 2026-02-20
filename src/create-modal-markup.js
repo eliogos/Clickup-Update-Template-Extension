@@ -86,93 +86,175 @@
     return `
 <div class="modal" id="modal" popover="auto">
   <section class="modal-card" role="dialog" aria-modal="true" aria-label="Insert Update Template">
-    <p class="title">Insert Update Template</p>
-    <div class="top-section">
-      <label class="field-label top-section-label" for="banner-trigger">Banner</label>
-      <div class="row-inline row-top banner-main-row">
-        <div class="banner-picker">
-          <button class="field banner-trigger" id="banner-trigger" type="button" popovertarget="banner-popover" aria-label="Banner color">
-            <span class="banner-preview {{DEFAULT_BANNER_COLOR}}" id="banner-preview" aria-hidden="true"></span>
-            <span class="select-icon" aria-hidden="true"></span>
-          </button>
-          <div class="banner-popover" id="banner-popover" popover="auto" aria-label="Banner palette"></div>
-        </div>
-        <div class="field-stack label-stack">
-          <input class="field label-input" id="label" value="{{DEFAULT_LABEL}}" aria-describedby="label-error" />
-          <p class="field-subtext field-subtext-error" id="label-error" hidden>Label is required.</p>
-          <div class="label-suggestions" aria-label="Label suggestions">
-            <span class="field-subtext">Suggestions:</span>
-            <div class="label-chip-row">
-              {{LABEL_SUGGESTION_CHIPS}}
+    <div class="card-header-row">
+      <p class="title">Insert Update Template</p>
+      <button class="btn btn-optional settings-toggle" id="settings-toggle" type="button" aria-expanded="true" aria-controls="settings-sidebar">
+        Hide Settings
+      </button>
+    </div>
+
+    <div class="modal-body-layout" id="modal-body-layout">
+      <div class="modal-main" id="modal-main">
+        <div class="top-section">
+          <label class="field-label top-section-label" for="banner-trigger">Banner</label>
+          <div class="row-inline row-top banner-main-row">
+            <div class="banner-picker">
+              <button class="field banner-trigger" id="banner-trigger" type="button" popovertarget="banner-popover" aria-label="Banner color">
+                <span class="banner-preview {{DEFAULT_BANNER_COLOR}}" id="banner-preview" aria-hidden="true"></span>
+                <span class="select-icon" aria-hidden="true"></span>
+              </button>
+              <div class="banner-popover" id="banner-popover" popover="auto" aria-label="Banner palette"></div>
+            </div>
+            <div class="field-stack label-stack">
+              <input class="field label-input" id="label" value="{{DEFAULT_LABEL}}" aria-describedby="label-error" />
+              <p class="field-subtext field-subtext-error" id="label-error" hidden>Label is required.</p>
+            </div>
+            <div class="field-stack number-stack">
+              <div class="num-controls" id="num-controls" aria-label="Update number">
+                <button class="num-btn" id="dec" type="button">-</button>
+                <input class="num-input" id="number" value="{{DEFAULT_NUMBER}}" inputmode="numeric" aria-describedby="number-error" />
+                <button class="num-btn" id="inc" type="button">+</button>
+              </div>
+              <p class="field-subtext field-subtext-error" id="number-error" hidden>Update number is required.</p>
+              <label class="append-number-wrap" for="append-number">
+                <input type="checkbox" id="append-number" checked />
+                <span>Append Number Suffix</span>
+              </label>
             </div>
           </div>
         </div>
-        <div class="field-stack number-stack">
-          <div class="num-controls" id="num-controls" aria-label="Update number">
-            <button class="num-btn" id="dec" type="button">-</button>
-            <input class="num-input" id="number" value="{{DEFAULT_NUMBER}}" inputmode="numeric" aria-describedby="number-error" />
-            <button class="num-btn" id="inc" type="button">+</button>
+
+        <div class="group">
+          <label>Status<span class="req">*</span></label><br/>
+          <div class="select-wrap status-select-wrap">
+            <select class="field status-select" id="status">
+              <option>Not Started</option>
+              <option selected>In Progress</option>
+              <option>For QA</option>
+              <option>Completed</option>
+            </select>
+            <span class="select-icon" aria-hidden="true"></span>
           </div>
-          <p class="field-subtext field-subtext-error" id="number-error" hidden>Update number is required.</p>
-          <label class="append-number-wrap" for="append-number">
-            <input type="checkbox" id="append-number" checked />
-            <span>Append Number Suffix</span>
-          </label>
+        </div>
+
+        <div class="group">
+          <label>Accomplishments<span class="req">*</span></label>
+          <textarea class="field" id="acc" aria-describedby="acc-error"></textarea>
+          <p class="field-subtext field-subtext-error" id="acc-error" hidden>Accomplishments is required.</p>
+        </div>
+
+        <div class="group">
+          <label>Blockers</label>
+          <textarea class="field" id="block"></textarea>
+        </div>
+
+        <div class="group">
+          <label>Current Focus</label>
+          <textarea class="field" id="focus"></textarea>
+        </div>
+
+        <div class="group optional-add-wrap">
+          <button class="btn btn-optional" id="add-notes" type="button">Add Notes</button>
+        </div>
+
+        <div class="group" id="notes-group" hidden>
+          <label>Notes</label>
+          <textarea class="field" id="notes"></textarea>
+        </div>
+
+        <div class="footer-row">
+          <div class="footer-left">
+            <div class="note note-feedback">
+              Have any suggestions or bugs?
+              <a href="https://github.com/eliogos/clickup-task-update-template/issues" target="_blank" rel="noopener noreferrer">
+                https://github.com/eliogos/clickup-task-update-template/issues
+              </a>
+            </div>
+          </div>
+          <div class="footer-right">
+            <div class="note">You can insert Files and Mentions after inserting this template.</div>
+            <div class="actions">
+              <button class="btn" id="cancel" type="button">Cancel</button>
+              <button class="btn btn-primary" id="insert" type="button" disabled>Insert</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="group">
-      <label>Status<span class="req">*</span></label><br/>
-      <div class="select-wrap status-select-wrap">
-        <select class="field status-select" id="status">
-          <option>Not Started</option>
-          <option selected>In Progress</option>
-          <option>For QA</option>
-          <option>Completed</option>
-        </select>
-        <span class="select-icon" aria-hidden="true"></span>
-      </div>
-    </div>
-    <div class="group">
-      <label>Accomplishments<span class="req">*</span></label>
-      <textarea class="field" id="acc" aria-describedby="acc-error"></textarea>
-      <p class="field-subtext field-subtext-error" id="acc-error" hidden>Accomplishments is required.</p>
-    </div>
-    <div class="group">
-      <label>Blockers</label>
-      <textarea class="field" id="block"></textarea>
-    </div>
-    <div class="group">
-      <label>Current Focus</label>
-      <textarea class="field" id="focus"></textarea>
-    </div>
-    <div class="group optional-add-wrap">
-      <button class="btn btn-optional" id="add-notes" type="button">📝 Add Notes</button>
-    </div>
-    <div class="group" id="notes-group" hidden>
-      <label>Notes</label>
-      <textarea class="field" id="notes"></textarea>
-    </div>
-    <div class="footer-row">
-      <div class="footer-left">
-        <div class="note note-credit">{{CREDIT_HTML}} - v{{APP_VERSION}}</div>
-        <div class="note note-feedback">
-          Have any suggestions or bugs?
-          <a href="https://github.com/eliogos/clickup-task-update-template/issues" target="_blank" rel="noopener noreferrer">
-            https://github.com/eliogos/clickup-task-update-template/issues
-          </a>
+
+      <aside class="settings-sidebar" id="settings-sidebar" aria-label="Modal settings">
+        <div class="settings-sidebar-inner">
+          <p class="settings-title">Settings</p>
+
+          <section class="settings-section">
+            <p class="settings-section-title">Appearance</p>
+
+            <div class="settings-field">
+              <label class="settings-label">Theme</label>
+              <div class="settings-segmented" id="theme-group" role="tablist" aria-label="Theme">
+                <button class="settings-segment-btn" type="button" data-theme-option="light">Light</button>
+                <button class="settings-segment-btn" type="button" data-theme-option="auto">Auto</button>
+                <button class="settings-segment-btn" type="button" data-theme-option="dark">Dark</button>
+              </div>
+            </div>
+
+            <div class="settings-field">
+              <label class="settings-label">Density Scale</label>
+              <div class="settings-segmented" id="density-scale-group" role="tablist" aria-label="Density Scale">
+                <button class="settings-segment-btn" type="button" data-density-scale-option="1">1x</button>
+                <button class="settings-segment-btn" type="button" data-density-scale-option="2">2x</button>
+                <button class="settings-segment-btn" type="button" data-density-scale-option="3">3x</button>
+              </div>
+            </div>
+
+            <div class="settings-field">
+              <label class="settings-label" for="color-filter-mode">Color Blindness</label>
+              <div class="select-wrap settings-select-wrap">
+                <select class="field settings-select" id="color-filter-mode">
+                  <option value="none">None</option>
+                  <option value="protanopia">Protanopia</option>
+                  <option value="deuteranopia">Deuteranopia</option>
+                  <option value="tritanopia">Tritanopia</option>
+                  <option value="achromatopsia">Achromatopsia</option>
+                </select>
+                <span class="select-icon" aria-hidden="true"></span>
+              </div>
+            </div>
+
+            <div class="settings-field">
+              <label class="settings-label" for="editor-font-size-input">Editor Font Size</label>
+              <div class="editor-font-size-row">
+                <input class="field editor-font-size-input" id="editor-font-size-input" type="number" min="10" max="24" step="any" inputmode="decimal" />
+                <input class="editor-font-size-slider" id="editor-font-size-slider" type="range" min="10" max="24" step="1" />
+              </div>
+              <p class="field-subtext">Slider range: 10-24px. Use the box for precise values.</p>
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <p class="settings-section-title">Suggestions</p>
+            <p class="field-subtext">Click a chip to quickly set the label.</p>
+            <div class="label-chip-row">
+              {{LABEL_SUGGESTION_CHIPS}}
+            </div>
+          </section>
+
+          <section class="settings-section">
+            <p class="settings-section-title">About</p>
+            <div class="note note-credit">{{CREDIT_HTML}} - v{{APP_VERSION}}</div>
+          </section>
+
+          <section class="settings-section">
+            <p class="settings-section-title">Variables</p>
+            <p class="field-subtext">
+              TODO: Variables replacement using <code>{var}</code> is planned while mentions and emoji formatting are finalized in the editor.
+            </p>
+          </section>
         </div>
-      </div>
-      <div class="footer-right">
-        <div class="note">You can insert Files and Mentions after inserting this template.</div>
-        <div class="actions">
-          <button class="btn" id="cancel" type="button">Cancel</button>
-          <button class="btn btn-primary" id="insert" type="button" disabled>Insert</button>
-        </div>
-      </div>
+      </aside>
     </div>
   </section>
 </div>
+
 `;
   }
 

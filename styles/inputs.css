@@ -80,49 +80,26 @@ textarea.field,
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 6px 12px;
-  border: 1px solid #2f3a52;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #121a2c 0%, #0f1420 100%);
-  scrollbar-gutter: stable;
-  clip-path: inset(0 round 999px);
+  padding: 2px 0 8px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  scrollbar-gutter: stable both-edges;
   -webkit-overflow-scrolling: touch;
 }
 
 .label-chip-row::before,
 .label-chip-row::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 28px;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 140ms ease;
-}
-
-.label-chip-row::before {
-  left: 0;
-  background: linear-gradient(90deg, rgba(15, 20, 32, 0.96) 0%, rgba(15, 20, 32, 0) 100%);
-}
-
-.label-chip-row::after {
-  right: 0;
-  background: linear-gradient(270deg, rgba(15, 20, 32, 0.96) 0%, rgba(15, 20, 32, 0) 100%);
-}
-
-.label-chip-row.has-overflow:not(.at-start)::before {
-  opacity: 1;
-}
-
-.label-chip-row.has-overflow:not(.at-end)::after {
-  opacity: 1;
+  content: none;
 }
 
 .label-chip-row {
   scrollbar-width: thin;
-  scrollbar-color: #7c96f0 #0f1420;
+  scrollbar-color: transparent transparent;
+}
+
+.label-chip-row:hover {
+  scrollbar-color: #7c96f0 transparent;
 }
 
 .label-chip-row::-webkit-scrollbar {
@@ -130,14 +107,18 @@ textarea.field,
 }
 
 .label-chip-row::-webkit-scrollbar-track {
-  background: #0f1420;
+  background: transparent;
   border-radius: 999px;
 }
 
 .label-chip-row::-webkit-scrollbar-thumb {
   border-radius: 999px;
+  background: transparent;
+  border: 2px solid transparent;
+}
+
+.label-chip-row:hover::-webkit-scrollbar-thumb {
   background: linear-gradient(90deg, #5f7ee5 0%, #8aa8ff 100%);
-  border: 2px solid #0f1420;
 }
 
 .label-chip-row::-webkit-scrollbar-thumb:hover {

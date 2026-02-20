@@ -9,12 +9,12 @@
   const FONT_SIZE_MIN = 10;
   const FONT_SIZE_MAX = 24;
   const THEME_OPTIONS = new Set(["light", "auto", "dark"]);
-  const DENSITY_OPTIONS = new Set(["compact", "comfortable", "spacious"]);
+  const DENSITY_SCALE_OPTIONS = new Set(["1", "2", "3"]);
   const COLOR_FILTER_OPTIONS = new Set(["none", "protanopia", "deuteranopia", "tritanopia", "achromatopsia"]);
   const DEFAULT_MODAL_SETTINGS = Object.freeze({
     sidebarCollapsed: false,
     theme: "auto",
-    density: "comfortable",
+    densityScale: 2,
     colorFilter: "none",
     editorFontSize: 13
   });
@@ -30,7 +30,21 @@
   function normalizeModalSettings(input) {
     const source = input && typeof input === "object" ? input : {};
     const theme = THEME_OPTIONS.has(source.theme) ? source.theme : DEFAULT_MODAL_SETTINGS.theme;
-    const density = DENSITY_OPTIONS.has(source.density) ? source.density : DEFAULT_MODAL_SETTINGS.density;
+    const legacyDensityScale = source.density === "compact"
+      ? 1
+      : source.density === "spacious"
+        ? 3
+        : source.density === "comfortable"
+          ? 2
+          : DEFAULT_MODAL_SETTINGS.densityScale;
+    const densityScale = Math.round(
+      clampNumber(
+        source.densityScale == null ? legacyDensityScale : source.densityScale,
+        1,
+        3,
+        DEFAULT_MODAL_SETTINGS.densityScale
+      )
+    );
     const colorFilter = COLOR_FILTER_OPTIONS.has(source.colorFilter)
       ? source.colorFilter
       : DEFAULT_MODAL_SETTINGS.colorFilter;
@@ -44,7 +58,7 @@
     return {
       sidebarCollapsed: Boolean(source.sidebarCollapsed),
       theme,
-      density,
+      densityScale,
       colorFilter,
       editorFontSize
     };
@@ -165,7 +179,7 @@
     const settingsSidebar = byId("settings-sidebar");
     const settingsToggle = byId("settings-toggle");
     const themeButtons = Array.from(shadow.querySelectorAll("[data-theme-option]"));
-    const densityButtons = Array.from(shadow.querySelectorAll("[data-density-option]"));
+    const densityButtons = Array.from(shadow.querySelectorAll("[data-density-scale-option]"));
     const colorFilterInput = byId("color-filter-mode");
     const editorFontSizeInput = byId("editor-font-size-input");
     const editorFontSizeSlider = byId("editor-font-size-slider");
@@ -409,8 +423,9 @@
       const resolvedTheme = getResolvedTheme();
       modalCard.setAttribute("data-theme", settingsState.theme);
       modalCard.setAttribute("data-resolved-theme", resolvedTheme);
-      modalCard.setAttribute("data-density", settingsState.density);
+      modalCard.setAttribute("data-density-scale", String(settingsState.densityScale));
       modalCard.setAttribute("data-color-filter", settingsState.colorFilter);
+      modalCard.setAttribute("data-sidebar-collapsed", settingsState.sidebarCollapsed ? "true" : "false");
       modalCard.style.setProperty("--editor-font-size", `${settingsState.editorFontSize}px`);
 
       if (modalBodyLayout) {
@@ -427,7 +442,7 @@
       }
 
       setSegmentedSelection(themeButtons, "data-theme-option", settingsState.theme);
-      setSegmentedSelection(densityButtons, "data-density-option", settingsState.density);
+      setSegmentedSelection(densityButtons, "data-density-scale-option", String(settingsState.densityScale));
 
       if (colorFilterInput) {
         colorFilterInput.value = settingsState.colorFilter;
@@ -548,9 +563,9 @@
 
     densityButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        const value = button.getAttribute("data-density-option");
-        if (!value || !DENSITY_OPTIONS.has(value)) return;
-        commitModalSettings({ density: value });
+        const value = String(button.getAttribute("data-density-scale-option") || "").trim();
+        if (!DENSITY_SCALE_OPTIONS.has(value)) return;
+        commitModalSettings({ densityScale: parseInt(value, 10) });
       });
     });
 
@@ -656,6 +671,7 @@
         blockers: splitLines(blockInput.value),
         focus: splitLines(focusInput.value),
         notes: notesInput && notesGroup && !notesGroup.hidden ? splitLines(notesInput.value) : [],
+        colorFilterMode: settingsState.colorFilter,
         bannerColor: selected
       };
 
