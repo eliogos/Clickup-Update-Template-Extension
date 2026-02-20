@@ -47,27 +47,18 @@ select.field {
 
 .banner-trigger {
   width: 100%;
-  height: 36px;
-  border-radius: 8px;
+  height: 30px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
   cursor: pointer;
-  padding-right: 10px;
-}
-
-.banner-trigger .banner-value {
-  font-size: 12px;
-  color: #dce6ff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1 1 auto;
+  padding: 0 8px;
+  anchor-name: --banner-anchor;
 }
 
 .banner-trigger .select-icon {
   position: static;
-  margin-left: auto;
 }
 
 .banner-trigger.is-open .select-icon {
@@ -76,7 +67,10 @@ select.field {
 
 .banner-popover {
   display: none;
-  margin: 6px 0 0 0;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  margin: 0;
   border: 1px solid #3f4863;
   border-radius: 12px;
   padding: 8px;
@@ -88,6 +82,16 @@ select.field {
   gap: 8px;
 }
 
+@supports (top: anchor(bottom)) and (position-anchor: --banner-anchor) {
+  .banner-popover {
+    position: fixed;
+    top: anchor(bottom);
+    left: anchor(left);
+    position-anchor: --banner-anchor;
+    margin: 6px 0 0 0;
+  }
+}
+
 .banner-popover:popover-open,
 .banner-popover.is-open-fallback {
   display: grid;
@@ -96,7 +100,7 @@ select.field {
 .banner-popover .swatch {
   width: 22px;
   height: 22px;
-  border-radius: 7px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.28);
 }
 
@@ -107,7 +111,7 @@ select.field {
 
 .status-select {
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 10px;
   border-color: #3b4259;
   background: #10131a;
   color: #ecf1ff;
@@ -160,7 +164,7 @@ select.field {
   .status-select::picker(select) {
     appearance: base-select;
     border: 1px solid #3f4863;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 8px;
     background: #111722;
     box-shadow:
@@ -170,7 +174,7 @@ select.field {
   }
 
   .status-select option {
-    border-radius: 9px;
+    border-radius: 12px;
     background: transparent;
     color: #e9efff;
     padding: 10px 12px;
@@ -184,25 +188,25 @@ select.field {
 
   .status-select option:nth-child(1):checked {
     background: rgba(236, 64, 122, 0.32);
-    outline: 1px solid rgba(236, 64, 122, 0.62);
+    outline: 2px solid rgba(236, 64, 122, 0.62);
     color: #fff;
   }
 
   .status-select option:nth-child(2):checked {
     background: rgba(47, 111, 237, 0.32);
-    outline: 1px solid rgba(47, 111, 237, 0.62);
+    outline: 2px solid rgba(47, 111, 237, 0.62);
     color: #fff;
   }
 
   .status-select option:nth-child(3):checked {
     background: rgba(212, 182, 46, 0.32);
-    outline: 1px solid rgba(212, 182, 46, 0.62);
+    outline: 2px solid rgba(212, 182, 46, 0.62);
     color: #fff;
   }
 
   .status-select option:nth-child(4):checked {
     background: rgba(67, 160, 71, 0.32);
-    outline: 1px solid rgba(67, 160, 71, 0.62);
+    outline: 2px solid rgba(67, 160, 71, 0.62);
     color: #fff;
   }
 }

@@ -77,7 +77,6 @@
         <div class="banner-picker">
           <button class="field banner-trigger" id="banner-trigger" type="button" popovertarget="banner-popover" aria-label="Banner color">
             <span class="banner-preview {{DEFAULT_BANNER_COLOR}}" id="banner-preview" aria-hidden="true"></span>
-            <span class="banner-value" id="banner-value"></span>
             <span class="select-icon" aria-hidden="true"></span>
           </button>
           <div class="banner-popover" id="banner-popover" popover="auto" aria-label="Banner palette"></div>

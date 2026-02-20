@@ -46,7 +46,6 @@
     const modal = byId("modal");
     const bannerTrigger = byId("banner-trigger");
     const bannerPreview = byId("banner-preview");
-    const bannerValue = byId("banner-value");
     const bannerPopover = byId("banner-popover");
     const labelInput = byId("label");
     const labelChips = Array.from(shadow.querySelectorAll(".label-chip"));
@@ -69,7 +68,7 @@
       !modal || !labelInput || !numberInput || !accInput ||
       !insertBtn || !incBtn || !decBtn || !cancelBtn ||
       !statusInput || !blockInput || !focusInput ||
-      !bannerTrigger || !bannerPreview || !bannerValue || !bannerPopover
+      !bannerTrigger || !bannerPreview || !bannerPopover
     ) {
       host.remove();
       return;
@@ -146,7 +145,6 @@
       selected = value;
 
       bannerTrigger.setAttribute("data-banner", selected);
-      bannerValue.textContent = toDisplayLabel(selected);
 
       if (bannerPreview) {
         bannerPreview.className = `banner-preview ${selected}`;
