@@ -78,7 +78,15 @@
       <textarea class="field" id="focus"></textarea>
     </div>
     <div class="footer-row">
-      <div class="note note-credit">{{CREDIT_HTML}} - v{{APP_VERSION}}</div>
+      <div class="footer-left">
+        <div class="note note-credit">{{CREDIT_HTML}} - v{{APP_VERSION}}</div>
+        <div class="note note-feedback">
+          Have any suggestions or bugs?
+          <a href="https://github.com/eliogos/clickup-task-update-template/issues" target="_blank" rel="noopener noreferrer">
+            https://github.com/eliogos/clickup-task-update-template/issues
+          </a>
+        </div>
+      </div>
       <div class="footer-right">
         <div class="note">You can insert Files and Mentions after inserting this template.</div>
         <div class="actions">

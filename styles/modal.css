@@ -177,6 +177,14 @@
   margin-top: 2px;
 }
 
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+
 .footer-right {
   display: flex;
   align-items: center;
@@ -193,6 +201,22 @@
   text-align: left;
   margin: 0;
   white-space: nowrap;
+}
+
+.note-feedback {
+  text-align: left;
+  margin: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.note-feedback a {
+  color: #9ec5ff;
+  text-decoration: underline;
+}
+
+.note-feedback a:hover {
+  color: #c6ddff;
 }
 
 @media (max-width: 720px) {
