@@ -116,6 +116,8 @@ select.field {
   background: #10131a;
   color: #ecf1ff;
   min-width: 180px;
+  font-size: 13px;
+  font-weight: 600;
   --status-accent: #2f6fed;
   --status-accent-rgb: 47, 111, 237;
   transition: border-color 150ms ease, box-shadow 150ms ease;
@@ -164,9 +166,9 @@ select.field {
   .status-select::picker(select) {
     appearance: base-select;
     border: 1px solid #3f4863;
-    border-radius: 14px;
-    padding: 8px;
-    background: #111722;
+    border-radius: 16px;
+    padding: 10px;
+    background: #0f1522;
     box-shadow:
       0 20px 40px rgba(0, 0, 0, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -179,6 +181,9 @@ select.field {
     color: #e9efff;
     padding: 10px 12px;
     margin: 3px 0;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background-color 120ms ease, outline-color 120ms ease;
   }
 
   .status-select option:nth-child(1):hover { background: rgba(236, 64, 122, 0.22); }

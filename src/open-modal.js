@@ -51,6 +51,7 @@
     const labelChips = Array.from(shadow.querySelectorAll(".label-chip"));
     const numberInput = byId("number");
     const numControls = byId("num-controls");
+    const appendNumberInput = byId("append-number");
     const accInput = byId("acc");
     const labelError = byId("label-error");
     const numberError = byId("number-error");
@@ -210,7 +211,8 @@
 
     const validate = () => {
       const labelInvalid = !labelInput.value.trim();
-      const numberInvalid = !numberInput.value.trim();
+      const shouldAppendNumber = appendNumberInput ? appendNumberInput.checked : true;
+      const numberInvalid = shouldAppendNumber && !numberInput.value.trim();
       const accInvalid = !accInput.value.trim();
 
       setFieldError(labelInput, labelError, labelInvalid, "Label is required.");
@@ -227,6 +229,19 @@
       } else {
         delete insertBtn.dataset.tooltip;
         insertBtn.removeAttribute("title");
+      }
+    };
+
+    const syncNumberVisibility = () => {
+      const shouldAppendNumber = appendNumberInput ? appendNumberInput.checked : true;
+      numControls.hidden = !shouldAppendNumber;
+
+      numberInput.disabled = !shouldAppendNumber;
+      incBtn.disabled = !shouldAppendNumber;
+      decBtn.disabled = !shouldAppendNumber;
+
+      if (!shouldAppendNumber) {
+        setFieldError(numberInput, numberError, false, "", numControls);
       }
     };
 
@@ -284,6 +299,13 @@
       validate();
     });
 
+    if (appendNumberInput) {
+      appendNumberInput.addEventListener("change", () => {
+        syncNumberVisibility();
+        validate();
+      });
+    }
+
     labelInput.addEventListener("input", () => {
       validate();
       syncLabelChipState();
@@ -303,6 +325,7 @@
 
     applyStatusAccent();
     syncLabelChipState();
+    syncNumberVisibility();
 
     cancelBtn.onclick = close;
 
@@ -312,6 +335,7 @@
       const data = {
         label: labelInput.value.trim().toUpperCase() || "DESIGN UPDATE",
         number: numberInput.value.trim() || "01",
+        appendNumberSuffix: appendNumberInput ? appendNumberInput.checked : true,
         status: statusInput.value,
         accomplishments: splitLines(accInput.value),
         blockers: splitLines(blockInput.value),

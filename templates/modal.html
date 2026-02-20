@@ -15,6 +15,13 @@
         <div class="field-stack label-stack">
           <input class="field label-input" id="label" value="{{DEFAULT_LABEL}}" aria-describedby="label-error" />
           <p class="field-subtext field-subtext-error" id="label-error" hidden>Label is required.</p>
+          <div class="label-suggestions" aria-label="Label suggestions">
+            <span class="field-subtext">Suggestions:</span>
+            <div class="label-chip-row">
+              <button class="label-chip" type="button" data-label-chip="Design Update">Design Update</button>
+              <button class="label-chip" type="button" data-label-chip="Feedback Application">Feedback Application</button>
+            </div>
+          </div>
         </div>
         <div class="field-stack number-stack">
           <div class="num-controls" id="num-controls" aria-label="Update number">
@@ -23,18 +30,11 @@
             <button class="num-btn" id="inc" type="button">+</button>
           </div>
           <p class="field-subtext field-subtext-error" id="number-error" hidden>Update number is required.</p>
+          <label class="append-number-wrap" for="append-number">
+            <input type="checkbox" id="append-number" checked />
+            <span>Append Number Suffix</span>
+          </label>
         </div>
-      </div>
-      <div class="row-inline banner-meta-row">
-        <div class="label-suggestions" aria-label="Label suggestions">
-          <span class="field-subtext">Suggestions:</span>
-          <button class="label-chip" type="button" data-label-chip="Design Update">Design Update</button>
-          <button class="label-chip" type="button" data-label-chip="Feedback Application">Feedback Application</button>
-        </div>
-        <label class="append-number-wrap">
-          <input type="checkbox" id="append-number" checked />
-          <span>Append Number Suffix</span>
-        </label>
       </div>
     </div>
 

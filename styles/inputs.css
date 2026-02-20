@@ -16,6 +16,21 @@
   min-width: 160px;
 }
 
+.top-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.top-section-label {
+  margin-bottom: 0;
+}
+
+.banner-main-row {
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+
 .field-stack {
   display: flex;
   flex-direction: column;
@@ -34,16 +49,22 @@
 }
 
 .label-stack {
-  flex: 1 1 200px;
-  min-width: 160px;
-  max-width: 320px;
+  flex: 1 1 260px;
+  min-width: 220px;
+  max-width: none;
 }
 
 .label-suggestions {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 6px;
+}
+
+.label-chip-row {
+  display: flex;
   flex-wrap: wrap;
+  gap: 6px;
 }
 
 .label-chip {
@@ -70,7 +91,8 @@
 }
 
 .number-stack {
-  min-width: 126px;
+  min-width: 180px;
+  align-items: flex-start;
 }
 
 .num-controls {
@@ -82,6 +104,10 @@
   background: #111;
 }
 
+.num-controls[hidden] {
+  display: none;
+}
+
 .num-input {
   width: 56px;
   height: 34px;
@@ -90,6 +116,24 @@
   background: transparent;
   color: #fff;
   outline: none;
+}
+
+.append-number-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #a9b4ca;
+  font-size: 11px;
+  line-height: 1.2;
+  user-select: none;
+  cursor: pointer;
+}
+
+.append-number-wrap input {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: #4b84ff;
 }
 
 textarea.field {
@@ -129,6 +173,10 @@ textarea.field {
   .label-input {
     min-width: 0;
     width: 100%;
+  }
+
+  .banner-main-row {
+    flex-wrap: wrap;
   }
 
   .label-stack,

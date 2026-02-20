@@ -18,8 +18,14 @@
       return html;
     }
 
+    const labelText = String(data.label || "").trim();
+    const numberText = String(data.number || "").trim();
+    const headingText = data.appendNumberSuffix === false
+      ? labelText
+      : `${labelText} ${numberText}`.trim();
+
     let html =
-      `<h2 data-advanced-banner="${crypto.randomUUID()}" data-advanced-banner-color="${data.bannerColor || defaultBannerColor}"><strong>${data.label} ${data.number}</strong></h2>` +
+      `<h2 data-advanced-banner="${crypto.randomUUID()}" data-advanced-banner-color="${data.bannerColor || defaultBannerColor}"><strong>${headingText}</strong></h2>` +
       `<p><strong>Status:</strong> <span class="ql-badge ql-badge-${statusColor[data.status]}">${data.status}</span></p>` +
       "<br/>";
 
