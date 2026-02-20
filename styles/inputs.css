@@ -23,6 +23,17 @@
   gap: 6px;
 }
 
+.field-label {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.2;
+  color: #a9b4ca;
+}
+
+.banner-stack {
+  min-width: 176px;
+}
+
 .label-stack {
   flex: 1 1 180px;
   min-width: 180px;
@@ -91,6 +102,7 @@ textarea.field {
   }
 
   .label-stack,
+  .banner-stack,
   .number-stack {
     min-width: 0;
     width: 100%;

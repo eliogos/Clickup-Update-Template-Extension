@@ -1,10 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0,0");
+
 select.field {
   min-width: 180px;
 }
 
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined", system-ui, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 20;
+}
+
+.select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select-wrap select.field {
+  width: 100%;
+  appearance: none;
+  padding-right: 34px;
+}
+
+.select-icon {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  color: #93a8da;
+  transition: color 140ms ease, transform 140ms ease;
+}
+
+.select-wrap:focus-within .select-icon {
+  color: #c4d4ff;
+}
+
+.banner-select-wrap {
+  min-width: 176px;
+}
+
+.banner-select-wrap .banner-select {
+  padding-left: 30px;
+}
+
+.banner-select-wrap .banner-preview {
+  position: absolute;
+  left: 10px;
+  z-index: 1;
+}
+
+.banner-select {
+  border-radius: 8px;
+}
+
 .status-select {
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 8px;
   border-color: #3b4259;
   background: #10131a;
   color: #ecf1ff;
@@ -24,26 +84,36 @@ select.field {
 .status-select[data-status="For QA"] { --status-accent: #d4b62e; --status-accent-rgb: 212, 182, 46; }
 .status-select[data-status="Completed"] { --status-accent: #43a047; --status-accent-rgb: 67, 160, 71; }
 
+.status-select-wrap {
+  --status-accent: #2f6fed;
+}
+
+.status-select-wrap[data-status="Not Started"] { --status-accent: #ec407a; }
+.status-select-wrap[data-status="In Progress"] { --status-accent: #2f6fed; }
+.status-select-wrap[data-status="For QA"] { --status-accent: #d4b62e; }
+.status-select-wrap[data-status="Completed"] { --status-accent: #43a047; }
+
+.status-select-wrap .select-icon {
+  color: var(--status-accent);
+}
+
 @supports (appearance: base-select) and selector(select::picker(select)) {
   .status-select {
     appearance: base-select;
-    padding-right: 34px;
   }
 
   .status-select::picker-icon {
-    color: var(--status-accent);
-    transition: transform 150ms ease, color 150ms ease;
+    opacity: 0;
   }
 
-  .status-select:open::picker-icon {
+  .status-select:open + .select-icon {
     transform: rotate(180deg);
-    color: var(--status-accent);
   }
 
   .status-select::picker(select) {
     appearance: base-select;
     border: 1px solid #3f4863;
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 6px;
     background: #111722;
     box-shadow:
@@ -53,20 +123,39 @@ select.field {
   }
 
   .status-select option {
-    border-radius: 10px;
+    border-radius: 8px;
     background: transparent;
     color: #e9efff;
     padding: 9px 11px;
     margin: 2px 0;
   }
 
-  .status-select option:hover {
-    background: rgba(var(--status-accent-rgb), 0.18);
+  .status-select option:nth-child(1):hover { background: rgba(236, 64, 122, 0.22); }
+  .status-select option:nth-child(2):hover { background: rgba(47, 111, 237, 0.22); }
+  .status-select option:nth-child(3):hover { background: rgba(212, 182, 46, 0.22); }
+  .status-select option:nth-child(4):hover { background: rgba(67, 160, 71, 0.22); }
+
+  .status-select option:nth-child(1):checked {
+    background: rgba(236, 64, 122, 0.32);
+    outline: 1px solid rgba(236, 64, 122, 0.62);
+    color: #fff;
   }
 
-  .status-select option:checked {
-    background: rgba(var(--status-accent-rgb), 0.3);
-    outline: 1px solid rgba(var(--status-accent-rgb), 0.6);
+  .status-select option:nth-child(2):checked {
+    background: rgba(47, 111, 237, 0.32);
+    outline: 1px solid rgba(47, 111, 237, 0.62);
+    color: #fff;
+  }
+
+  .status-select option:nth-child(3):checked {
+    background: rgba(212, 182, 46, 0.32);
+    outline: 1px solid rgba(212, 182, 46, 0.62);
+    color: #fff;
+  }
+
+  .status-select option:nth-child(4):checked {
+    background: rgba(67, 160, 71, 0.32);
+    outline: 1px solid rgba(67, 160, 71, 0.62);
     color: #fff;
   }
 }

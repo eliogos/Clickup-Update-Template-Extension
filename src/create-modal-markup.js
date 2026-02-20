@@ -71,8 +71,15 @@
 <div class="modal" id="modal" popover="auto">
   <section class="modal-card" role="dialog" aria-modal="true" aria-label="Insert Update Template">
     <p class="title">Insert Update Template</p>
-    <div class="row-inline">
-      <div class="palette" id="palette" aria-label="Banner color"></div>
+    <div class="row-inline row-top">
+      <div class="field-stack banner-stack">
+        <label class="field-label" for="banner-color">Banner</label>
+        <div class="select-wrap banner-select-wrap">
+          <span class="banner-preview {{DEFAULT_BANNER_COLOR}}" id="banner-preview" aria-hidden="true"></span>
+          <select class="field banner-select" id="banner-color" aria-label="Banner color"></select>
+          <span class="material-symbols-outlined select-icon" aria-hidden="true">expand_more</span>
+        </div>
+      </div>
       <div class="field-stack label-stack">
         <input class="field label-input" id="label" value="{{DEFAULT_LABEL}}" aria-describedby="label-error" />
         <p class="field-subtext field-subtext-error" id="label-error" hidden>Label is required.</p>
@@ -88,12 +95,15 @@
     </div>
     <div class="group">
       <label>Status<span class="req">*</span></label><br/>
-      <select class="field status-select" id="status">
-        <option>Not Started</option>
-        <option selected>In Progress</option>
-        <option>For QA</option>
-        <option>Completed</option>
-      </select>
+      <div class="select-wrap status-select-wrap">
+        <select class="field status-select" id="status">
+          <option>Not Started</option>
+          <option selected>In Progress</option>
+          <option>For QA</option>
+          <option>Completed</option>
+        </select>
+        <span class="material-symbols-outlined select-icon" aria-hidden="true">expand_more</span>
+      </div>
     </div>
     <div class="group">
       <label>Accomplishments<span class="req">*</span></label>
@@ -123,6 +133,7 @@
     const constants = app.constants || {};
     const defaultLabel = constants.defaultLabel || "Design Update";
     const defaultNumber = constants.defaultNumber || "01";
+    const defaultBannerColor = constants.defaultBannerColor || "blue-strong";
     const appVersion =
       constants.APP_VERSION ||
       constants.appVersion ||
@@ -143,6 +154,7 @@
     let output = source;
     output = replaceToken(output, "DEFAULT_LABEL", escapeAttr(defaultLabel));
     output = replaceToken(output, "DEFAULT_NUMBER", escapeAttr(defaultNumber));
+    output = replaceToken(output, "DEFAULT_BANNER_COLOR", escapeAttr(defaultBannerColor));
     output = replaceToken(output, "APP_VERSION", escapeAttr(appVersion));
     output = replaceToken(output, "appVersion", escapeAttr(appVersion));
     output = replaceToken(output, "VERSION", escapeAttr(appVersion));

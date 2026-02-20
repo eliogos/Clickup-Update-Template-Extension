@@ -44,6 +44,8 @@
 
     const byId = (id) => shadow.getElementById(id);
     const modal = byId("modal");
+    const bannerSelect = byId("banner-color");
+    const bannerPreview = byId("banner-preview");
     const paletteEl = byId("palette");
     const labelInput = byId("label");
     const numberInput = byId("number");
@@ -57,13 +59,14 @@
     const decBtn = byId("dec");
     const cancelBtn = byId("cancel");
     const statusInput = byId("status");
+    const statusSelectWrap = statusInput ? statusInput.closest(".status-select-wrap") : null;
     const blockInput = byId("block");
     const focusInput = byId("focus");
 
     if (
-      !modal || !paletteEl || !labelInput || !numberInput || !accInput ||
+      !modal || !labelInput || !numberInput || !accInput ||
       !insertBtn || !incBtn || !decBtn || !cancelBtn ||
-      !statusInput || !blockInput || !focusInput
+      !statusInput || !blockInput || !focusInput || (!bannerSelect && !paletteEl)
     ) {
       host.remove();
       return;
@@ -77,17 +80,23 @@
 
     let selected = defaultBannerColor;
     let closed = false;
+    let close = () => {};
 
     const cleanup = () => {
       if (closed) return;
       closed = true;
+
+      if (app._activeModalClose === close) {
+        app._activeModalClose = null;
+      }
+
       document.removeEventListener("keydown", stopKeys, true);
       document.removeEventListener("keyup", stopKeys, true);
       document.removeEventListener("keypress", stopKeys, true);
       host.remove();
     };
 
-    const close = () => {
+    close = () => {
       let nativePopoverOpen = false;
       if (typeof modal.matches === "function") {
         try {
@@ -106,6 +115,8 @@
       cleanup();
     };
 
+    app._activeModalClose = close;
+
     const stopKeys = (e) => {
       if (!isPopoverOpen(modal)) return;
       e.stopPropagation();
@@ -121,7 +132,43 @@
       }
     };
 
+    const toDisplayLabel = (name) => String(name)
+      .split("-")
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+
+    const applyBannerSelection = () => {
+      if (bannerSelect) {
+        let value = bannerSelect.value || defaultBannerColor;
+        if (!allColors.includes(value)) value = defaultBannerColor;
+        selected = value;
+        bannerSelect.value = value;
+        bannerSelect.setAttribute("data-banner", value);
+      }
+
+      if (bannerPreview) {
+        bannerPreview.className = `banner-preview ${selected}`;
+      }
+    };
+
+    const populateBannerSelect = () => {
+      if (!bannerSelect) return;
+      bannerSelect.innerHTML = "";
+
+      allColors.forEach((name) => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = toDisplayLabel(name);
+        bannerSelect.appendChild(option);
+      });
+
+      const initial = allColors.includes(defaultBannerColor) ? defaultBannerColor : allColors[0];
+      if (initial) bannerSelect.value = initial;
+      applyBannerSelection();
+    };
+
     const renderPalette = () => {
+      if (!paletteEl) return;
       paletteEl.innerHTML = "";
       allColors.forEach((name) => {
         const sw = document.createElement("button");
@@ -131,6 +178,7 @@
         sw.setAttribute("aria-label", name);
         sw.onclick = () => {
           selected = name;
+          applyBannerSelection();
           renderPalette();
           validate();
         };
@@ -141,6 +189,7 @@
     const applyStatusAccent = () => {
       const value = statusInput.value || "In Progress";
       statusInput.setAttribute("data-status", value);
+      if (statusSelectWrap) statusSelectWrap.setAttribute("data-status", value);
     };
 
     const setFieldError = (inputEl, helperEl, isInvalid, message, wrapperEl) => {
@@ -181,7 +230,17 @@
       }
     };
 
-    renderPalette();
+    if (bannerSelect) {
+      populateBannerSelect();
+      bannerSelect.addEventListener("change", () => {
+        applyBannerSelection();
+        validate();
+      });
+    } else {
+      renderPalette();
+    }
+
+    applyBannerSelection();
     validate();
 
     incBtn.onclick = () => {

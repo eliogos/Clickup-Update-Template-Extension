@@ -91,9 +91,13 @@
 
 .row-inline {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.row-top {
+  align-items: flex-end;
 }
 
 .palette {
@@ -125,24 +129,32 @@
   border-color: #fff;
 }
 
-/* Swatch color tokens: class sets background-color only. */
-.swatch.red-strong { background-color: #E53935; }
-.swatch.orange-strong { background-color: #FB8C00; }
-.swatch.yellow-strong { background-color: #FDD835; }
-.swatch.blue-strong { background-color: #1E88E5; }
-.swatch.purple-strong { background-color: #5E35B1; }
-.swatch.pink-strong { background-color: #EC407A; }
-.swatch.green-strong { background-color: #43A047; }
-.swatch.grey-strong { background-color: #616161; }
+.banner-preview {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  flex: 0 0 auto;
+}
 
-.swatch.red { background-color: #B71C1C; }
-.swatch.orange { background-color: #8D4C00; }
-.swatch.yellow { background-color: #8D7A00; }
-.swatch.blue { background-color: #0D47A1; }
-.swatch.purple { background-color: #311B92; }
-.swatch.pink { background-color: #6A1B9A; }
-.swatch.green { background-color: #1B5E20; }
-.swatch.grey { background-color: #424242; }
+/* Swatch color tokens: class sets background-color only. */
+:is(.swatch, .banner-preview).red-strong { background-color: #E53935; }
+:is(.swatch, .banner-preview).orange-strong { background-color: #FB8C00; }
+:is(.swatch, .banner-preview).yellow-strong { background-color: #FDD835; }
+:is(.swatch, .banner-preview).blue-strong { background-color: #1E88E5; }
+:is(.swatch, .banner-preview).purple-strong { background-color: #5E35B1; }
+:is(.swatch, .banner-preview).pink-strong { background-color: #EC407A; }
+:is(.swatch, .banner-preview).green-strong { background-color: #43A047; }
+:is(.swatch, .banner-preview).grey-strong { background-color: #616161; }
+
+:is(.swatch, .banner-preview).red { background-color: #B71C1C; }
+:is(.swatch, .banner-preview).orange { background-color: #8D4C00; }
+:is(.swatch, .banner-preview).yellow { background-color: #8D7A00; }
+:is(.swatch, .banner-preview).blue { background-color: #0D47A1; }
+:is(.swatch, .banner-preview).purple { background-color: #311B92; }
+:is(.swatch, .banner-preview).pink { background-color: #6A1B9A; }
+:is(.swatch, .banner-preview).green { background-color: #1B5E20; }
+:is(.swatch, .banner-preview).grey { background-color: #424242; }
 
 .group label {
   display: inline-block;

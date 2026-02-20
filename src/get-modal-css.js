@@ -13,6 +13,10 @@
   }
 
   app.getModalCss = function getModalCss() {
+    if (typeof app._hotCssOverride === "string" && app._hotCssOverride.trim()) {
+      return app._hotCssOverride;
+    }
+
     if (typeof GM_getResourceText === "function") {
       const cssParts = RESOURCE_NAMES.map(getResourceTextSafe).filter(Boolean);
       if (cssParts.length > 0) return cssParts.join("\n");

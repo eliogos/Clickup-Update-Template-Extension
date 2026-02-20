@@ -2,14 +2,26 @@
   "use strict";
 
   const app = (global.ClickUpUpdateApp = global.ClickUpUpdateApp || {});
-  const constants = app.constants || {};
-  const trigger = constants.TRIGGER || "--update";
+
+  app.unmount = function unmount() {
+    if (typeof app._keydownHandler === "function") {
+      document.removeEventListener("keydown", app._keydownHandler);
+      app._keydownHandler = null;
+    }
+
+    app._bootstrapped = false;
+  };
 
   app.bootstrap = function bootstrap() {
-    if (app._bootstrapped) return;
+    if (app._bootstrapped && typeof app._keydownHandler === "function") return;
+
+    const constants = app.constants || {};
+    const trigger = constants.TRIGGER || "--update";
+
+    app.unmount();
     app._bootstrapped = true;
 
-    document.addEventListener("keydown", (e) => {
+    const handler = (e) => {
       if (e.key !== " ") return;
       if (typeof app.getVisibleEditor !== "function" || typeof app.openModal !== "function") return;
 
@@ -21,6 +33,9 @@
 
       e.preventDefault();
       app.openModal(editor);
-    });
+    };
+
+    app._keydownHandler = handler;
+    document.addEventListener("keydown", handler);
   };
 })(globalThis);
