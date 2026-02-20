@@ -138,6 +138,11 @@
       });
     };
 
+    const applyStatusAccent = () => {
+      const value = statusInput.value || "In Progress";
+      statusInput.setAttribute("data-status", value);
+    };
+
     const setFieldError = (inputEl, helperEl, isInvalid, message, wrapperEl) => {
       if (inputEl) {
         inputEl.classList.toggle("input-error", isInvalid);
@@ -199,6 +204,9 @@
 
     labelInput.addEventListener("input", validate);
     accInput.addEventListener("input", validate);
+    statusInput.addEventListener("change", applyStatusAccent);
+
+    applyStatusAccent();
 
     cancelBtn.onclick = close;
 

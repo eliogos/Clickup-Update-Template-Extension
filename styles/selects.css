@@ -4,36 +4,25 @@ select.field {
 
 .status-select {
   cursor: pointer;
+  border-radius: 12px;
   border-color: #3b4259;
-  background:
-    linear-gradient(180deg, rgba(37, 46, 69, 0.35), rgba(17, 19, 24, 0.4)),
-    #10131a;
+  background: #10131a;
   color: #ecf1ff;
+  --status-accent: #2f6fed;
+  --status-accent-rgb: 47, 111, 237;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
+.status-select:hover,
 .status-select:focus {
-  border-color: #6f91ff;
+  border-color: var(--status-accent);
+  box-shadow: 0 0 0 2px rgba(var(--status-accent-rgb), 0.22);
 }
 
-@supports not ((appearance: base-select) and selector(select::picker(select))) {
-  .status-select {
-    appearance: none;
-    padding-right: 34px;
-    background-image:
-      linear-gradient(45deg, transparent 50%, #95aeff 50%),
-      linear-gradient(135deg, #95aeff 50%, transparent 50%),
-      linear-gradient(180deg, rgba(37, 46, 69, 0.35), rgba(17, 19, 24, 0.4));
-    background-position:
-      calc(100% - 16px) calc(50% + 1px),
-      calc(100% - 11px) calc(50% + 1px),
-      0 0;
-    background-size:
-      5px 5px,
-      5px 5px,
-      100% 100%;
-    background-repeat: no-repeat;
-  }
-}
+.status-select[data-status="Not Started"] { --status-accent: #ec407a; --status-accent-rgb: 236, 64, 122; }
+.status-select[data-status="In Progress"] { --status-accent: #2f6fed; --status-accent-rgb: 47, 111, 237; }
+.status-select[data-status="For QA"] { --status-accent: #d4b62e; --status-accent-rgb: 212, 182, 46; }
+.status-select[data-status="Completed"] { --status-accent: #43a047; --status-accent-rgb: 67, 160, 71; }
 
 @supports (appearance: base-select) and selector(select::picker(select)) {
   .status-select {
@@ -42,26 +31,24 @@ select.field {
   }
 
   .status-select::picker-icon {
-    color: #9ab8ff;
+    color: var(--status-accent);
     transition: transform 150ms ease, color 150ms ease;
   }
 
   .status-select:open::picker-icon {
     transform: rotate(180deg);
-    color: #c6d4ff;
+    color: var(--status-accent);
   }
 
   .status-select::picker(select) {
     appearance: base-select;
-    border: 1px solid #43507a;
-    border-radius: 14px;
+    border: 1px solid #3f4863;
+    border-radius: 12px;
     padding: 6px;
-    background:
-      radial-gradient(120% 100% at 50% 0%, rgba(107, 140, 255, 0.18), rgba(0, 0, 0, 0) 45%),
-      #121827;
+    background: #111722;
     box-shadow:
       0 20px 40px rgba(0, 0, 0, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
     margin-top: 8px;
   }
 
@@ -74,11 +61,12 @@ select.field {
   }
 
   .status-select option:hover {
-    background: rgba(114, 146, 255, 0.18);
+    background: rgba(var(--status-accent-rgb), 0.18);
   }
 
   .status-select option:checked {
-    background: #2f6fed;
+    background: rgba(var(--status-accent-rgb), 0.3);
+    outline: 1px solid rgba(var(--status-accent-rgb), 0.6);
     color: #fff;
   }
 }
