@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ClickUp --update Modal
 // @namespace    clickup-update-modal
-// @version      14.2.0
+// @version      14.3.0
 // @description  Insert update template in ClickUp
 // @match        https://app.clickup.com/*
 // @grant        GM_getResourceText
@@ -10,7 +10,12 @@
 // @resource     modalButtonsCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/buttons.css
 // @resource     modalSelectsCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/selects.css
 // @resource     modalBannerCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/banner.css
-// @resource     modalTemplate https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/templates/modal.html
+// @resource     modalShellTemplate https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/modal-shell.html
+// @resource     modalPageEditor https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/editor.html
+// @resource     modalPageSettings https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/settings.html
+// @resource     modalPageVariables https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/variables.html
+// @resource     modalPageDrafts https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/drafts.html
+// @resource     modalPageAbout https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/about.html
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/constants.js
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/suggestion-chips.js
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/get-modal-css.js

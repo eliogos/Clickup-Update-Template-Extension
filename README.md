@@ -1,8 +1,32 @@
 # ClickUp Task Update Template
 
-Userscript that opens a modal in ClickUp when you type `--update` and press space, then inserts a formatted task update template.
+Userscript that opens a modal in ClickUp using a configurable trigger, then inserts a formatted task update template.
 
 ## What's New
+
+### 14.3.0 (2026-02-20)
+- Split modal markup into separate resource pages under `pages/`:
+  - `modal-shell.html`
+  - `editor.html`
+  - `settings.html`
+  - `variables.html`
+  - `drafts.html`
+  - `about.html`
+- Added runtime template assembly in `src/get-modal-template.js` (with legacy fallback support).
+- Added `Drafts` page support and action-row controls (`Save as Draft`, `Copy as innerHTML`).
+- Reworked color-vision support away from hue-rotate filters into semantic, mode-specific palettes.
+- Updated status/badge/picker colors to follow color-vision modes consistently.
+- Added OKLCH-capable color tokens where supported for a more robust color system.
+- Added separate typography controls in Settings:
+  - `UI Font Size`
+  - `Editor Font Size`
+- Added trigger customization in Settings:
+  - Custom `Trigger Text`
+  - Slash (`/`) validation with error messaging due to ClickUp keybind conflicts
+  - Activation mode toggle: trigger on `Space` or immediately after the last trigger character
+- Updated bootstrap trigger detection to use saved settings dynamically.
+- Updated settings persistence shape and key usage to `clickup-update-modal.settings.v4`.
+- Bumped script version to `14.3.0`.
 
 ### 14.2.0 (2026-02-20)
 - Refactored modal layout into left-sidebar page navigation with 4 pages:

@@ -1,0 +1,71 @@
+<div class="modal" id="modal" popover="manual">
+  <section class="modal-card" role="dialog" aria-modal="true" aria-label="Insert Update Template">
+    <div class="card-header-row">
+      <p class="title">
+        <span class="material-symbols-outlined title-icon" aria-hidden="true">article</span>
+        Insert Update Template
+      </p>
+      <div class="card-header-actions">
+        <button class="btn btn-optional settings-toggle is-active" id="settings-toggle" type="button" aria-expanded="true" aria-pressed="true" aria-controls="settings-sidebar">
+          <span class="material-symbols-outlined" aria-hidden="true">left_panel_open</span>
+          <span>Sidebar</span>
+        </button>
+        <button class="icon-close-btn" id="close-modal" type="button" aria-label="Close modal">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-body-layout" id="modal-body-layout">
+      <aside class="settings-sidebar" id="settings-sidebar" aria-label="Modal pages">
+        <div class="settings-sidebar-inner">
+          <nav class="sidebar-nav" id="sidebar-nav" aria-label="Modal pages">
+            <button class="sidebar-page-btn is-active" type="button" data-page-target="editor">
+              <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+              <span>Editor</span>
+            </button>
+            <button class="sidebar-page-btn" type="button" data-page-target="settings">
+              <span class="material-symbols-outlined" aria-hidden="true">tune</span>
+              <span>Settings</span>
+            </button>
+            <button class="sidebar-page-btn" type="button" data-page-target="variables">
+              <span class="material-symbols-outlined" aria-hidden="true">data_object</span>
+              <span>Variables</span>
+            </button>
+            <button class="sidebar-page-btn" type="button" data-page-target="drafts">
+              <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+              <span>Drafts</span>
+            </button>
+            <button class="sidebar-page-btn" type="button" data-page-target="about">
+              <span class="material-symbols-outlined" aria-hidden="true">info</span>
+              <span>About</span>
+            </button>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="modal-main" id="modal-main">
+        <div class="modal-main-content" id="modal-main-content">
+          {{PAGE_EDITOR}}
+          {{PAGE_SETTINGS}}
+          {{PAGE_VARIABLES}}
+          {{PAGE_DRAFTS}}
+          {{PAGE_ABOUT}}
+        </div>
+
+        <div class="footer-row footer-fixed" id="modal-footer-row">
+          <div class="footer-left">
+            <div class="note" id="action-feedback" data-tone="muted">Ready.</div>
+          </div>
+          <div class="footer-right">
+            <div class="actions">
+              <button class="btn" id="save-draft" type="button">Save as Draft</button>
+              <button class="btn" id="copy-html" type="button">Copy as innerHTML</button>
+              <button class="btn btn-primary" id="insert" type="button" disabled>Insert</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

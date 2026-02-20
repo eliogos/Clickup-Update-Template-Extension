@@ -63,8 +63,8 @@ select.field {
   font-weight: 600;
   transform-origin: center top;
 
-  --status-accent: #2f6fed;
-  --status-accent-rgb: 47, 111, 237;
+  --status-accent: var(--status-color-in-progress, #2f6fed);
+  --status-accent-rgb: var(--status-color-in-progress-rgb, 47, 111, 237);
 
   transition:
     border-color 180ms ease,
@@ -86,10 +86,22 @@ select.field {
 }
 
 /* Accent Variants */
-.status-select[data-status="Not Started"] { --status-accent: #ec407a; --status-accent-rgb: 236,64,122; }
-.status-select[data-status="In Progress"] { --status-accent: #2f6fed; --status-accent-rgb: 47,111,237; }
-.status-select[data-status="For QA"] { --status-accent: #d4b62e; --status-accent-rgb: 212,182,46; }
-.status-select[data-status="Completed"] { --status-accent: #43a047; --status-accent-rgb: 67,160,71; }
+.status-select[data-status="Not Started"] {
+  --status-accent: var(--status-color-not-started, #c63f6f);
+  --status-accent-rgb: var(--status-color-not-started-rgb, 198, 63, 111);
+}
+.status-select[data-status="In Progress"] {
+  --status-accent: var(--status-color-in-progress, #2f6fed);
+  --status-accent-rgb: var(--status-color-in-progress-rgb, 47, 111, 237);
+}
+.status-select[data-status="For QA"] {
+  --status-accent: var(--status-color-for-qa, #c9971c);
+  --status-accent-rgb: var(--status-color-for-qa-rgb, 201, 151, 28);
+}
+.status-select[data-status="Completed"] {
+  --status-accent: var(--status-color-completed, #2f9a53);
+  --status-accent-rgb: var(--status-color-completed-rgb, 47, 154, 83);
+}
 
 .status-select-wrap {
   display: inline-flex;
@@ -156,33 +168,41 @@ select.field {
 .status-select:open option:nth-child(4) { animation-delay: 140ms; }
 
 /* Hover colors */
-.status-select option:nth-child(1):hover { background: rgba(236, 64, 122, 0.22); }
-.status-select option:nth-child(2):hover { background: rgba(47, 111, 237, 0.22); }
-.status-select option:nth-child(3):hover { background: rgba(212, 182, 46, 0.22); }
-.status-select option:nth-child(4):hover { background: rgba(67, 160, 71, 0.22); }
+.status-select option:nth-child(1):hover {
+  background: rgba(var(--status-color-not-started-rgb, 198, 63, 111), 0.22);
+}
+.status-select option:nth-child(2):hover {
+  background: rgba(var(--status-color-in-progress-rgb, 47, 111, 237), 0.22);
+}
+.status-select option:nth-child(3):hover {
+  background: rgba(var(--status-color-for-qa-rgb, 201, 151, 28), 0.22);
+}
+.status-select option:nth-child(4):hover {
+  background: rgba(var(--status-color-completed-rgb, 47, 154, 83), 0.22);
+}
 
 /* Selected states */
 .status-select option:nth-child(1):checked {
-  background: rgba(236, 64, 122, 0.32);
-  outline: 2px solid rgba(236, 64, 122, 0.62);
+  background: rgba(var(--status-color-not-started-rgb, 198, 63, 111), 0.32);
+  outline: 2px solid rgba(var(--status-color-not-started-rgb, 198, 63, 111), 0.62);
   color: #fff;
 }
 
 .status-select option:nth-child(2):checked {
-  background: rgba(47, 111, 237, 0.32);
-  outline: 2px solid rgba(47, 111, 237, 0.62);
+  background: rgba(var(--status-color-in-progress-rgb, 47, 111, 237), 0.32);
+  outline: 2px solid rgba(var(--status-color-in-progress-rgb, 47, 111, 237), 0.62);
   color: #fff;
 }
 
 .status-select option:nth-child(3):checked {
-  background: rgba(212, 182, 46, 0.32);
-  outline: 2px solid rgba(212, 182, 46, 0.62);
-  color: #fff;
+  background: rgba(var(--status-color-for-qa-rgb, 201, 151, 28), 0.32);
+  outline: 2px solid rgba(var(--status-color-for-qa-rgb, 201, 151, 28), 0.62);
+  color: #111;
 }
 
 .status-select option:nth-child(4):checked {
-  background: rgba(67, 160, 71, 0.32);
-  outline: 2px solid rgba(67, 160, 71, 0.62);
+  background: rgba(var(--status-color-completed-rgb, 47, 154, 83), 0.32);
+  outline: 2px solid rgba(var(--status-color-completed-rgb, 47, 154, 83), 0.62);
   color: #fff;
 }
 

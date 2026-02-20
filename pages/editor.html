@@ -1,0 +1,76 @@
+<section class="page-panel is-active" data-page="editor" id="page-editor">
+  <div class="page-scroll">
+    <div class="top-section">
+      <label class="group-label top-section-label" for="banner-trigger">Banner</label>
+      <div class="row-inline row-top banner-main-row">
+        <div class="banner-picker">
+          <button class="field banner-trigger" id="banner-trigger" type="button" popovertarget="banner-popover" aria-label="Banner color">
+            <span class="banner-preview {{DEFAULT_BANNER_COLOR}}" id="banner-preview" aria-hidden="true"></span>
+            <span class="select-icon" aria-hidden="true"></span>
+          </button>
+          <div class="banner-popover" id="banner-popover" popover="auto" aria-label="Banner palette"></div>
+        </div>
+        <div class="field-stack label-stack">
+          <input class="field label-input" id="label" value="{{DEFAULT_LABEL}}" aria-describedby="label-error" />
+          <p class="field-subtext field-subtext-error" id="label-error" hidden>Label is required.</p>
+          <div class="label-suggestions" aria-label="Label suggestions">
+            <span class="field-subtext">Suggestions:</span>
+            <div class="label-chip-row">
+              {{LABEL_SUGGESTION_CHIPS}}
+            </div>
+          </div>
+        </div>
+        <div class="field-stack number-stack">
+          <div class="num-controls" id="num-controls" aria-label="Update number">
+            <button class="num-btn" id="dec" type="button">-</button>
+            <input class="num-input" id="number" value="{{DEFAULT_NUMBER}}" inputmode="numeric" aria-describedby="number-error" />
+            <button class="num-btn" id="inc" type="button">+</button>
+          </div>
+          <p class="field-subtext field-subtext-error" id="number-error" hidden>Update number is required.</p>
+          <label class="append-number-wrap" for="append-number">
+            <input type="checkbox" id="append-number" checked />
+            <span>Append Number Suffix</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <label class="group-label">Status<span class="req">*</span></label><br />
+      <div class="select-wrap status-select-wrap">
+        <select class="field status-select" id="status">
+          <option>Not Started</option>
+          <option selected>In Progress</option>
+          <option>For QA</option>
+          <option>Completed</option>
+        </select>
+        <span class="select-icon" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <div class="group">
+      <label class="group-label">Accomplishments<span class="req">*</span></label>
+      <textarea class="field" id="acc" aria-describedby="acc-error"></textarea>
+      <p class="field-subtext field-subtext-error" id="acc-error" hidden>Accomplishments is required.</p>
+    </div>
+
+    <div class="group">
+      <label class="group-label">Blockers</label>
+      <textarea class="field" id="block"></textarea>
+    </div>
+
+    <div class="group">
+      <label class="group-label">Current Focus</label>
+      <textarea class="field" id="focus"></textarea>
+    </div>
+
+    <div class="group optional-add-wrap">
+      <button class="btn btn-optional" id="add-notes" type="button">Add Notes</button>
+    </div>
+
+    <div class="group" id="notes-group" hidden>
+      <label class="group-label">Notes</label>
+      <textarea class="field" id="notes"></textarea>
+    </div>
+  </div>
+</section>

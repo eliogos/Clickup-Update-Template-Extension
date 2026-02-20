@@ -4,14 +4,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #111;
-  color: #fff;
+  background: transparent;
+  color: #f0f5ff;
   border: none;
   cursor: pointer;
+  transition: background-color 140ms ease;
 }
 
 .num-btn:hover {
-  background: #181818;
+  background: rgba(109, 145, 225, 0.25);
 }
 
 .num-btn:disabled {
@@ -22,47 +23,56 @@
 .actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 4px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .btn {
   height: 34px;
   padding: 0 12px;
   border-radius: 10px;
-  border: 1px solid #333;
-  background: #111;
-  color: #fff;
+  border: 1px solid #3f4f70;
+  background: linear-gradient(180deg, #1f2d45 0%, #121b2b 100%);
+  color: #eff4ff;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  transition: border-color 140ms ease, transform 140ms ease, filter 140ms ease;
 }
 
 .btn:hover {
-  background: #181818;
+  border-color: #89aaf0;
+  transform: translateY(-1px);
+  filter: brightness(1.04);
 }
 
 .btn-primary {
-  background: #2f6fed;
+  background: linear-gradient(180deg, #3b7df5 0%, #2f6fed 100%);
   border-color: #2f6fed;
+  color: #fff;
 }
 
 .btn-primary:hover {
-  filter: brightness(1.06);
+  filter: brightness(1.08);
 }
 
 .btn-primary:disabled {
   opacity: 0.45;
   cursor: not-allowed;
   filter: none;
+  transform: none;
 }
 
 .btn-optional {
-  border-style: dashed;
-  color: #d4e1ff;
+  border-style: solid;
+  color: #d9e7ff;
 }
 
 .btn-optional:hover {
-  background: #18233a;
-  border-color: #5c78b8;
+  background: linear-gradient(180deg, #2a3f63 0%, #1a2a43 100%);
 }
 
 .btn-optional:disabled {
@@ -83,12 +93,12 @@
   white-space: nowrap;
   padding: 6px 8px;
   border-radius: 8px;
-  border: 1px solid #3b3b3b;
-  background: #0f1115;
+  border: 1px solid #445575;
+  background: #121a29;
   color: #f5f7fb;
   font-size: 11px;
   line-height: 1.2;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .btn[data-tooltip]:hover::before {
@@ -99,5 +109,5 @@
   z-index: 2;
   border-width: 6px 6px 0 6px;
   border-style: solid;
-  border-color: #0f1115 transparent transparent transparent;
+  border-color: #121a29 transparent transparent transparent;
 }

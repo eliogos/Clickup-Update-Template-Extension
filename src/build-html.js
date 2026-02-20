@@ -5,20 +5,43 @@
   const constants = app.constants || {};
   const statusColor = constants.statusColor || {};
   const defaultBannerColor = constants.defaultBannerColor || "blue-strong";
-
-  function getBadgeFilterForMode(mode) {
-    switch (String(mode || "").trim()) {
-      case "protanopia":
-        return "saturate(0.72) hue-rotate(-12deg) contrast(1.04)";
-      case "deuteranopia":
-        return "saturate(0.76) hue-rotate(8deg) contrast(1.03)";
-      case "tritanopia":
-        return "saturate(0.78) hue-rotate(-28deg) contrast(1.02)";
-      case "achromatopsia":
-        return "grayscale(1) contrast(1.08)";
-      default:
-        return "";
+  const STATUS_PALETTES = {
+    none: {
+      "Not Started": { bg: "#c63f6f", border: "#a6365c", text: "#ffffff" },
+      "In Progress": { bg: "#2f6fed", border: "#2658be", text: "#ffffff" },
+      "For QA": { bg: "#c9971c", border: "#9f7816", text: "#1a1300" },
+      "Completed": { bg: "#2f9a53", border: "#247840", text: "#ffffff" }
+    },
+    protanopia: {
+      "Not Started": { bg: "#8857d8", border: "#6d46ac", text: "#ffffff" },
+      "In Progress": { bg: "#2d7ddf", border: "#245fb0", text: "#ffffff" },
+      "For QA": { bg: "#d18e18", border: "#a77114", text: "#1f1400" },
+      "Completed": { bg: "#0a8d89", border: "#076f6c", text: "#ffffff" }
+    },
+    deuteranopia: {
+      "Not Started": { bg: "#8a4fb6", border: "#6e3f90", text: "#ffffff" },
+      "In Progress": { bg: "#2f76da", border: "#255cae", text: "#ffffff" },
+      "For QA": { bg: "#d48b18", border: "#a96e13", text: "#1f1400" },
+      "Completed": { bg: "#0b8f8a", border: "#08706d", text: "#ffffff" }
+    },
+    tritanopia: {
+      "Not Started": { bg: "#b14677", border: "#8d375e", text: "#ffffff" },
+      "In Progress": { bg: "#256fcb", border: "#1f58a1", text: "#ffffff" },
+      "For QA": { bg: "#6a61cf", border: "#544da5", text: "#ffffff" },
+      "Completed": { bg: "#2b8d5f", border: "#216f4a", text: "#ffffff" }
+    },
+    achromatopsia: {
+      "Not Started": { bg: "#5b5b5b", border: "#494949", text: "#ffffff" },
+      "In Progress": { bg: "#808080", border: "#696969", text: "#ffffff" },
+      "For QA": { bg: "#a5a5a5", border: "#868686", text: "#111111" },
+      "Completed": { bg: "#383838", border: "#2f2f2f", text: "#ffffff" }
     }
+  };
+
+  function getStatusBadgeStyle(mode, status) {
+    const paletteKey = Object.prototype.hasOwnProperty.call(STATUS_PALETTES, mode) ? mode : "none";
+    const tone = STATUS_PALETTES[paletteKey][status] || STATUS_PALETTES.none["In Progress"];
+    return ` style="background-color:${tone.bg};border:1px solid ${tone.border};color:${tone.text}"`;
   }
 
   app.buildHTML = function buildHTML(data) {
@@ -42,8 +65,7 @@
     const headingText = data.appendNumberSuffix === false
       ? labelText
       : `${labelText} ${numberText}`.trim();
-    const badgeFilter = getBadgeFilterForMode(data.colorFilterMode);
-    const badgeStyle = badgeFilter ? ` style="filter:${badgeFilter}"` : "";
+    const badgeStyle = getStatusBadgeStyle(data.colorVisionMode, data.status);
 
     let html =
       `<h2 data-advanced-banner="${crypto.randomUUID()}" data-advanced-banner-color="${data.bannerColor || defaultBannerColor}"><strong>${headingText}</strong></h2>` +

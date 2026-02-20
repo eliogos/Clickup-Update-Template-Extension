@@ -7,11 +7,13 @@
     global.GM_info.script &&
     global.GM_info.script.version
       ? String(global.GM_info.script.version)
-      : "14.0.0";
+      : "14.3.0";
 
   app.constants = {
     APP_VERSION: scriptVersion,
     TRIGGER: "--update",
+    TRIGGER_ACTIVATION_DEFAULT: "space",
+    SETTINGS_STORAGE_KEY: "clickup-update-modal.settings.v4",
     defaultLabel: "Design Update",
     defaultNumber: "01",
     defaultBannerColor: "blue-strong",

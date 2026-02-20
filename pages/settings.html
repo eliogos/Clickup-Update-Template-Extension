@@ -1,0 +1,84 @@
+<section class="page-panel" data-page="settings" id="page-settings" hidden>
+  <div class="page-scroll">
+    <div class="settings-page-content">
+      <section class="settings-section">
+        <p class="settings-section-title">Trigger</p>
+
+        <div class="settings-field">
+          <label class="settings-label" for="trigger-text-input">Trigger Text</label>
+          <input class="field" id="trigger-text-input" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="trigger-text-help trigger-text-error" />
+          <p class="field-subtext" id="trigger-text-help">Tip: start with a symbol (like <code>--</code>) instead of plain letters to avoid accidental triggers.</p>
+          <p class="field-subtext field-subtext-error" id="trigger-text-error" hidden>Slash <code>/</code> is not allowed because it interferes with ClickUp default keybinds.</p>
+        </div>
+
+        <div class="settings-field">
+          <label class="append-number-wrap settings-checkbox" for="trigger-after-space">
+            <input type="checkbox" id="trigger-after-space" checked />
+            <span>Trigger after pressing space (off = trigger after last letter)</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <p class="settings-section-title">Appearance</p>
+
+        <div class="settings-field">
+          <label class="settings-label">Theme</label>
+          <div class="settings-segmented" id="theme-group" role="tablist" aria-label="Theme">
+            <button class="settings-segment-btn" type="button" data-theme-option="light">Light</button>
+            <button class="settings-segment-btn" type="button" data-theme-option="auto">Auto</button>
+            <button class="settings-segment-btn" type="button" data-theme-option="dark">Dark</button>
+          </div>
+        </div>
+
+        <div class="settings-field">
+          <label class="settings-label">Density</label>
+          <div class="settings-segmented" id="density-group" role="tablist" aria-label="Density">
+            <button class="settings-segment-btn" type="button" data-density-option="compact">Compact</button>
+            <button class="settings-segment-btn" type="button" data-density-option="comfortable">Comfortable</button>
+            <button class="settings-segment-btn" type="button" data-density-option="spacious">Spacious</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <p class="settings-section-title">Accessibility</p>
+        <div class="settings-field">
+          <label class="settings-label" for="color-filter-mode">Color Vision Mode</label>
+          <div class="select-wrap settings-select-wrap">
+            <select class="field settings-select" id="color-filter-mode">
+              <option value="none">None</option>
+              <option value="protanopia">Protanopia Optimized</option>
+              <option value="deuteranopia">Deuteranopia Optimized</option>
+              <option value="tritanopia">Tritanopia Optimized</option>
+              <option value="achromatopsia">Achromatopsia Optimized</option>
+            </select>
+            <span class="select-icon" aria-hidden="true"></span>
+          </div>
+          <p class="field-subtext">Uses tuned semantic palettes, not hue rotation filters.</p>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <p class="settings-section-title">Typography</p>
+        <div class="settings-field">
+          <label class="settings-label" for="ui-font-size-input">UI Font Size</label>
+          <div class="editor-font-size-row">
+            <input class="field editor-font-size-input" id="ui-font-size-input" type="number" min="11" max="20" step="any" inputmode="decimal" />
+            <input class="editor-font-size-slider" id="ui-font-size-slider" type="range" min="11" max="20" step="1" />
+          </div>
+          <p class="field-subtext">Slider range: 11-20px. Use the box for precise values.</p>
+        </div>
+
+        <div class="settings-field">
+          <label class="settings-label" for="editor-font-size-input">Editor Font Size</label>
+          <div class="editor-font-size-row">
+            <input class="field editor-font-size-input" id="editor-font-size-input" type="number" min="10" max="24" step="any" inputmode="decimal" />
+            <input class="editor-font-size-slider" id="editor-font-size-slider" type="range" min="10" max="24" step="1" />
+          </div>
+          <p class="field-subtext">Slider range: 10-24px. Use the box for precise values.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
