@@ -5,6 +5,8 @@
 // @description  Insert update template in ClickUp
 // @match        https://app.clickup.com/*
 // @grant        GM_getResourceText
+// @grant        GM_xmlhttpRequest
+// @connect      ec3.yesstreaming.net
 // @resource     rootCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/root.css
 // @resource     modalMotionCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/animations/motion.css
 // @resource     modalCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/modal.css

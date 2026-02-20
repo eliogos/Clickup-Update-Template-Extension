@@ -484,7 +484,7 @@
       ratePitchSync: true
     };
 
-    const audio = new Audio(LOFI_STREAM_URL);
+    const audio = new Audio();
     audio.preload = "none";
     audio.loop = true;
     audio.autoplay = false;
@@ -492,6 +492,200 @@
     let attemptedAutoplay = false;
     let fadeFrame = 0;
     let fadeToken = 0;
+    let sourceInitPromise = null;
+    let sourceReady = false;
+    let streamAbort = null;
+    let streamObjectUrl = "";
+
+    const cleanupStreamSource = () => {
+      if (typeof streamAbort === "function") {
+        try {
+          streamAbort();
+        } catch {
+          // Ignore cleanup errors.
+        }
+      }
+      streamAbort = null;
+      if (streamObjectUrl) {
+        try {
+          URL.revokeObjectURL(streamObjectUrl);
+        } catch {
+          // Ignore revoke errors.
+        }
+      }
+      streamObjectUrl = "";
+    };
+
+    const toMimeType = (contentType) => {
+      const lower = String(contentType || "").toLowerCase();
+      if (lower.includes("audio/aac") || lower.includes("audio/aacp")) return "audio/aac";
+      if (lower.includes("audio/mpeg")) return "audio/mpeg";
+      if (lower.includes("audio/ogg")) return "audio/ogg";
+      return "audio/mpeg";
+    };
+
+    const streamViaFetch = async (url) => {
+      if (typeof MediaSource === "undefined" || typeof fetch !== "function") return false;
+      cleanupStreamSource();
+      let aborted = false;
+      const mediaSource = new MediaSource();
+      streamObjectUrl = URL.createObjectURL(mediaSource);
+      audio.src = streamObjectUrl;
+      streamAbort = () => {
+        aborted = true;
+        try {
+          if (mediaSource.readyState === "open") {
+            mediaSource.endOfStream();
+          }
+        } catch {
+          // Ignore.
+        }
+      };
+
+      return await new Promise((resolve) => {
+        const handleOpen = async () => {
+          try {
+            const response = await fetch(url, { mode: "cors", cache: "no-store" });
+            if (!response || !response.ok || !response.body) {
+              resolve(false);
+              return;
+            }
+            const mimeType = toMimeType(response.headers.get("content-type"));
+            const sourceBuffer = mediaSource.addSourceBuffer(mimeType);
+            const queue = [];
+            let resolved = false;
+            const appendNext = () => {
+              if (!queue.length || sourceBuffer.updating || aborted) return;
+              const chunk = queue.shift();
+              try {
+                sourceBuffer.appendBuffer(chunk);
+              } catch {
+                // Ignore append errors.
+              }
+            };
+            sourceBuffer.addEventListener("updateend", appendNext);
+
+            const reader = response.body.getReader();
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done || aborted) break;
+              if (value && value.byteLength) {
+                const chunk = value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength);
+                queue.push(chunk);
+                appendNext();
+                if (!resolved) {
+                  resolved = true;
+                  resolve(true);
+                }
+              }
+            }
+            if (mediaSource.readyState === "open") {
+              try {
+                mediaSource.endOfStream();
+              } catch {
+                // Ignore.
+              }
+            }
+            if (!resolved) resolve(false);
+          } catch {
+            resolve(false);
+          }
+        };
+
+        mediaSource.addEventListener("sourceopen", handleOpen, { once: true });
+      });
+    };
+
+    const streamViaGm = async (url) => {
+      if (typeof MediaSource === "undefined" || typeof global.GM_xmlhttpRequest !== "function") return false;
+      cleanupStreamSource();
+      let aborted = false;
+      const mediaSource = new MediaSource();
+      streamObjectUrl = URL.createObjectURL(mediaSource);
+      audio.src = streamObjectUrl;
+      streamAbort = () => {
+        aborted = true;
+        try {
+          if (mediaSource.readyState === "open") {
+            mediaSource.endOfStream();
+          }
+        } catch {
+          // Ignore.
+        }
+      };
+
+      return await new Promise((resolve) => {
+        mediaSource.addEventListener("sourceopen", () => {
+          const queue = [];
+          let resolved = false;
+          let lastSize = 0;
+          let sourceBuffer = null;
+          try {
+            sourceBuffer = mediaSource.addSourceBuffer("audio/mpeg");
+          } catch {
+            resolve(false);
+            return;
+          }
+
+          const appendNext = () => {
+            if (!queue.length || sourceBuffer.updating || aborted) return;
+            const chunk = queue.shift();
+            try {
+              sourceBuffer.appendBuffer(chunk);
+            } catch {
+              // Ignore append errors.
+            }
+          };
+          sourceBuffer.addEventListener("updateend", appendNext);
+
+          global.GM_xmlhttpRequest({
+            method: "GET",
+            url,
+            responseType: "arraybuffer",
+            onprogress: (event) => {
+              if (aborted) return;
+              const buffer = event && event.response ? event.response : null;
+              if (!buffer || buffer.byteLength <= lastSize) return;
+              const chunk = buffer.slice(lastSize);
+              lastSize = buffer.byteLength;
+              queue.push(chunk);
+              appendNext();
+              if (!resolved) {
+                resolved = true;
+                resolve(true);
+              }
+            },
+            onload: () => {
+              if (!resolved) resolve(true);
+              if (mediaSource.readyState === "open") {
+                try {
+                  mediaSource.endOfStream();
+                } catch {
+                  // Ignore.
+                }
+              }
+            },
+            onerror: () => {
+              resolve(false);
+            }
+          });
+        }, { once: true });
+      });
+    };
+
+    const ensureLofiSource = async () => {
+      if (sourceReady) return true;
+      if (sourceInitPromise) return await sourceInitPromise;
+      sourceInitPromise = (async () => {
+        const ok = await streamViaFetch(LOFI_STREAM_URL) || await streamViaGm(LOFI_STREAM_URL);
+        if (!ok) {
+          audio.src = LOFI_STREAM_URL;
+        }
+        sourceReady = true;
+        return ok;
+      })();
+      return await sourceInitPromise;
+    };
 
     const readSavedVolume = () => {
       try {
@@ -640,6 +834,7 @@
       state.failed = false;
       try {
         stopVolumeFade();
+        await ensureLofiSource();
         const targetVolume = Math.max(0, Math.min(1, Number(state.volume)));
         if (fadeInMs > 0) {
           applyVolume(0);
@@ -1236,8 +1431,10 @@
 
     const stopKeys = (e) => {
       if (!isPopoverOpen(modal)) return;
+      e.stopPropagation();
       const focused = shadow.activeElement || document.activeElement;
       const focusIsInteractive = isInteractiveControlElement(focused);
+      const focusIsText = isTextEditingElement(focused);
 
       if (e.key === "/") {
         if (focused === triggerTextInput) {
@@ -1277,11 +1474,12 @@
 
       if ((e.key === " " || e.key === "Spacebar") && !e.ctrlKey && !e.altKey && !e.metaKey) {
         if (e.type !== "keydown") return;
-        if (isTextEditingElement(focused) || focusIsInteractive) return;
+        if (focusIsText || focusIsInteractive) return;
         e.stopPropagation();
         e.preventDefault();
         toggleLofiFromShortcut();
       }
+
     };
 
     const toDisplayLabel = (name) => String(name)
