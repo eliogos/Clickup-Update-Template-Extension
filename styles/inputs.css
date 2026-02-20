@@ -14,6 +14,7 @@
 
 .label-input {
   min-width: 160px;
+  text-transform: uppercase;
 }
 
 .top-section {
