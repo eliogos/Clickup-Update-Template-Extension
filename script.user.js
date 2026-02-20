@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ClickUp --update Modal
 // @namespace    clickup-update-modal
-// @version      10.28
+// @version      11.0.0
 // @description  Insert update template in ClickUp
 // @match        https://app.clickup.com/*
 // @grant        GM_getResourceText
@@ -12,6 +12,7 @@
 // @resource     modalBannerCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/banner.css
 // @resource     modalTemplate https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/templates/modal.html
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/constants.js
+// @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/suggestion-chips.js
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/get-modal-css.js
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/get-modal-template.js
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/get-visible-editor.js
@@ -33,3 +34,4 @@
     app.bootstrap();
   }
 })();
+

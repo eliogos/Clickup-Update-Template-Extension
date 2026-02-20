@@ -70,6 +70,18 @@
     return output;
   }
 
+  function ensureLabelSuggestionChips(source, chipsMarkup) {
+    const markup = chipsMarkup || "";
+    if (/{{\s*LABEL_SUGGESTION_CHIPS\s*}}/.test(source)) {
+      return source.replace(/{{\s*LABEL_SUGGESTION_CHIPS\s*}}/g, markup);
+    }
+
+    return source.replace(
+      /(<div\s+class=(["'])label-chip-row\2[^>]*>)[\s\S]*?(<\/div>)/i,
+      `$1\n${markup}\n            $3`
+    );
+  }
+
   function getFallbackTemplate() {
     return `
 <div class="modal" id="modal" popover="auto">
@@ -91,8 +103,7 @@
           <div class="label-suggestions" aria-label="Label suggestions">
             <span class="field-subtext">Suggestions:</span>
             <div class="label-chip-row">
-              <button class="label-chip" type="button" data-label-chip="Design Update">Design Update</button>
-              <button class="label-chip" type="button" data-label-chip="Feedback Application">Feedback Application</button>
+              {{LABEL_SUGGESTION_CHIPS}}
             </div>
           </div>
         </div>
@@ -185,9 +196,17 @@
       typeof app.getModalTemplate === "function"
         ? app.getModalTemplate()
         : getFallbackTemplate();
-    const source = ensureValidationHelpers(ensureCreditLine(template || getFallbackTemplate()));
+    const chipsMarkup =
+      typeof app.renderLabelSuggestionChips === "function"
+        ? app.renderLabelSuggestionChips()
+        : "";
+    const source = ensureLabelSuggestionChips(
+      ensureValidationHelpers(ensureCreditLine(template || getFallbackTemplate())),
+      chipsMarkup
+    );
 
     let output = source;
+    output = replaceToken(output, "LABEL_SUGGESTION_CHIPS", chipsMarkup);
     output = replaceToken(output, "DEFAULT_LABEL", escapeAttr(defaultLabel));
     output = replaceToken(output, "DEFAULT_NUMBER", escapeAttr(defaultNumber));
     output = replaceToken(output, "DEFAULT_BANNER_COLOR", escapeAttr(defaultBannerColor));

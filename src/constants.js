@@ -7,7 +7,7 @@
     global.GM_info.script &&
     global.GM_info.script.version
       ? String(global.GM_info.script.version)
-      : "10.28";
+      : "11.0.0";
 
   app.constants = {
     APP_VERSION: scriptVersion,
@@ -37,3 +37,4 @@
 
   app.constants.allColors = [...app.constants.strongOrder, ...app.constants.mutedOrder];
 })(globalThis);
+

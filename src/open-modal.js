@@ -331,21 +331,23 @@
     syncNumberVisibility();
 
     if (addNotesBtn && notesGroup && notesInput) {
-      addNotesBtn.setAttribute("aria-expanded", notesGroup.hidden ? "false" : "true");
-      if (!notesGroup.hidden) {
-        addNotesBtn.disabled = true;
-        addNotesBtn.textContent = "📝 Notes Added";
-      }
-
+      const setNotesState = (isVisible) => {
+        notesGroup.hidden = !isVisible;
+        addNotesBtn.textContent = isVisible ? "Remove Notes" : "Add Notes";
+        addNotesBtn.setAttribute("aria-expanded", isVisible ? "true" : "false");
+      };
+      setNotesState(!notesGroup.hidden);
       addNotesBtn.addEventListener("click", () => {
-        notesGroup.hidden = false;
-        addNotesBtn.disabled = true;
-        addNotesBtn.textContent = "📝 Notes Added";
-        addNotesBtn.setAttribute("aria-expanded", "true");
-        notesInput.focus();
+        const willShow = notesGroup.hidden;
+        if (willShow) {
+          setNotesState(true);
+          notesInput.focus();
+          return;
+        }
+        notesInput.value = "";
+        setNotesState(false);
       });
     }
-
     cancelBtn.onclick = close;
 
     insertBtn.onclick = () => {
@@ -359,7 +361,7 @@
         accomplishments: splitLines(accInput.value),
         blockers: splitLines(blockInput.value),
         focus: splitLines(focusInput.value),
-        notes: notesInput ? splitLines(notesInput.value) : [],
+        notes: notesInput && notesGroup && !notesGroup.hidden ? splitLines(notesInput.value) : [],
         bannerColor: selected
       };
 
@@ -389,3 +391,4 @@
     labelInput.focus();
   };
 })(globalThis);
+
