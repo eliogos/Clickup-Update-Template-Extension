@@ -1,0 +1,67 @@
+.banner-picker {
+  position: relative;
+}
+
+.banner-trigger {
+  height: 30px;
+  gap: 10px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 0 8px;
+  anchor-name: --banner-anchor;
+}
+
+.banner-trigger .select-icon {
+  position: static;
+}
+
+.banner-trigger.is-open .select-icon {
+  transform: rotate(180deg);
+}
+
+.banner-popover {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  margin: 0;
+  border: 1px solid #3f4863;
+  border-radius: 12px;
+  padding: 8px;
+  background: #111722;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  grid-template-columns: repeat(4, 22px);
+  gap: 8px;
+}
+
+@supports (top: anchor(bottom)) and (position-anchor: --banner-anchor) {
+  .banner-popover {
+    position: fixed;
+    top: anchor(bottom);
+    left: anchor(left);
+    position-anchor: --banner-anchor;
+    margin: 6px 0 0 0;
+  }
+}
+
+.banner-popover:popover-open,
+.banner-popover.is-open-fallback {
+  display: grid;
+}
+
+.banner-popover .swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.banner-popover .swatch.selected {
+  outline: 2px solid #d7e3ff;
+  outline-offset: 1px;
+}
