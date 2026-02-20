@@ -1,0 +1,63 @@
+<section class="settings-section" id="settings-section-overlay" data-settings-anchor="Overlay">
+        <p class="settings-section-title">Overlay</p>
+
+        <div class="settings-two-column">
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="overlay-blur-input">Background Blur</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="overlayBlur" title="Reset background blur">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="overlay-blur-input" type="number" min="0" max="20" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="overlay-blur-slider" type="range" min="0" max="20" step="1" />
+            </div>
+            <p class="field-subtext">Adjusts dialog backdrop blur intensity (0-20px).</p>
+          </div>
+
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="overlay-opacity-input">Background Overlay Opacity</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="overlayOpacity" title="Reset background overlay opacity">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="overlay-opacity-input" type="number" min="0" max="100" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="overlay-opacity-slider" type="range" min="0" max="100" step="1" />
+            </div>
+            <p class="field-subtext">Controls backdrop dim level in percent (0-100%).</p>
+          </div>
+        </div>
+
+        <div class="settings-two-column">
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="modal-scale-input">Modal Scale</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="modalScale" title="Reset modal scale">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="modal-scale-input" type="number" min="70" max="130" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="modal-scale-slider" type="range" min="70" max="130" step="1" />
+            </div>
+            <p class="field-subtext">Scales modal width and height together (70-130%).</p>
+          </div>
+
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="modal-opacity-input">Modal Opacity</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="modalOpacity" title="Reset modal opacity">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="modal-opacity-input" type="number" min="10" max="100" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="modal-opacity-slider" type="range" min="10" max="100" step="1" />
+            </div>
+            <p class="field-subtext">Sets modal transparency (10-100%). Minimum is 10% for safety.</p>
+          </div>
+        </div>
+      </section>

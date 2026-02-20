@@ -2,7 +2,7 @@
   "use strict";
 
   const app = (global.ClickUpUpdateApp = global.ClickUpUpdateApp || {});
-  const RESOURCE_NAMES = ["modalCss", "modalInputsCss", "modalSelectsCss", "modalBannerCss", "modalButtonsCss"];
+  const RESOURCE_NAMES = ["rootCss", "modalCss", "modalInputsCss", "modalSelectsCss", "modalBannerCss", "modalButtonsCss", "modalMotionCss"];
 
   function getResourceTextSafe(name) {
     try {

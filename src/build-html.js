@@ -29,12 +29,6 @@
       "In Progress": { bg: "#256fcb", border: "#1f58a1", text: "#ffffff" },
       "For QA": { bg: "#6a61cf", border: "#544da5", text: "#ffffff" },
       "Completed": { bg: "#2b8d5f", border: "#216f4a", text: "#ffffff" }
-    },
-    achromatopsia: {
-      "Not Started": { bg: "#5b5b5b", border: "#494949", text: "#ffffff" },
-      "In Progress": { bg: "#808080", border: "#696969", text: "#ffffff" },
-      "For QA": { bg: "#a5a5a5", border: "#868686", text: "#111111" },
-      "Completed": { bg: "#383838", border: "#2f2f2f", text: "#ffffff" }
     }
   };
 

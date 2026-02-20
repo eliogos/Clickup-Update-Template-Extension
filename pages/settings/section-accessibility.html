@@ -1,0 +1,21 @@
+<section class="settings-section" id="settings-section-accessibility" data-settings-anchor="Accessibility">
+        <p class="settings-section-title">Accessibility</p>
+        <div class="settings-field">
+          <div class="settings-label-row">
+            <label class="settings-label" for="color-filter-mode">Color Blind Correction (Experimental)</label>
+            <button class="settings-reset-btn" type="button" data-reset-setting="colorVisionMode" title="Reset color blind correction">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <div class="select-wrap settings-select-wrap">
+            <select class="field settings-select" id="color-filter-mode">
+              <option value="none">None</option>
+              <option value="protanopia">Protanopia (No Red)</option>
+              <option value="deuteranopia">Deuteranopia (No Green)</option>
+              <option value="tritanopia">Tritanopia (No Blue)</option>
+            </select>
+            <span class="select-icon" aria-hidden="true"></span>
+          </div>
+          <p class="field-subtext" id="color-filter-description">No correction applied. Modes approximate channel loss: Protanopia (no red), Deuteranopia (no green), Tritanopia (no blue).</p>
+        </div>
+      </section>

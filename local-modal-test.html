@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ClickUp Modal UI Sandbox</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+
+    .sandbox {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #dbe3f0;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    button {
+      border: 1px solid #c4d0e5;
+      background: #fff;
+      color: #1f2937;
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    button:hover {
+      background: #f4f7fc;
+    }
+
+    .fake-editor {
+      min-height: 180px;
+      border: 1px dashed #9bb0d3;
+      border-radius: 10px;
+      padding: 12px;
+      background: #fbfcff;
+    }
+
+    .hint {
+      margin: 10px 0 0;
+      color: #475467;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sandbox">
+    <div class="toolbar">
+      <button id="open-modal" type="button">Open Modal</button>
+      <button id="reset-storage" type="button">Reset Local Storage</button>
+    </div>
+    <div id="editor" class="ql-editor fake-editor" contenteditable="true">--update</div>
+    <p class="hint">
+      This page is local-only. Use it to style modal UI quickly without touching ClickUp.
+    </p>
+  </div>
+
+  <script src="./src/constants.js"></script>
+  <script src="./src/suggestion-chips.js"></script>
+  <script src="./src/get-modal-css.js"></script>
+  <script src="./src/get-modal-template.js"></script>
+  <script src="./src/get-visible-editor.js"></script>
+  <script src="./src/simulate-paste.js"></script>
+  <script src="./src/build-html.js"></script>
+  <script src="./src/is-popover-open.js"></script>
+  <script src="./src/create-modal-markup.js"></script>
+  <script src="./src/modal-physics.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.js"></script>
+  <script src="./src/open-modal.js"></script>
+  <script src="./src/bootstrap.js"></script>
+
+  <script>
+    (async function () {
+      "use strict";
+
+      const app = globalThis.ClickUpUpdateApp || {};
+      const editor = document.getElementById("editor");
+      const openButton = document.getElementById("open-modal");
+      const resetButton = document.getElementById("reset-storage");
+
+      async function loadText(path) {
+        const response = await fetch(path, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Failed to load " + path + " (" + response.status + ")");
+        }
+        return response.text();
+      }
+
+      async function loadModalAssets() {
+        const cssPaths = [
+          "./styles/root.css",
+          "./styles/modal.css",
+          "./styles/inputs.css",
+          "./styles/selects.css",
+          "./styles/banner.css",
+          "./styles/buttons.css",
+          "./styles/animations/motion.css"
+        ];
+
+        const pagePaths = {
+          PAGE_EDITOR: "./pages/editor.html",
+          PAGE_SETTINGS: "./pages/settings/index.html",
+          PAGE_VARIABLES: "./pages/variables.html",
+          PAGE_DRAFTS: "./pages/drafts.html",
+          PAGE_ABOUT: "./pages/about.html",
+          SETTINGS_ANCHOR_RAIL: "./pages/settings/anchor-rail.html",
+          SETTINGS_SECTION_TRIGGER: "./pages/settings/section-trigger.html",
+          SETTINGS_SECTION_APPEARANCE: "./pages/settings/section-appearance.html",
+          SETTINGS_SECTION_TYPOGRAPHY: "./pages/settings/section-typography.html",
+          SETTINGS_SECTION_OVERLAY: "./pages/settings/section-overlay.html",
+          SETTINGS_SECTION_AUDIO: "./pages/settings/section-audio.html",
+          SETTINGS_SECTION_ACCESSIBILITY: "./pages/settings/section-accessibility.html",
+          SETTINGS_SECTION_ANIMATION: "./pages/settings/section-animation.html"
+        };
+
+        const [shellTemplate, cssParts, pageEntries] = await Promise.all([
+          loadText("./pages/modal-shell.html"),
+          Promise.all(cssPaths.map(loadText)),
+          Promise.all(
+            Object.entries(pagePaths).map(async function ([token, path]) {
+              const content = await loadText(path);
+              return [token, content];
+            })
+          )
+        ]);
+
+        let template = shellTemplate;
+        pageEntries.forEach(function ([token, content]) {
+          const tokenPattern = new RegExp("{{\\s*" + token + "\\s*}}", "g");
+          template = template.replace(tokenPattern, content);
+        });
+
+        app._hotCssOverride = cssParts.join("\n");
+        app._hotTemplateOverride = template;
+      }
+
+      async function openModal() {
+        if (typeof app.openModal !== "function") {
+          throw new Error("ClickUpUpdateApp.openModal is unavailable.");
+        }
+        await loadModalAssets();
+        app.openModal(editor);
+      }
+
+      openButton.addEventListener("click", function () {
+        openModal().catch(function (error) {
+          console.error(error);
+          alert(error.message);
+        });
+      });
+
+      resetButton.addEventListener("click", function () {
+        localStorage.removeItem("clickup-update-modal.settings.v4");
+        localStorage.removeItem("clickup-update-modal.drafts.v1");
+        alert("Modal settings and drafts were cleared.");
+      });
+    })();
+  </script>
+</body>
+</html>

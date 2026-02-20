@@ -1,0 +1,30 @@
+<section class="settings-section" id="settings-section-trigger" data-settings-anchor="Trigger">
+        <p class="settings-section-title">Trigger</p>
+
+        <div class="settings-field">
+          <div class="settings-label-row">
+            <label class="settings-label" for="trigger-text-input">Trigger Text</label>
+            <button class="settings-reset-btn" type="button" data-reset-setting="triggerText" title="Reset trigger text">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <input class="field" id="trigger-text-input" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="trigger-text-help trigger-text-warning trigger-text-error" />
+          <p class="field-subtext" id="trigger-text-help">Tip: start with a symbol (like <code>--</code>) instead of plain letters to avoid accidental triggers.</p>
+          <p class="field-subtext field-subtext-warning" id="trigger-text-warning" hidden>Use at least 3 characters for safer triggers. A short symbol-only trigger can open accidentally while typing.</p>
+          <p class="field-subtext field-subtext-error" id="trigger-text-error" hidden>Slash <code>/</code> is not allowed because it interferes with ClickUp default keybinds.</p>
+        </div>
+
+        <div class="settings-field">
+          <div class="settings-label-row">
+            <span class="settings-label">Trigger Activation</span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="triggerActivation" title="Reset trigger activation">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <label class="append-number-wrap settings-checkbox" for="trigger-after-space">
+            <input type="checkbox" id="trigger-after-space" checked />
+            <span>Trigger after pressing space (off = trigger after last letter)</span>
+          </label>
+          <p class="field-subtext">Use space mode to reduce accidental opens while typing quickly.</p>
+        </div>
+      </section>

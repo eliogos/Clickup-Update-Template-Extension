@@ -4,8 +4,54 @@
       <section class="settings-section">
         <p class="settings-section-title">Drafts</p>
         <p class="field-subtext">Select a draft to load it back into the Editor page.</p>
-        <p class="drafts-empty" id="drafts-empty">No drafts yet. Save one from the action bar below.</p>
-        <div class="drafts-list" id="drafts-list"></div>
+        <p class="drafts-empty" id="drafts-empty">No drafts yet. Save one from the Editor footer action bar.</p>
+        <div class="drafts-table" id="drafts-table" hidden>
+          <div class="drafts-table-head">
+            <label class="draft-head-select" for="drafts-select-all" title="Select all">
+              <input type="checkbox" id="drafts-select-all" />
+            </label>
+            <div class="draft-head-label">List</div>
+            <div class="draft-head-actions">Actions</div>
+          </div>
+          <div class="drafts-table-body" id="drafts-list"></div>
+        </div>
+
+        <div class="drafts-bulk-actions" id="drafts-bulk-actions" hidden>
+          <div class="drafts-bulk-left">
+            <span id="drafts-selected-count">0</span>
+            <span>selected</span>
+          </div>
+          <div class="drafts-bulk-right">
+            <button class="btn" id="drafts-bulk-delete" type="button">
+              <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+              <span>Delete</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="drafts-confirm-backdrop" id="drafts-confirm-backdrop" hidden>
+          <div class="drafts-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="drafts-confirm-title">
+            <p class="settings-section-title" id="drafts-confirm-title">Delete Drafts</p>
+            <p class="field-subtext" id="drafts-confirm-message">Delete selected drafts?</p>
+            <div class="drafts-confirm-actions">
+              <button class="btn" id="drafts-confirm-cancel" type="button">Cancel</button>
+              <button class="btn btn-primary" id="drafts-confirm-delete" type="button">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="drafts-confirm-backdrop" id="drafts-replace-confirm-backdrop" hidden>
+          <div class="drafts-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="drafts-replace-confirm-title">
+            <p class="settings-section-title" id="drafts-replace-confirm-title">Replace Editor Content</p>
+            <p class="field-subtext" id="drafts-replace-confirm-message">
+              Current editor content will be replaced by the selected draft. Continue?
+            </p>
+            <div class="drafts-confirm-actions">
+              <button class="btn" id="drafts-replace-confirm-cancel" type="button">Cancel</button>
+              <button class="btn btn-primary" id="drafts-replace-confirm-continue" type="button">Continue</button>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   </div>

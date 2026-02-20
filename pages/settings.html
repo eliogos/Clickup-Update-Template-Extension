@@ -1,82 +1,408 @@
 <section class="page-panel" data-page="settings" id="page-settings" hidden>
   <div class="page-scroll">
     <div class="settings-page-content">
-      <section class="settings-section">
+      <section class="settings-section" id="settings-section-trigger" data-settings-anchor="Trigger">
         <p class="settings-section-title">Trigger</p>
 
         <div class="settings-field">
-          <label class="settings-label" for="trigger-text-input">Trigger Text</label>
-          <input class="field" id="trigger-text-input" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="trigger-text-help trigger-text-error" />
+          <div class="settings-label-row">
+            <label class="settings-label" for="trigger-text-input">Trigger Text</label>
+            <button class="settings-reset-btn" type="button" data-reset-setting="triggerText" title="Reset trigger text">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <input class="field" id="trigger-text-input" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="trigger-text-help trigger-text-warning trigger-text-error" />
           <p class="field-subtext" id="trigger-text-help">Tip: start with a symbol (like <code>--</code>) instead of plain letters to avoid accidental triggers.</p>
+          <p class="field-subtext field-subtext-warning" id="trigger-text-warning" hidden>Use at least 3 characters for safer triggers. A short symbol-only trigger can open accidentally while typing.</p>
           <p class="field-subtext field-subtext-error" id="trigger-text-error" hidden>Slash <code>/</code> is not allowed because it interferes with ClickUp default keybinds.</p>
         </div>
 
         <div class="settings-field">
+          <div class="settings-label-row">
+            <span class="settings-label">Trigger Activation</span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="triggerActivation" title="Reset trigger activation">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
           <label class="append-number-wrap settings-checkbox" for="trigger-after-space">
             <input type="checkbox" id="trigger-after-space" checked />
             <span>Trigger after pressing space (off = trigger after last letter)</span>
           </label>
+          <p class="field-subtext">Use space mode to reduce accidental opens while typing quickly.</p>
         </div>
       </section>
 
-      <section class="settings-section">
+      <section class="settings-section" id="settings-section-appearance" data-settings-anchor="Appearance">
         <p class="settings-section-title">Appearance</p>
 
         <div class="settings-field">
-          <label class="settings-label">Theme</label>
+          <div class="settings-label-row">
+            <label class="settings-label">Theme</label>
+            <button class="settings-reset-btn" type="button" data-reset-setting="theme" title="Reset theme">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
           <div class="settings-segmented" id="theme-group" role="tablist" aria-label="Theme">
             <button class="settings-segment-btn" type="button" data-theme-option="light">Light</button>
             <button class="settings-segment-btn" type="button" data-theme-option="auto">Auto</button>
             <button class="settings-segment-btn" type="button" data-theme-option="dark">Dark</button>
           </div>
+          <p class="field-subtext">Auto follows device color scheme.</p>
         </div>
 
         <div class="settings-field">
-          <label class="settings-label">Density</label>
+          <div class="settings-label-row">
+            <label class="settings-label">Density</label>
+            <button class="settings-reset-btn" type="button" data-reset-setting="density" title="Reset density">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
           <div class="settings-segmented" id="density-group" role="tablist" aria-label="Density">
             <button class="settings-segment-btn" type="button" data-density-option="compact">Compact</button>
             <button class="settings-segment-btn" type="button" data-density-option="comfortable">Comfortable</button>
             <button class="settings-segment-btn" type="button" data-density-option="spacious">Spacious</button>
           </div>
+          <p class="field-subtext">Changes top/bottom paddings and spacing between components.</p>
+        </div>
+
+        <div class="settings-field">
+          <div class="settings-label-row">
+            <label class="settings-label">Accent Color</label>
+            <button class="settings-reset-btn" type="button" data-reset-setting="accentColor" title="Reset accent color">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <p class="field-subtext">Sets the main accent (default blue) used by primary actions, focus styles, and progress accents.</p>
+          <div class="accent-palette" role="group" aria-label="Accent color presets">
+            <button class="accent-swatch-btn" type="button" data-accent-preset="blue" title="Blue">
+              <span class="accent-swatch-dot" style="--accent-dot-color:hsl(218 84% 56%);"></span>
+              <span class="material-symbols-outlined accent-swatch-check" aria-hidden="true">check</span>
+            </button>
+            <button class="accent-swatch-btn" type="button" data-accent-preset="teal" title="Teal">
+              <span class="accent-swatch-dot" style="--accent-dot-color:hsl(182 72% 48%);"></span>
+              <span class="material-symbols-outlined accent-swatch-check" aria-hidden="true">check</span>
+            </button>
+            <button class="accent-swatch-btn" type="button" data-accent-preset="green" title="Green">
+              <span class="accent-swatch-dot" style="--accent-dot-color:hsl(146 68% 44%);"></span>
+              <span class="material-symbols-outlined accent-swatch-check" aria-hidden="true">check</span>
+            </button>
+            <button class="accent-swatch-btn" type="button" data-accent-preset="amber" title="Amber">
+              <span class="accent-swatch-dot" style="--accent-dot-color:hsl(40 92% 52%);"></span>
+              <span class="material-symbols-outlined accent-swatch-check" aria-hidden="true">check</span>
+            </button>
+            <button class="accent-swatch-btn" type="button" data-accent-preset="violet" title="Violet">
+              <span class="accent-swatch-dot" style="--accent-dot-color:hsl(272 72% 56%);"></span>
+              <span class="material-symbols-outlined accent-swatch-check" aria-hidden="true">check</span>
+            </button>
+            <button class="accent-swatch-btn" type="button" data-accent-preset="rose" title="Rose">
+              <span class="accent-swatch-dot" style="--accent-dot-color:hsl(342 76% 56%);"></span>
+              <span class="material-symbols-outlined accent-swatch-check" aria-hidden="true">check</span>
+            </button>
+            <button class="accent-swatch-btn accent-swatch-custom" id="accent-custom-trigger" type="button" popovertarget="accent-custom-popover" title="Custom hue">
+              <span class="accent-swatch-dot accent-swatch-dot-custom"></span>
+              <span class="material-symbols-outlined accent-swatch-check" aria-hidden="true">check</span>
+            </button>
+          </div>
+          <div class="accent-custom-popover" id="accent-custom-popover" popover="auto" aria-label="Custom accent hue">
+            <div class="accent-custom-header">
+              <span class="accent-custom-preview" id="accent-custom-preview"></span>
+              <span class="accent-custom-value" id="accent-hue-value">218°</span>
+            </div>
+            <div class="accent-hue-wheel" id="accent-hue-wheel" role="slider" aria-label="Accent hue dial" aria-valuemin="0" aria-valuemax="360" aria-valuenow="218" tabindex="0">
+              <span class="accent-hue-wheel-core"></span>
+              <span class="accent-hue-thumb" id="accent-hue-thumb"></span>
+            </div>
+            <input class="accent-hue-slider" id="accent-hue-slider" type="range" min="0" max="360" step="1" value="218" />
+            <p class="field-subtext">Hue only. Saturation and brightness are fixed for consistency.</p>
+          </div>
         </div>
       </section>
 
-      <section class="settings-section">
+      <section class="settings-section" id="settings-section-typography" data-settings-anchor="Typography">
+        <p class="settings-section-title">Typography</p>
+        <div class="settings-two-column">
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="ui-font-size-input">UI Font Size</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="uiFontSize" title="Reset UI font size">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="ui-font-size-input" type="number" min="11" max="20" step="any" inputmode="decimal" />
+              <input class="editor-font-size-slider" id="ui-font-size-slider" type="range" min="11" max="20" step="1" />
+            </div>
+            <p class="field-subtext">Slider range: 11-20px. Use the box for precise values.</p>
+          </div>
+ 
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="editor-font-size-input">Editor Font Size</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="editorFontSize" title="Reset editor font size">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="editor-font-size-input" type="number" min="10" max="24" step="any" inputmode="decimal" />
+              <input class="editor-font-size-slider" id="editor-font-size-slider" type="range" min="10" max="24" step="1" />
+            </div>
+            <p class="field-subtext">Slider range: 10-24px. Use the box for precise values.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-section" id="settings-section-overlay" data-settings-anchor="Overlay">
+        <p class="settings-section-title">Overlay</p>
+
+        <div class="settings-two-column">
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="overlay-blur-input">Background Blur</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="overlayBlur" title="Reset background blur">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="overlay-blur-input" type="number" min="0" max="20" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="overlay-blur-slider" type="range" min="0" max="20" step="1" />
+            </div>
+            <p class="field-subtext">Adjusts dialog backdrop blur intensity (0-20px).</p>
+          </div>
+
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="overlay-opacity-input">Background Overlay Opacity</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="overlayOpacity" title="Reset background overlay opacity">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="overlay-opacity-input" type="number" min="0" max="100" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="overlay-opacity-slider" type="range" min="0" max="100" step="1" />
+            </div>
+            <p class="field-subtext">Controls backdrop dim level in percent (0-100%).</p>
+          </div>
+        </div>
+
+        <div class="settings-two-column">
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="modal-scale-input">Modal Scale</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="modalScale" title="Reset modal scale">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="modal-scale-input" type="number" min="70" max="130" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="modal-scale-slider" type="range" min="70" max="130" step="1" />
+            </div>
+            <p class="field-subtext">Scales modal width and height together (70-130%).</p>
+          </div>
+
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="modal-opacity-input">Modal Opacity</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="modalOpacity" title="Reset modal opacity">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="modal-opacity-input" type="number" min="10" max="100" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="modal-opacity-slider" type="range" min="10" max="100" step="1" />
+            </div>
+            <p class="field-subtext">Sets modal transparency (10-100%). Minimum is 10% for safety.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-section" id="settings-section-audio" data-settings-anchor="Audio">
+        <p class="settings-section-title">Audio</p>
+
+        <div class="settings-field">
+          <div class="settings-label-row">
+            <span class="settings-label">Music Autoplay</span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="musicAutoplay" title="Reset music autoplay">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <label class="settings-switch" for="lofi-autoplay">
+            <input type="checkbox" id="lofi-autoplay" checked />
+            <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+            <span class="settings-switch-text">Autoplay lo-fi stream when opening the modal</span>
+          </label>
+        </div>
+
+      </section>
+
+      <section class="settings-section" id="settings-section-accessibility" data-settings-anchor="Accessibility">
         <p class="settings-section-title">Accessibility</p>
         <div class="settings-field">
-          <label class="settings-label" for="color-filter-mode">Color Vision Mode</label>
+          <div class="settings-label-row">
+            <label class="settings-label" for="color-filter-mode">Color Blind Correction (Experimental)</label>
+            <button class="settings-reset-btn" type="button" data-reset-setting="colorVisionMode" title="Reset color blind correction">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
           <div class="select-wrap settings-select-wrap">
             <select class="field settings-select" id="color-filter-mode">
               <option value="none">None</option>
-              <option value="protanopia">Protanopia Optimized</option>
-              <option value="deuteranopia">Deuteranopia Optimized</option>
-              <option value="tritanopia">Tritanopia Optimized</option>
-              <option value="achromatopsia">Achromatopsia Optimized</option>
+              <option value="protanopia">Protanopia (No Red)</option>
+              <option value="deuteranopia">Deuteranopia (No Green)</option>
+              <option value="tritanopia">Tritanopia (No Blue)</option>
             </select>
             <span class="select-icon" aria-hidden="true"></span>
           </div>
-          <p class="field-subtext">Uses tuned semantic palettes, not hue rotation filters.</p>
+          <p class="field-subtext" id="color-filter-description">No correction applied. Modes approximate channel loss: Protanopia (no red), Deuteranopia (no green), Tritanopia (no blue).</p>
         </div>
       </section>
 
-      <section class="settings-section">
-        <p class="settings-section-title">Typography</p>
+      <section class="settings-section" id="settings-section-animation" data-settings-anchor="Animation">
+        <p class="settings-section-title">Animation</p>
         <div class="settings-field">
-          <label class="settings-label" for="ui-font-size-input">UI Font Size</label>
-          <div class="editor-font-size-row">
-            <input class="field editor-font-size-input" id="ui-font-size-input" type="number" min="11" max="20" step="any" inputmode="decimal" />
-            <input class="editor-font-size-slider" id="ui-font-size-slider" type="range" min="11" max="20" step="1" />
+          <div class="settings-label-row">
+            <label class="settings-label" for="animation-speed-slider">Animation Speed</label>
+            <button class="settings-reset-btn" type="button" data-reset-setting="animationSpeed" title="Reset animation speed">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
           </div>
-          <p class="field-subtext">Slider range: 11-20px. Use the box for precise values.</p>
+          <div class="animation-preview-box" id="animation-preview-box" aria-hidden="true">
+            <button class="settings-sync-btn animation-preview-toggle" id="animation-preview-toggle" type="button" aria-pressed="false">
+              <span class="material-symbols-outlined" aria-hidden="true">pause</span>
+            </button>
+            <div class="animation-preview-track">
+              <span class="animation-preview-point animation-preview-point-a">A</span>
+              <span class="animation-preview-point animation-preview-point-b">B</span>
+              <span class="animation-preview-dot" id="animation-preview-dot"></span>
+            </div>
+          </div>
+          <div class="animation-speed-wrap">
+            <input class="editor-font-size-slider animation-speed-slider" id="animation-speed-slider" type="range" min="0" max="5" step="1" />
+            <div class="animation-speed-labels" aria-hidden="true">
+              <span>Sluggish</span>
+              <span>Slow</span>
+              <span>Normal</span>
+              <span>Fast</span>
+              <span>Hyper</span>
+              <span>Off</span>
+            </div>
+          </div>
+          <p class="field-subtext">Preset speed curve for UI motion and physics return. Off disables motion.</p>
         </div>
 
         <div class="settings-field">
-          <label class="settings-label" for="editor-font-size-input">Editor Font Size</label>
-          <div class="editor-font-size-row">
-            <input class="field editor-font-size-input" id="editor-font-size-input" type="number" min="10" max="24" step="any" inputmode="decimal" />
-            <input class="editor-font-size-slider" id="editor-font-size-slider" type="range" min="10" max="24" step="1" />
+          <div class="settings-label-row">
+            <span class="settings-label">Interpolator</span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="interpolator" title="Reset interpolator">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
           </div>
-          <p class="field-subtext">Slider range: 10-24px. Use the box for precise values.</p>
+          <div class="settings-segmented" id="interpolator-mode-group" role="tablist" aria-label="Interpolator mode">
+            <button class="settings-segment-btn" id="interpolator-tab-preset" type="button" role="tab" aria-controls="interpolator-mode-preset" data-interpolator-mode="preset">Preset</button>
+            <button class="settings-segment-btn" id="interpolator-tab-expression" type="button" role="tab" aria-controls="interpolator-mode-expression" data-interpolator-mode="expression">Expression</button>
+            <button class="settings-segment-btn" id="interpolator-tab-curve" type="button" role="tab" aria-controls="interpolator-mode-curve" data-interpolator-mode="curve">Curve</button>
+          </div>
+
+          <div class="settings-interpolator-mode" id="interpolator-mode-preset" role="tabpanel" aria-labelledby="interpolator-tab-preset">
+            <div class="select-wrap settings-select-wrap">
+              <select class="field settings-select" id="interpolator-preset">
+                <option value="default">Default (dynamic)</option>
+                <option value="linear">Linear</option>
+                <option value="ease-in">Ease In</option>
+                <option value="ease-out">Ease Out</option>
+                <option value="ease-in-out">Ease In Out</option>
+                <option value="stop-motion">Stop Motion</option>
+              </select>
+              <span class="select-icon" aria-hidden="true"></span>
+            </div>
+            <p class="field-subtext">Default uses current adaptive easing behavior.</p>
+          </div>
+
+          <div class="settings-interpolator-mode" id="interpolator-mode-expression" role="tabpanel" aria-labelledby="interpolator-tab-expression" hidden>
+            <label class="settings-label" for="interpolator-expression">Expression f(t)</label>
+            <input class="field" id="interpolator-expression" type="text" spellcheck="false" autocomplete="off" />
+            <p class="field-subtext">Math.js expression with <code>t</code>, <code>lerp(a,b,t)</code>, and constants like <code>pi</code> (or <code>pi()</code>).</p>
+            <p class="field-subtext field-subtext-error" id="interpolator-expression-error" hidden>Invalid expression.</p>
+          </div>
+
+          <div class="settings-interpolator-mode" id="interpolator-mode-curve" role="tabpanel" aria-labelledby="interpolator-tab-curve" hidden>
+            <div class="curve-editor-wrap">
+              <canvas class="curve-editor-canvas" id="curve-editor-canvas" width="240" height="240" aria-label="Curve preview"></canvas>
+              <div class="curve-editor-controls">
+                <label class="curve-editor-row">P1 X
+                  <input id="interpolator-curve-p1x" type="range" min="0" max="1" step="0.01" />
+                </label>
+                <label class="curve-editor-row">P1 Y
+                  <input id="interpolator-curve-p1y" type="range" min="0" max="1" step="0.01" />
+                </label>
+                <label class="curve-editor-row">P2 X
+                  <input id="interpolator-curve-p2x" type="range" min="0" max="1" step="0.01" />
+                </label>
+                <label class="curve-editor-row">P2 Y
+                  <input id="interpolator-curve-p2y" type="range" min="0" max="1" step="0.01" />
+                </label>
+              </div>
+            </div>
+            <p class="field-subtext">Drag points to shape the curve. Click graph to add a control point; double-click a custom point to remove.</p>
+          </div>
+        </div>
+
+        <div class="settings-field">
+          <div class="settings-label-row">
+            <span class="settings-label">Reduced Motion</span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="animationFollowDevice" title="Reset reduced motion">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <label class="settings-switch" for="animation-follow-device">
+            <input type="checkbox" id="animation-follow-device" />
+            <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+            <span class="settings-switch-text">Use device reduced motion preference</span>
+          </label>
+          <p class="field-subtext">When enabled, device reduced motion reduces or disables non-essential animations.</p>
+        </div>
+
+        <div class="settings-field" id="physics-intensity-field">
+          <div class="settings-label-row">
+            <span class="settings-label">Physics Effects</span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="physicsEnabled" title="Reset physics effects">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <label class="settings-switch" for="animation-enable-physics">
+            <input type="checkbox" id="animation-enable-physics" checked />
+            <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+            <span class="settings-switch-text">Enable physics effects</span>
+          </label>
+          <p class="field-subtext">Adds press/tilt feedback on controls like incrementers.</p>
+          <div class="settings-conditional-body" id="physics-intensity-body">
+            <div class="settings-label-row">
+              <label class="settings-label" for="physics-intensity-slider">Physics Intensity</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="physicsIntensity" title="Reset physics intensity">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="physics-intensity-input" type="number" min="0" max="100" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="physics-intensity-slider" type="range" min="0" max="100" step="1" />
+            </div>
+            <label class="settings-switch" for="physics-sync-music">
+              <input type="checkbox" id="physics-sync-music" />
+              <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+              <span class="settings-switch-text">Sync to music BPM</span>
+            </label>
+            <div class="physics-sync-tools" id="physics-sync-tools" hidden>
+              <p class="field-subtext physics-sync-bpm-readout">Current BPM: <strong id="physics-sync-bpm-value">84</strong></p>
+              <div class="physics-bpm-offset-row">
+                <label class="settings-label" for="physics-bpm-offset-input">BPM Offset</label>
+                <div class="num-controls physics-bpm-offset-control" role="group" aria-label="BPM offset controls">
+                  <button class="num-btn" id="physics-bpm-offset-dec" type="button" title="Decrease BPM offset">-</button>
+                  <input class="num-input" id="physics-bpm-offset-input" type="number" min="-40" max="40" step="1" inputmode="numeric" />
+                  <button class="num-btn" id="physics-bpm-offset-inc" type="button" title="Increase BPM offset">+</button>
+                </div>
+              </div>
+            </div>
+            <p class="field-subtext" id="physics-sync-bpm-hint">Controls tilt and modal nudge strength.</p>
+          </div>
         </div>
       </section>
     </div>

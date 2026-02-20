@@ -1,16 +1,21 @@
 <div class="modal" id="modal" popover="manual">
   <section class="modal-card" role="dialog" aria-modal="true" aria-label="Insert Update Template">
     <div class="card-header-row">
-      <p class="title">
-        <span class="material-symbols-outlined title-icon" aria-hidden="true">article</span>
-        Insert Update Template
-      </p>
-      <div class="card-header-actions">
-        <button class="btn btn-optional settings-toggle is-active" id="settings-toggle" type="button" aria-expanded="true" aria-pressed="true" aria-controls="settings-sidebar">
+      <div class="card-header-left">
+        <button class="icon-close-btn settings-toggle is-active" id="settings-toggle" type="button" aria-label="Hide sidebar [Tab]" title="Hide Sidebar [Tab]" aria-expanded="true" aria-pressed="true" aria-controls="settings-sidebar">
           <span class="material-symbols-outlined" aria-hidden="true">left_panel_open</span>
-          <span>Sidebar</span>
         </button>
-        <button class="icon-close-btn" id="close-modal" type="button" aria-label="Close modal">
+        <p class="title">
+          <span class="material-symbols-outlined title-icon" aria-hidden="true">article</span>
+          Insert Update Template
+        </p>
+      </div>
+      <div class="card-header-actions">
+        <input class="lofi-volume" id="lofi-volume" type="range" min="0" max="100" step="1" value="35" aria-label="Lo-fi volume" title="Lo-fi volume" />
+        <button class="icon-close-btn lofi-toggle-btn" id="lofi-toggle" type="button" aria-label="Pause lo-fi stream [Space]" title="Pause/Play music [Space] (when not typing)">
+          <span class="material-symbols-outlined" aria-hidden="true">pause</span>
+        </button>
+        <button class="icon-close-btn" id="close-modal" type="button" aria-label="Close [Esc]" title="Close [Esc]">
           <span class="material-symbols-outlined" aria-hidden="true">close</span>
         </button>
       </div>
@@ -52,20 +57,9 @@
           {{PAGE_DRAFTS}}
           {{PAGE_ABOUT}}
         </div>
-
-        <div class="footer-row footer-fixed" id="modal-footer-row">
-          <div class="footer-left">
-            <div class="note" id="action-feedback" data-tone="muted">Ready.</div>
-          </div>
-          <div class="footer-right">
-            <div class="actions">
-              <button class="btn" id="save-draft" type="button">Save as Draft</button>
-              <button class="btn" id="copy-html" type="button">Copy as innerHTML</button>
-              <button class="btn btn-primary" id="insert" type="button" disabled>Insert</button>
-            </div>
-          </div>
-        </div>
       </div>
+      {{SETTINGS_ANCHOR_RAIL}}
     </div>
+    <div class="modal-toast" id="modal-toast" hidden></div>
   </section>
 </div>

@@ -8,9 +8,16 @@
     global.GM_info.script.version
       ? String(global.GM_info.script.version)
       : "14.3.0";
+  const scriptUpdateUrl =
+    global.GM_info &&
+    global.GM_info.script &&
+    global.GM_info.script.updateURL
+      ? String(global.GM_info.script.updateURL)
+      : "https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/script.user.js";
 
   app.constants = {
     APP_VERSION: scriptVersion,
+    UPDATE_URL: scriptUpdateUrl,
     TRIGGER: "--update",
     TRIGGER_ACTIVATION_DEFAULT: "space",
     SETTINGS_STORAGE_KEY: "clickup-update-modal.settings.v4",

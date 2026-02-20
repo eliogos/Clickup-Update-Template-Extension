@@ -8,24 +8,88 @@ select.field {
   align-items: center;
 }
 
-.select-wrap select.field:not(.status-select) {
+.select-wrap select.field {
   width: 100%;
-  appearance: none;
+  appearance: base-select;
+  cursor: pointer;
+  border-radius: var(--radius-s);
+  min-height: var(--control-height);
   padding-right: 34px;
+  --status-accent: var(--surface-button-primary-soft);
+  --status-accent-rgb: 47, 111, 237;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 220ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    filter 220ms ease;
 }
 
-.select-wrap .status-select {
-  width: 100%;
-  padding-right: 34px;
+.select-wrap select.field:hover,
+.select-wrap select.field:focus {
+  border-color: var(--status-accent);
+  box-shadow: 0 0 0 2px rgba(var(--status-accent-rgb), 0.18);
+  transform: translateY(-1px);
 }
 
-/* ================= ICON ================= */
+.select-wrap select.field:open {
+  animation: picker-trigger-bounce calc(520ms * var(--motion-scale, 1)) var(--physics-pop-ease, cubic-bezier(0.2, 0.9, 0.2, 1));
+}
+
+.status-select[data-status="Not Started"] {
+  --status-accent: var(--status-color-not-started);
+  --status-accent-rgb: var(--status-color-not-started-rgb);
+}
+
+.status-select[data-status="In Progress"] {
+  --status-accent: var(--status-color-in-progress);
+  --status-accent-rgb: var(--status-color-in-progress-rgb);
+}
+
+.status-select[data-status="For QA"] {
+  --status-accent: var(--status-color-for-qa);
+  --status-accent-rgb: var(--status-color-for-qa-rgb);
+}
+
+.status-select[data-status="Completed"] {
+  --status-accent: var(--status-color-completed);
+  --status-accent-rgb: var(--status-color-completed-rgb);
+}
+
+.status-select {
+  border-color: color-mix(in oklab, var(--status-accent) 38%, var(--border-strong));
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--status-accent) 14%, var(--surface-field-soft)) 0%, color-mix(in oklab, var(--status-accent) 10%, var(--surface-field)) 100%);
+}
+
+.status-select::picker(select) {
+  border-color: color-mix(in oklab, var(--status-accent) 58%, var(--border-strong));
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--status-accent) 16%, var(--surface-picker)) 0%,
+      color-mix(in oklab, var(--status-accent) 10%, var(--surface-picker-soft)) 100%
+    );
+}
+
+.status-select-wrap .select-icon {
+  color: var(--status-accent);
+}
+
+.status-select-wrap {
+  display: inline-flex;
+  width: 180px;
+  max-width: 100%;
+}
+
+.settings-select-wrap {
+  width: 100%;
+}
 
 .select-icon {
   position: absolute;
   right: 10px;
   pointer-events: none;
-  color: #93a8da;
+  color: var(--icon-muted);
   display: inline-flex;
   width: 12px;
   height: 12px;
@@ -44,216 +108,91 @@ select.field {
 }
 
 .select-wrap:focus-within .select-icon {
-  color: #c4d4ff;
+  color: var(--status-accent, var(--icon-primary));
 }
 
-/* ================= STATUS SELECT ================= */
-
-.status-select {
-  appearance: base-select;
-
-  cursor: pointer;
-  border-radius: 10px;
-  height: 2.2rem;
-  border: 1px solid #3b4259;
-  background: linear-gradient(180deg, #111726 0%, #0f1420 100%);
-  color: #ecf1ff;
-  min-width: 180px;
-  font-size: 13px;
-  font-weight: 600;
-  transform-origin: center top;
-
-  --status-accent: var(--status-color-in-progress, #2f6fed);
-  --status-accent-rgb: var(--status-color-in-progress-rgb, 47, 111, 237);
-
-  transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 220ms cubic-bezier(0.2, 0.9, 0.2, 1),
-    filter 220ms ease;
-}
-
-.status-select:hover,
-.status-select:focus {
-  border-color: var(--status-accent);
-  box-shadow: 0 0 0 2px rgba(var(--status-accent-rgb), 0.22);
-  transform: translateY(-1px);
-}
-
-.status-select:open {
-  animation: status-trigger-bounce 520ms cubic-bezier(0.17, 0.84, 0.24, 1);
-  filter: saturate(1.12) brightness(1.04);
-}
-
-/* Accent Variants */
-.status-select[data-status="Not Started"] {
-  --status-accent: var(--status-color-not-started, #c63f6f);
-  --status-accent-rgb: var(--status-color-not-started-rgb, 198, 63, 111);
-}
-.status-select[data-status="In Progress"] {
-  --status-accent: var(--status-color-in-progress, #2f6fed);
-  --status-accent-rgb: var(--status-color-in-progress-rgb, 47, 111, 237);
-}
-.status-select[data-status="For QA"] {
-  --status-accent: var(--status-color-for-qa, #c9971c);
-  --status-accent-rgb: var(--status-color-for-qa-rgb, 201, 151, 28);
-}
-.status-select[data-status="Completed"] {
-  --status-accent: var(--status-color-completed, #2f9a53);
-  --status-accent-rgb: var(--status-color-completed-rgb, 47, 154, 83);
-}
-
-.status-select-wrap {
-  display: inline-flex;
-  width: 180px;
-  max-width: 100%;
-}
-
-.status-select-wrap .select-icon {
-  color: var(--status-accent);
-}
-
-/* Hide native arrow */
-.status-select::picker-icon {
+.select-wrap select.field::picker-icon {
   opacity: 0;
 }
 
-/* Rotate arrow when open */
-.status-select:open + .select-icon {
+.select-wrap select.field:open + .select-icon {
   transform: rotate(180deg);
-  animation: status-icon-pop 360ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  animation: picker-icon-pop calc(300ms * var(--motion-scale, 1)) var(--physics-pop-ease, cubic-bezier(0.2, 0.9, 0.2, 1));
 }
 
-/* ================= PICKER PANEL ================= */
-
-.status-select::picker(select) {
+.select-wrap select.field::picker(select) {
   appearance: base-select;
-
-  border: 1px solid #262b3a;
-  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-m);
   padding: 5px;
-  margin-top: 8px;
-
-  background: #1a1f29;
+  margin-block: 8px 10px;
+  background: linear-gradient(180deg, var(--surface-picker) 0%, var(--surface-picker-soft) 100%);
   transform-origin: top center;
-  animation: status-picker-pop 440ms cubic-bezier(0.19, 0.96, 0.19, 1);
-
+  animation: picker-pop calc(220ms * var(--motion-scale, 1)) var(--physics-pop-ease, cubic-bezier(0.2, 0.9, 0.2, 1));
   box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    0 16px 34px rgba(8, 12, 22, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-/* ================= OPTIONS ================= */
-
-.status-select option {
-  border-radius: 6px;
+.select-wrap select.field option {
+  border-radius: 8px;
   background: transparent;
-  color: #e9efff;
-  padding: 10px 12px;
+  color: var(--text-primary);
+  padding: 9px 11px;
   margin: 3px 0;
   font-size: 13px;
   font-weight: 600;
-  transition: background-color 120ms ease, outline-color 120ms ease;
+  border: 1px solid transparent;
+  transition: background-color 120ms ease, border-color 120ms ease;
 }
 
-.status-select:open option {
+.select-wrap select.field:open option {
   opacity: 0;
   transform: translateY(-6px) scale(0.97);
-  animation: status-option-enter 260ms cubic-bezier(0.2, 0.92, 0.24, 1) forwards;
+  animation: picker-option-enter calc(220ms * var(--motion-scale, 1)) var(--physics-pop-ease, cubic-bezier(0.2, 0.9, 0.2, 1)) forwards;
 }
 
-.status-select:open option:nth-child(1) { animation-delay: 35ms; }
-.status-select:open option:nth-child(2) { animation-delay: 70ms; }
-.status-select:open option:nth-child(3) { animation-delay: 105ms; }
-.status-select:open option:nth-child(4) { animation-delay: 140ms; }
+.select-wrap select.field:open option:nth-child(1) { animation-delay: calc(26ms * var(--motion-scale, 1)); }
+.select-wrap select.field:open option:nth-child(2) { animation-delay: calc(46ms * var(--motion-scale, 1)); }
+.select-wrap select.field:open option:nth-child(3) { animation-delay: calc(66ms * var(--motion-scale, 1)); }
+.select-wrap select.field:open option:nth-child(4) { animation-delay: calc(86ms * var(--motion-scale, 1)); }
+.select-wrap select.field:open option:nth-child(5) { animation-delay: calc(106ms * var(--motion-scale, 1)); }
 
-/* Hover colors */
+.modal-card[data-motion-disabled="true"] .select-wrap select.field,
+.modal-card[data-motion-disabled="true"] .select-wrap select.field::picker(select),
+.modal-card[data-motion-disabled="true"] .select-wrap select.field option,
+.modal-card[data-motion-disabled="true"] .select-wrap select.field:open + .select-icon {
+  animation: none !important;
+  animation-delay: 0ms !important;
+  transition: none !important;
+}
+
+.select-wrap select.field option:hover {
+  background: color-mix(in oklab, var(--surface-button) 60%, transparent);
+  border-color: color-mix(in oklab, var(--border-soft) 85%, transparent);
+}
+
 .status-select option:nth-child(1):hover {
-  background: rgba(var(--status-color-not-started-rgb, 198, 63, 111), 0.22);
+  background: rgba(var(--status-color-not-started-rgb), 0.2);
+  border-color: rgba(var(--status-color-not-started-rgb), 0.5);
 }
+
 .status-select option:nth-child(2):hover {
-  background: rgba(var(--status-color-in-progress-rgb, 47, 111, 237), 0.22);
+  background: rgba(var(--status-color-in-progress-rgb), 0.2);
+  border-color: rgba(var(--status-color-in-progress-rgb), 0.5);
 }
+
 .status-select option:nth-child(3):hover {
-  background: rgba(var(--status-color-for-qa-rgb, 201, 151, 28), 0.22);
+  background: rgba(var(--status-color-for-qa-rgb), 0.2);
+  border-color: rgba(var(--status-color-for-qa-rgb), 0.5);
 }
+
 .status-select option:nth-child(4):hover {
-  background: rgba(var(--status-color-completed-rgb, 47, 154, 83), 0.22);
+  background: rgba(var(--status-color-completed-rgb), 0.2);
+  border-color: rgba(var(--status-color-completed-rgb), 0.5);
 }
 
-/* Selected states */
-.status-select option:nth-child(1):checked {
-  background: rgba(var(--status-color-not-started-rgb, 198, 63, 111), 0.32);
-  outline: 2px solid rgba(var(--status-color-not-started-rgb, 198, 63, 111), 0.62);
-  color: #fff;
-}
-
-.status-select option:nth-child(2):checked {
-  background: rgba(var(--status-color-in-progress-rgb, 47, 111, 237), 0.32);
-  outline: 2px solid rgba(var(--status-color-in-progress-rgb, 47, 111, 237), 0.62);
-  color: #fff;
-}
-
-.status-select option:nth-child(3):checked {
-  background: rgba(var(--status-color-for-qa-rgb, 201, 151, 28), 0.32);
-  outline: 2px solid rgba(var(--status-color-for-qa-rgb, 201, 151, 28), 0.62);
-  color: #111;
-}
-
-.status-select option:nth-child(4):checked {
-  background: rgba(var(--status-color-completed-rgb, 47, 154, 83), 0.32);
-  outline: 2px solid rgba(var(--status-color-completed-rgb, 47, 154, 83), 0.62);
-  color: #fff;
-}
-
-@keyframes status-trigger-bounce {
-  0% { transform: translateY(0) scale(1); }
-  38% { transform: translateY(-1px) scale(1.04, 0.97); }
-  66% { transform: translateY(0) scale(0.985, 1.02); }
-  100% { transform: translateY(0) scale(1); }
-}
-
-@keyframes status-picker-pop {
-  0% {
-    opacity: 0;
-    transform: translateY(-12px) scale(0.9);
-    filter: saturate(0.86);
-  }
-  62% {
-    opacity: 1;
-    transform: translateY(2px) scale(1.03);
-    filter: saturate(1.06);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: saturate(1);
-  }
-}
-
-@keyframes status-icon-pop {
-  0% { transform: rotate(0deg) scale(1); }
-  55% { transform: rotate(200deg) scale(1.2); }
-  100% { transform: rotate(180deg) scale(1); }
-}
-
-@keyframes status-option-enter {
-  0% {
-    opacity: 0;
-    transform: translateY(-6px) scale(0.97);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .status-select,
-  .status-select::picker(select),
-  .status-select option,
-  .status-select:open + .select-icon {
-    animation: none !important;
-    transition: none !important;
-  }
+.select-wrap select.field option:checked {
+  background: color-mix(in oklab, var(--status-accent) 24%, transparent);
+  border-color: color-mix(in oklab, var(--status-accent) 70%, transparent);
 }
