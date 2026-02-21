@@ -2638,6 +2638,46 @@
   animation: golden-spark-pop ease-out forwards;
 }
 
+.modal-cursor-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+  overflow: hidden;
+}
+
+.modal-cursor-sparkles[hidden] {
+  display: none !important;
+}
+
+.modal-cursor-spark {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 35% 35%, #fffbe6 0%, #ffe184 45%, rgba(255, 196, 52, 0.9) 100%);
+  box-shadow:
+    0 0 6px rgba(255, 224, 130, 0.95),
+    0 0 12px rgba(255, 188, 44, 0.6);
+  opacity: 0;
+  animation: cursor-spark-pop ease-out forwards;
+}
+
+@keyframes cursor-spark-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.15);
+  }
+}
+
 @keyframes golden-spark-pop {
   0% {
     opacity: 0;

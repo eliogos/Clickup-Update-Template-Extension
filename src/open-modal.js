@@ -3351,6 +3351,8 @@
     let confettiParticles = [];
     let goldenSparkleOverlay = null;
     let goldenSparkleTimer = 0;
+    let cursorSparkleOverlay = null;
+    let cursorSparkleLastAt = 0;
     let partySidebarHintShown = false;
     let partySidebarRapidClickTimes = [];
     let partySidebarMelody = [];
@@ -3861,6 +3863,7 @@
       clearToastTimers();
       stopConfettiOverlay();
       stopGoldenSparkles();
+      clearCursorSparkles();
       stopAccentPartyMode();
       hideKonamiOverlay();
       radioStationValidationToken += 1;
@@ -5468,6 +5471,7 @@
         startAccentPartyMode();
       } else {
         stopAccentPartyMode();
+        clearCursorSparkles();
       }
     };
 
@@ -5538,6 +5542,66 @@
           spawnGoldenSparkle();
         }
       }, 340);
+    };
+
+    const ensureCursorSparkleOverlay = () => {
+      if (!modalCard) return null;
+      if (!cursorSparkleOverlay) {
+        cursorSparkleOverlay = shadow.getElementById("modal-cursor-sparkles") || null;
+      }
+      if (!cursorSparkleOverlay) {
+        cursorSparkleOverlay = document.createElement("div");
+        cursorSparkleOverlay.className = "modal-cursor-sparkles";
+        cursorSparkleOverlay.id = "modal-cursor-sparkles";
+        cursorSparkleOverlay.hidden = true;
+        cursorSparkleOverlay.setAttribute("aria-hidden", "true");
+        modalCard.appendChild(cursorSparkleOverlay);
+      }
+      return cursorSparkleOverlay;
+    };
+
+    const clearCursorSparkles = () => {
+      cursorSparkleLastAt = 0;
+      if (!cursorSparkleOverlay) return;
+      cursorSparkleOverlay.hidden = true;
+      while (cursorSparkleOverlay.firstChild) {
+        cursorSparkleOverlay.removeChild(cursorSparkleOverlay.firstChild);
+      }
+    };
+
+    const emitCursorSparkle = (clientX, clientY) => {
+      if (!modalCard || settingsState.accentPartyMode !== true) return;
+      if (!Number.isFinite(clientX) || !Number.isFinite(clientY)) return;
+      const now = Date.now();
+      if ((now - cursorSparkleLastAt) < 26) return;
+      cursorSparkleLastAt = now;
+      const overlay = ensureCursorSparkleOverlay();
+      if (!overlay) return;
+      const bounds = modalCard.getBoundingClientRect();
+      if (!bounds || bounds.width <= 0 || bounds.height <= 0) return;
+      if (clientX < bounds.left || clientX > bounds.right || clientY < bounds.top || clientY > bounds.bottom) return;
+      overlay.hidden = false;
+
+      const sparkle = document.createElement("span");
+      sparkle.className = "modal-cursor-spark";
+      const localX = clientX - bounds.left;
+      const localY = clientY - bounds.top;
+      const size = 3.2 + (Math.random() * 5.4);
+      const durationMs = 360 + Math.round(Math.random() * 460);
+      sparkle.style.left = `${localX.toFixed(2)}px`;
+      sparkle.style.top = `${localY.toFixed(2)}px`;
+      sparkle.style.width = `${size.toFixed(2)}px`;
+      sparkle.style.height = `${size.toFixed(2)}px`;
+      sparkle.style.animationDuration = `${durationMs}ms`;
+      overlay.appendChild(sparkle);
+      global.setTimeout(() => {
+        if (sparkle.parentNode === overlay) {
+          overlay.removeChild(sparkle);
+        }
+        if (overlay.childElementCount === 0 && settingsState.accentPartyMode !== true) {
+          overlay.hidden = true;
+        }
+      }, durationMs + 120);
     };
 
     const syncPartySidebarFinalDoVisibility = () => {
@@ -10699,6 +10763,7 @@
     onPartyCursorPointerMove = (event) => {
       if (!event || event.pointerType === "touch") return;
       updatePartyCursorTargetsFromPointer(event.clientX, event.clientY);
+      emitCursorSparkle(event.clientX, event.clientY);
     };
     onPartyCursorLeave = () => {
       stopPartyCursorNudge({ immediate: false });
