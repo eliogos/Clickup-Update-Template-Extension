@@ -345,7 +345,7 @@
   const ANIMATION_SPEED_SCALES = Object.freeze([0.1, 0.5, 1, 1.5, 3, 0]);
   const REDUCED_MOTION_SCALE_CAP = 0.4;
   const INTERPOLATOR_MODE_OPTIONS = new Set(["preset", "expression", "curve"]);
-  const AI_QUERY_PROVIDER_OPTIONS = new Set(["chatgpt", "claude", "perplexity", "grok", "gemini"]);
+  const AI_QUERY_PROVIDER_OPTIONS = new Set(["chatgpt", "claude", "perplexity", "grok", "gemini", "copilot"]);
   const AUDIO_BPM_INFLUENCE_MODE_OPTIONS = new Set(["animation", "both", "physics"]);
   const AUDIO_STREAM_SOURCE_OPTIONS = new Set(["lofi", "radio"]);
   const INTERPOLATOR_NERD_RATINGS = Object.freeze({
@@ -2495,6 +2495,11 @@
               <input type="radio" name="ai-query-provider" value="gemini" data-ai-query-provider />
               <img class="ai-provider-logo" src="https://cdn.simpleicons.org/googlegemini/ffffff" alt="" aria-hidden="true" />
               <span>Gemini</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="copilot" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/githubcopilot/ffffff" alt="" aria-hidden="true" />
+              <span>Copilot</span>
             </label>
           </div>
           <p class="field-subtext">Currently used for interpolation Ask/Explain actions.</p>
@@ -7908,6 +7913,8 @@
         : DEFAULT_MODAL_SETTINGS.aiQueryProvider;
       const encodedQuery = encodeURIComponent(String(promptText || "").trim());
       switch (selectedProvider) {
+        case "copilot":
+          return `https://www.bing.com/copilotsearch?q=${encodedQuery}`;
         case "claude":
           return `https://claude.ai/new?q=${encodedQuery}`;
         case "perplexity":
