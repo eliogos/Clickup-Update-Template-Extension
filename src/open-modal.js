@@ -1682,7 +1682,7 @@
             if (resolved) return;
             resolved = true;
             clearTimers();
-            if (requestHandle && typeof requestHandle.abort === "function") {
+            if (ok !== true && requestHandle && typeof requestHandle.abort === "function") {
               try {
                 requestHandle.abort();
               } catch {
