@@ -1610,6 +1610,8 @@
       if (typeof MediaSource === "undefined" || typeof global.GM_xmlhttpRequest !== "function") return false;
       cleanupStreamSource();
       const requestStartedAt = global.performance ? global.performance.now() : Date.now();
+      const GM_STREAM_STALL_TIMEOUT_MS = 4200;
+      const GM_STREAM_HARD_TIMEOUT_MS = 12000;
       let firstChunkCaptured = false;
       setStreamDiagnostics(
         {
@@ -1651,10 +1653,56 @@
           const queue = [];
           let resolved = false;
           let lastSize = 0;
+          let sawAnyBytes = false;
+          let requestHandle = null;
+          let stallTimer = 0;
+          let hardTimer = global.setTimeout(() => {
+            finish(false, "timeout-gm", "GM stream request timed out.");
+          }, GM_STREAM_HARD_TIMEOUT_MS);
           let sourceBuffer = null;
+          const clearTimers = () => {
+            if (stallTimer) {
+              global.clearTimeout(stallTimer);
+              stallTimer = 0;
+            }
+            if (hardTimer) {
+              global.clearTimeout(hardTimer);
+              hardTimer = 0;
+            }
+          };
+          const armStallTimer = () => {
+            if (stallTimer) {
+              global.clearTimeout(stallTimer);
+            }
+            stallTimer = global.setTimeout(() => {
+              finish(false, "timeout-gm", "GM stream stalled before first audio chunk.");
+            }, GM_STREAM_STALL_TIMEOUT_MS);
+          };
+          const finish = (ok, mode, error = "") => {
+            if (resolved) return;
+            resolved = true;
+            clearTimers();
+            if (requestHandle && typeof requestHandle.abort === "function") {
+              try {
+                requestHandle.abort();
+              } catch {
+                // Ignore abort errors.
+              }
+            }
+            setStreamDiagnostics(
+              {
+                streamMode: mode,
+                streamBuffering: false,
+                streamLastError: ok ? "" : String(error || "")
+              },
+              { forceNotify: true, silent: true }
+            );
+            resolve(ok === true);
+          };
           try {
             sourceBuffer = mediaSource.addSourceBuffer("audio/mpeg");
           } catch {
+            clearTimers();
             resolve(false);
             return;
           }
@@ -1670,7 +1718,8 @@
           };
           sourceBuffer.addEventListener("updateend", appendNext);
 
-          global.GM_xmlhttpRequest({
+          armStallTimer();
+          requestHandle = global.GM_xmlhttpRequest({
             method: "GET",
             url,
             responseType: "arraybuffer",
@@ -1680,6 +1729,8 @@
               if (!buffer || buffer.byteLength <= lastSize) return;
               const chunk = buffer.slice(lastSize);
               lastSize = buffer.byteLength;
+              sawAnyBytes = true;
+              armStallTimer();
               if (!firstChunkCaptured) {
                 firstChunkCaptured = true;
                 const firstChunkAt = global.performance ? global.performance.now() : Date.now();
@@ -1703,27 +1754,16 @@
               );
               updateBufferedDiagnostics({ forceNotify: false, buffering: false });
               if (!resolved) {
-                resolved = true;
-                setStreamDiagnostics(
-                  {
-                    streamMode: "ready-gm",
-                    streamBuffering: false
-                  },
-                  { forceNotify: true, silent: true }
-                );
-                resolve(true);
+                finish(true, "ready-gm");
               }
             },
             onload: () => {
               if (!resolved) {
-                setStreamDiagnostics(
-                  {
-                    streamMode: "ready-gm",
-                    streamBuffering: false
-                  },
-                  { forceNotify: true, silent: true }
-                );
-                resolve(true);
+                if (sawAnyBytes && lastSize > 0) {
+                  finish(true, "ready-gm");
+                } else {
+                  finish(false, "error-gm", "GM stream ended before receiving audio.");
+                }
               }
               if (mediaSource.readyState === "open") {
                 try {
@@ -1734,36 +1774,13 @@
               }
             },
             onerror: () => {
-              setStreamDiagnostics(
-                {
-                  streamMode: "error-gm",
-                  streamBuffering: false,
-                  streamLastError: "GM stream request failed."
-                },
-                { forceNotify: true, silent: true }
-              );
-              resolve(false);
+              finish(false, "error-gm", "GM stream request failed.");
             },
             ontimeout: () => {
-              setStreamDiagnostics(
-                {
-                  streamMode: "timeout-gm",
-                  streamBuffering: false,
-                  streamLastError: "GM stream request timed out."
-                },
-                { forceNotify: true, silent: true }
-              );
-              resolve(false);
+              finish(false, "timeout-gm", "GM stream request timed out.");
             },
             onabort: () => {
-              setStreamDiagnostics(
-                {
-                  streamMode: "aborted",
-                  streamBuffering: false
-                },
-                { forceNotify: true, silent: true }
-              );
-              resolve(false);
+              finish(false, "aborted", "");
             }
           });
         }, { once: true });
