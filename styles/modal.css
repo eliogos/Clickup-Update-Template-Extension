@@ -82,9 +82,13 @@
     scale(0.985)
     scale(var(--modal-scale, 1))
     scale(var(--modal-live-scale, 1))
-    translate3d(var(--modal-nudge-x, 0px), var(--modal-nudge-y, 0px), 0)
-    rotateX(var(--modal-tilt-x, 0deg))
-    rotateY(var(--modal-tilt-y, 0deg));
+    translate3d(
+      calc(var(--modal-nudge-x, 0px) + var(--modal-cursor-nudge-x, 0px)),
+      calc(var(--modal-nudge-y, 0px) + var(--modal-cursor-nudge-y, 0px)),
+      0
+    )
+    rotateX(calc(var(--modal-tilt-x, 0deg) + var(--modal-cursor-tilt-x, 0deg)))
+    rotateY(calc(var(--modal-tilt-y, 0deg) + var(--modal-cursor-tilt-y, 0deg)));
   opacity: 0;
   transition:
     transform calc(160ms * var(--motion-scale, 1)) cubic-bezier(0.2, 0.9, 0.2, 1),
@@ -114,9 +118,13 @@
     scale(1)
     scale(var(--modal-scale, 1))
     scale(var(--modal-live-scale, 1))
-    translate3d(var(--modal-nudge-x, 0px), var(--modal-nudge-y, 0px), 0)
-    rotateX(var(--modal-tilt-x, 0deg))
-    rotateY(var(--modal-tilt-y, 0deg));
+    translate3d(
+      calc(var(--modal-nudge-x, 0px) + var(--modal-cursor-nudge-x, 0px)),
+      calc(var(--modal-nudge-y, 0px) + var(--modal-cursor-nudge-y, 0px)),
+      0
+    )
+    rotateX(calc(var(--modal-tilt-x, 0deg) + var(--modal-cursor-tilt-x, 0deg)))
+    rotateY(calc(var(--modal-tilt-y, 0deg) + var(--modal-cursor-tilt-y, 0deg)));
   opacity: var(--modal-opacity, 1);
   animation: modal-pop-in calc(240ms * var(--motion-scale, 1)) cubic-bezier(0.2, 0.9, 0.2, 1);
 }
@@ -1708,8 +1716,52 @@
 
 .audio-channel-nav {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
+  gap: var(--space-2);
+}
+
+.modal-card[data-party-mode="true"] .audio-channel-column,
+.modal-card[data-party-mode="true"] .audio-radio-pulse-section {
+  position: relative;
+  padding: 10px;
+  border: 1px solid color-mix(in oklab, var(--surface-button-primary-soft) 42%, var(--border-soft) 58%);
+  border-radius: var(--radius-m);
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in oklab, var(--surface-main-soft) 78%, var(--surface-button-primary-soft) 22%) 0%,
+      color-mix(in oklab, var(--surface-main) 80%, var(--surface-button-primary) 20%) 100%
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--surface-button-primary-soft) 24%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--surface-button-primary-soft) calc(8% + (var(--radio-party-pulse-level, 0) * 22%)), transparent);
+  transition: border-color 120ms ease, background 160ms ease, box-shadow 140ms ease;
+}
+
+.modal-card[data-party-mode="true"] .audio-channel-column::before,
+.modal-card[data-party-mode="true"] .audio-radio-pulse-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--surface-button-primary-soft) 72%, transparent) 0%,
+    color-mix(in oklab, var(--surface-button-primary) 64%, transparent) 100%
+  );
+  opacity: calc((0.08 + (var(--radio-party-pulse-level, 0) * 0.36)) * var(--radio-party-strength, 1));
+  transition: opacity 120ms ease;
+}
+
+.modal-card[data-party-mode="true"] .audio-channel-column > *,
+.modal-card[data-party-mode="true"] .audio-radio-pulse-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.audio-radio-pulse-section {
   gap: var(--space-2);
 }
 

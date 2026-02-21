@@ -4,6 +4,24 @@ Userscript that opens a modal in ClickUp using a configurable trigger, then inse
 
 ## What's New
 
+### 15.0.61 (2026-02-22)
+- Radio UX enhancements:
+  - Added `Shuffle` button in radio channel navigation.
+  - Radio station dropdown now sorts alphabetically at runtime.
+  - Added dedicated `Pulse` section on the Radio page.
+  - Added `Pulse strength` control (0–200), visible only in Party Mode.
+- Party Mode visual/audio responsiveness improvements:
+  - Modal pulse now follows waveform-derived hit/drum telemetry instead of raw packet frequency.
+  - Added stronger drum-hit emphasis and subtler non-drum pulse behavior.
+  - Added party tint behavior for radio channel/pulse section border and background.
+  - Added Party Mode cursor parallax: modal gently nudges/tilts with pointer position and eases back on leave.
+- Radio data/content updates:
+  - Added additional Laut.fm channels and Savage stream normalization compatibility.
+  - Renamed station label from `9J-Pop Powerplay` to `J-Pop Powerplay`.
+- Infrastructure and template updates:
+  - Added/expanded waveform preview integration for radio page templates and local sandbox.
+  - Updated userscript metadata/resource integrations and bumped version to `15.0.61`.
+
 ### 15.0.0 (2026-02-21)
 - Major settings and UX expansion across modal pages, including:
   - New `Radio` page for music/SFX controls.

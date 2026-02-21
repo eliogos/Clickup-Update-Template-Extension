@@ -131,7 +131,7 @@
       variables: readResource("modalPageVariables"),
       drafts: readResource("modalPageDrafts"),
       usage: readResource("modalPageUsage"),
-      radio: radioPage,
+      radio: readResource("modalPageRadio"),
       about: readResource("modalPageAbout"),
       settingsAnchor: readResource("modalPageSettingsAnchorRail"),
       modalToast: readResource("modalFragmentToast"),

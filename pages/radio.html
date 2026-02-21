@@ -83,6 +83,32 @@
           </div>
         </div>
 
+        <div class="settings-field">
+          <div class="settings-label-row">
+            <span class="settings-label">Waveform Preview</span>
+          </div>
+          <div class="waveform-preview-wrap">
+            <div class="waveform-section">
+              <div class="waveform-filters" role="group" aria-label="Waveform channels">
+                <label><input type="checkbox" name="waveform-filter" value="music" checked /> Music</label>
+                <label><input type="checkbox" name="waveform-filter" value="sfx" checked /> SFX</label>
+                <label><input type="checkbox" name="waveform-filter" value="ambient" checked /> Ambient</label>
+              </div>
+              <div class="waveform-container">
+                <div id="waveform" role="img" aria-label="Audio waveform"></div>
+                <canvas id="waveform-canvas"></canvas>
+              </div>
+            </div>
+            <div class="waveform-factor-filters" role="radiogroup" aria-label="Waveform factor">
+              <label><input type="radio" name="waveform-factor" value="all" checked /> All</label>
+              <label><input type="radio" name="waveform-factor" value="beat" /> Beat only</label>
+              <label><input type="radio" name="waveform-factor" value="melody" /> Melody</label>
+              <label><input type="radio" name="waveform-factor" value="amplitude" /> Amplitude</label>
+            </div>
+          </div>
+        </div>
+
+
         <div class="settings-field audio-settings-column audio-channel-column">
           <div class="settings-label-row">
             <p class="audio-settings-subtitle">Channel</p>
@@ -117,9 +143,28 @@
                 <option value="https://uk2.internet-radio.com/proxy/urbanchic?mp=/stream;">Urban Chic - UK2</option>
                 <option value="https://ic.radiomonster.fm/rock.ultra">RadioMonster - Rock Ultra</option>
                 <option value="https://webmusik.stream.laut.fm/webmusik">Webmusik</option>
+                <option value="https://savagemusic.stream.laut.fm/savagemusic?t302=2026-02-21_17-38-32&uuid=2aacaff9-c52e-477b-b2a3-dddd4041752b">Savage Music</option>
+                <option value="https://hardstylefm.stream.laut.fm/hardstylefm?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">HardstyleFM</option>
+                <option value="https://clubradio.stream.laut.fm/clubradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Clubradio</option>
+                <option value="https://1000-electronic-dance-music.stream.laut.fm/1000-electronic-dance-music?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">1000 Electronic Dance Music</option>
+                <option value="https://edmradio.stream.laut.fm/edmradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Edmradio</option>
+                <option value="https://game-fm.stream.laut.fm/game-fm?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Game FM</option>
+                <option value="https://soundtrack.stream.laut.fm/soundtrack?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Soundtrack</option>
+                <option value="https://blockbuster.stream.laut.fm/blockbuster?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Blockbuster</option>
+                <option value="https://twentytenradio.stream.laut.fm/twentytenradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Twentytenradio</option>
+                <option value="https://draingang.stream.laut.fm/draingang?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Drain Gang (Hyperpop)</option>
+                <option value="https://kpophits.stream.laut.fm/kpophits?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Kpop Hits</option>
+                <option value="https://simulator1.stream.laut.fm/simulator1?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Simulator1 (Mainstream)</option>
+                <option value="https://nightcoreradio.stream.laut.fm/nightcoreradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Nightcore Radio</option>
+                <option value="https://musicalradiode.stream.laut.fm/musicalradiode?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Musical Radio DE</option>
+                <option value="https://phonkwave.stream.laut.fm/phonkwave?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Phonkwave</option>
+                <option value="https://latenightradio.stream.laut.fm/latenightradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Late Night Radio</option>
+                <option value="https://punk.stream.laut.fm/punk?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Punk</option>
+                <option value="https://englishrap.stream.laut.fm/englishrap?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">English Rap</option>
+                <option value="https://maxretro.stream.laut.fm/maxretro?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Maxretro</option>
                 <option value="https://uk1.internet-radio.com/proxy/pinknoise?mp=/stream;">Pink Noise - UK1</option>
                 <option value="https://das-edge15-live365-dal02.cdnstream.com/a20450">Live365 - a20450</option>
-                <option value="https://kathy.torontocast.com:3560/;">9J-Pop Powerplay</option>
+                <option value="https://kathy.torontocast.com:3560/;">J-Pop Powerplay</option>
                 <option value="https://kathy.torontocast.com:3340/;">J-Rock Powerplay</option>
                 <option value="https://radio35.virtualtronics.com:20040/;">BAMM Radio</option>
                 <option value="https://boxradio-edge-00.streamafrica.net/jpopchill">BOX - Japan City Pop</option>
@@ -134,8 +179,23 @@
               <span class="select-icon" aria-hidden="true"></span>
             </div>
             <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-next" type="button">Next</button>
+            <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-shuffle" type="button">Shuffle</button>
           </div>
           <p class="field-subtext" id="radio-channel-status">Shows live channel health, including ping and buffer.</p>
+        </div>
+
+        <div class="settings-field audio-settings-column audio-radio-pulse-section" id="radio-pulse-section" hidden>
+          <div class="settings-label-row">
+            <p class="audio-settings-subtitle">Pulse</p>
+          </div>
+          <div class="settings-conditional-body" id="radio-pulse-controls-body" hidden>
+            <label class="settings-label" for="radio-pulse-strength-slider">Pulse strength</label>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="radio-pulse-strength-input" type="number" min="0" max="200" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="radio-pulse-strength-slider" type="range" min="0" max="200" step="1" />
+            </div>
+            <p class="field-subtext">How strong the radio pulse can be in Party Mode.</p>
+          </div>
         </div>
 
         <div class="settings-field audio-settings-column audio-ambient-section">

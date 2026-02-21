@@ -111,6 +111,101 @@
       url: "https://webmusik.stream.laut.fm/webmusik"
     }),
     Object.freeze({
+      id: "savagemusic-laut",
+      label: "Savage Music",
+      url: "https://savagemusic.stream.laut.fm/savagemusic?t302=2026-02-21_17-38-32&uuid=2aacaff9-c52e-477b-b2a3-dddd4041752b"
+    }),
+    Object.freeze({
+      id: "hardstylefm-laut",
+      label: "HardstyleFM",
+      url: "https://hardstylefm.stream.laut.fm/hardstylefm?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "clubradio-laut",
+      label: "Clubradio",
+      url: "https://clubradio.stream.laut.fm/clubradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "electronic-dance-1000-laut",
+      label: "1000 Electronic Dance Music",
+      url: "https://1000-electronic-dance-music.stream.laut.fm/1000-electronic-dance-music?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "edmradio-laut",
+      label: "Edmradio",
+      url: "https://edmradio.stream.laut.fm/edmradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "game-fm-laut",
+      label: "Game FM",
+      url: "https://game-fm.stream.laut.fm/game-fm?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "soundtrack-laut",
+      label: "Soundtrack",
+      url: "https://soundtrack.stream.laut.fm/soundtrack?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "blockbuster-laut",
+      label: "Blockbuster",
+      url: "https://blockbuster.stream.laut.fm/blockbuster?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "twentytenradio-laut",
+      label: "Twentytenradio",
+      url: "https://twentytenradio.stream.laut.fm/twentytenradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "draingang-laut",
+      label: "Drain Gang (Hyperpop)",
+      url: "https://draingang.stream.laut.fm/draingang?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "kpophits-laut",
+      label: "Kpop Hits",
+      url: "https://kpophits.stream.laut.fm/kpophits?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "simulator1-laut",
+      label: "Simulator1 (Mainstream)",
+      url: "https://simulator1.stream.laut.fm/simulator1?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "nightcoreradio-laut",
+      label: "Nightcore Radio",
+      url: "https://nightcoreradio.stream.laut.fm/nightcoreradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "musicalradiode-laut",
+      label: "Musical Radio DE",
+      url: "https://musicalradiode.stream.laut.fm/musicalradiode?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "phonkwave-laut",
+      label: "Phonkwave",
+      url: "https://phonkwave.stream.laut.fm/phonkwave?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "latenightradio-laut",
+      label: "Late Night Radio",
+      url: "https://latenightradio.stream.laut.fm/latenightradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "punk-laut",
+      label: "Punk",
+      url: "https://punk.stream.laut.fm/punk?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "englishrap-laut",
+      label: "English Rap",
+      url: "https://englishrap.stream.laut.fm/englishrap?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
+      id: "maxretro-laut",
+      label: "Maxretro",
+      url: "https://maxretro.stream.laut.fm/maxretro?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+    }),
+    Object.freeze({
       id: "pinknoise-uk1",
       label: "Pink Noise - UK1",
       url: "https://uk1.internet-radio.com/proxy/pinknoise?mp=/stream;"
@@ -122,7 +217,7 @@
     }),
     Object.freeze({
       id: "jpop-powerplay-9j",
-      label: "9J-Pop Powerplay",
+      label: "J-Pop Powerplay",
       url: "https://kathy.torontocast.com:3560/;"
     }),
     Object.freeze({
@@ -222,6 +317,13 @@
   ]);
   const AMBIENT_NOISE_IDS = new Set(AMBIENT_NOISE_TRACKS.map((track) => track.id));
   const RADIO_STATION_URLS = new Set(RADIO_STATION_OPTIONS.map((station) => String(station.url || "").trim().toLowerCase()));
+  const RADIO_STATION_OPTIONS_SORTED = Object.freeze(
+    [...RADIO_STATION_OPTIONS].sort((a, b) => {
+      const left = String(a && a.label ? a.label : "");
+      const right = String(b && b.label ? b.label : "");
+      return left.localeCompare(right, undefined, { sensitivity: "base", numeric: true });
+    })
+  );
   const REMOVED_RADIO_STATION_URLS = new Set([
     "http://c22.radioboss.fm:8808/autodj",
     "https://c22.radioboss.fm:8808/autodj",
@@ -229,6 +331,7 @@
     "https://mscp3.live-streams.nl:8020/radio"
   ]);
   const DEFAULT_RADIO_STATION_URL = RADIO_STATION_OPTIONS[0].url;
+  const SAVAGE_MUSIC_REQUIRED_URL = "https://savagemusic.stream.laut.fm/savagemusic?t302=2026-02-21_17-38-32&uuid=2aacaff9-c52e-477b-b2a3-dddd4041752b";
   const LOFI_VOLUME_STORAGE_KEY = "clickup-update-modal.lofi.volume.v1";
   const MAX_DRAFTS = 40;
   const UI_FONT_SIZE_MIN = 11;
@@ -267,6 +370,8 @@
   const LOFI_8D_RATE_MAX = 4;
   const AUDIO_BPM_INFLUENCE_STRENGTH_MIN = 0;
   const AUDIO_BPM_INFLUENCE_STRENGTH_MAX = 100;
+  const RADIO_PULSE_STRENGTH_MIN = 0;
+  const RADIO_PULSE_STRENGTH_MAX = 200;
   const SFX_VOLUME_MIN = 0;
   const SFX_VOLUME_MAX = 200;
   const SFX_VOLUME_SNAP_POINTS = Object.freeze([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200]);
@@ -349,6 +454,7 @@
     keepRadioOn: false,
     audioStreamSource: "lofi",
     radioStationUrl: DEFAULT_RADIO_STATION_URL,
+    radioPulseStrength: 100,
     ambientRainEnabled: false,
     ambientRainVolume: 35,
     ambientBeachEnabled: false,
@@ -427,6 +533,14 @@
     const raw = String(value == null ? "" : value).trim();
     if (!raw) return safeFallback;
     const normalized = raw.toLowerCase();
+    const savagePrefix = "https://savagemusic.stream.laut.fm/savagemusic";
+    if (
+      normalized === savagePrefix
+      || normalized.startsWith(`${savagePrefix}?`)
+      || normalized === "https://savagemusic.laut.fm/savagemusic"
+    ) {
+      return SAVAGE_MUSIC_REQUIRED_URL;
+    }
     if (REMOVED_RADIO_STATION_URLS.has(normalized)) return safeFallback;
     if (!RADIO_STATION_URLS.has(normalized)) return safeFallback;
     const match = RADIO_STATION_OPTIONS.find((station) => String(station.url || "").trim().toLowerCase() === normalized);
@@ -574,6 +688,12 @@
       source.radioStationUrl == null ? source.radioChannel : source.radioStationUrl,
       DEFAULT_MODAL_SETTINGS.radioStationUrl
     );
+    const radioPulseStrength = clampNumber(
+      source.radioPulseStrength,
+      RADIO_PULSE_STRENGTH_MIN,
+      RADIO_PULSE_STRENGTH_MAX,
+      DEFAULT_MODAL_SETTINGS.radioPulseStrength
+    );
     const sfxVolume = snapSfxVolumeValue(
       source.sfxVolume,
       DEFAULT_MODAL_SETTINGS.sfxVolume
@@ -714,6 +834,7 @@
       keepRadioOn: source.keepRadioOn === true,
       audioStreamSource,
       radioStationUrl,
+      radioPulseStrength: Math.round(radioPulseStrength),
       ambientRainEnabled: source.ambientRainEnabled === true,
       ambientRainVolume,
       ambientBeachEnabled: source.ambientBeachEnabled === true,
@@ -1002,6 +1123,30 @@
       const frequencyData = new Uint8Array(spatialAnalyserNode.frequencyBinCount);
       const timeDomainData = new Uint8Array(spatialAnalyserNode.fftSize);
 
+      const buildCompressedSpectrum = (source, bins = 48) => {
+        const safeBins = Math.max(8, Math.min(96, Math.floor(bins)));
+        const out = new Array(safeBins).fill(0);
+        if (!source || !source.length) {
+          return { spectrum: out, peak: 0 };
+        }
+        const stride = source.length / safeBins;
+        let peak = 0;
+        for (let bin = 0; bin < safeBins; bin += 1) {
+          const start = Math.floor(bin * stride);
+          const end = Math.max(start + 1, Math.floor((bin + 1) * stride));
+          let sum = 0;
+          let count = 0;
+          for (let i = start; i < end && i < source.length; i += 1) {
+            const value = source[i] / 255;
+            sum += value;
+            count += 1;
+            if (value > peak) peak = value;
+          }
+          out[bin] = count > 0 ? (sum / count) : 0;
+        }
+        return { spectrum: out, peak };
+      };
+
       const step = () => {
         beatDetectFrame = 0;
         if (!state.playing || !spatialAnalyserNode) return;
@@ -1031,6 +1176,7 @@
         let detectedBeatBpm = null;
 
         if (beatDetected) {
+          const compressed = buildCompressedSpectrum(frequencyData, 48);
           const interval = beatLastDetectedAt > 0 ? (now - beatLastDetectedAt) : 0;
           beatLastDetectedAt = now;
           const emitInterval = beatLastEmitAt > 0 ? (now - beatLastEmitAt) : interval;
@@ -1051,7 +1197,9 @@
             beatBpm: detectedBeatBpm == null ? null : Math.round(detectedBeatBpm),
             intervalMs: emitInterval > 0 ? emitInterval : 0,
             energy: lowBandEnergy,
-            rms
+            rms,
+            peak: compressed.peak,
+            spectrum: compressed.spectrum
           });
         } else {
           const visualizerInterval = 88;
@@ -1059,6 +1207,7 @@
             ? (now - beatLastVisualizerEmitAt)
             : Number.POSITIVE_INFINITY;
           if (sinceVisualizerEmit >= visualizerInterval) {
+            const compressed = buildCompressedSpectrum(frequencyData, 48);
             beatLastVisualizerEmitAt = now;
             const visualEnergy = clampNumber((lowBandEnergy * 0.72) + (rms * 0.56), 0, 1, 0.14);
             const visualRms = clampNumber((rms * 0.8) + (lowBandEnergy * 0.12), 0, 1, 0.02);
@@ -1068,7 +1217,9 @@
               beatBpm: null,
               intervalMs: visualizerInterval,
               energy: visualEnergy,
-              rms: visualRms
+              rms: visualRms,
+              peak: compressed.peak,
+              spectrum: compressed.spectrum
             });
           }
 
@@ -1084,7 +1235,9 @@
               beatBpm: null,
               intervalMs: estimatedInterval,
               energy: 0.2,
-              rms: 0.03
+              rms: 0.03,
+              peak: 0,
+              spectrum: []
             });
           }
         }
@@ -2201,6 +2354,7 @@
       setPlaybackTuning,
       setStreamUrl,
       getStreamUrl,
+      getAudioElement: () => audio,
       subscribeBeats
     };
     const persistedVolume = readSavedVolume();
@@ -2222,6 +2376,9 @@
     ensureFontLinks();
 
     const host = document.createElement("div");
+    // Mark the host so other scripts (visualizers) can find the modal's shadow root.
+    host.className = "clickup-update-modal-host";
+    host.setAttribute("data-clickup-update-host", "1");
     document.body.appendChild(host);
 
     const shadow = host.attachShadow({ mode: "open" });
@@ -2573,9 +2730,28 @@
                       <option value="https://uk2.internet-radio.com/proxy/urbanchic?mp=/stream;">Urban Chic - UK2</option>
                       <option value="https://ic.radiomonster.fm/rock.ultra">RadioMonster - Rock Ultra</option>
                       <option value="https://webmusik.stream.laut.fm/webmusik">Webmusik</option>
+                      <option value="https://savagemusic.stream.laut.fm/savagemusic?t302=2026-02-21_17-38-32&uuid=2aacaff9-c52e-477b-b2a3-dddd4041752b">Savage Music</option>
+                      <option value="https://hardstylefm.stream.laut.fm/hardstylefm?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">HardstyleFM</option>
+                      <option value="https://clubradio.stream.laut.fm/clubradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Clubradio</option>
+                      <option value="https://1000-electronic-dance-music.stream.laut.fm/1000-electronic-dance-music?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">1000 Electronic Dance Music</option>
+                      <option value="https://edmradio.stream.laut.fm/edmradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Edmradio</option>
+                      <option value="https://game-fm.stream.laut.fm/game-fm?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Game FM</option>
+                      <option value="https://soundtrack.stream.laut.fm/soundtrack?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Soundtrack</option>
+                      <option value="https://blockbuster.stream.laut.fm/blockbuster?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Blockbuster</option>
+                      <option value="https://twentytenradio.stream.laut.fm/twentytenradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Twentytenradio</option>
+                      <option value="https://draingang.stream.laut.fm/draingang?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Drain Gang (Hyperpop)</option>
+                      <option value="https://kpophits.stream.laut.fm/kpophits?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Kpop Hits</option>
+                      <option value="https://simulator1.stream.laut.fm/simulator1?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Simulator1 (Mainstream)</option>
+                      <option value="https://nightcoreradio.stream.laut.fm/nightcoreradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Nightcore Radio</option>
+                      <option value="https://musicalradiode.stream.laut.fm/musicalradiode?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Musical Radio DE</option>
+                      <option value="https://phonkwave.stream.laut.fm/phonkwave?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Phonkwave</option>
+                      <option value="https://latenightradio.stream.laut.fm/latenightradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Late Night Radio</option>
+                      <option value="https://punk.stream.laut.fm/punk?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Punk</option>
+                      <option value="https://englishrap.stream.laut.fm/englishrap?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">English Rap</option>
+                      <option value="https://maxretro.stream.laut.fm/maxretro?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Maxretro</option>
                       <option value="https://uk1.internet-radio.com/proxy/pinknoise?mp=/stream;">Pink Noise - UK1</option>
                       <option value="https://das-edge15-live365-dal02.cdnstream.com/a20450">Live365 - a20450</option>
-                      <option value="https://kathy.torontocast.com:3560/;">9J-Pop Powerplay</option>
+                      <option value="https://kathy.torontocast.com:3560/;">J-Pop Powerplay</option>
                       <option value="https://kathy.torontocast.com:3340/;">J-Rock Powerplay</option>
                       <option value="https://radio35.virtualtronics.com:20040/;">BAMM Radio</option>
                       <option value="https://boxradio-edge-00.streamafrica.net/jpopchill">BOX - Japan City Pop</option>
@@ -2590,8 +2766,23 @@
                     <span class="select-icon" aria-hidden="true"></span>
                   </div>
                   <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-next" type="button">Next</button>
+                  <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-shuffle" type="button">Shuffle</button>
                 </div>
                 <p class="field-subtext" id="radio-channel-status">Shows live channel health, including ping and buffer.</p>
+              </div>
+
+              <div class="settings-field audio-settings-column audio-radio-pulse-section" id="radio-pulse-section" hidden>
+                <div class="settings-label-row">
+                  <p class="audio-settings-subtitle">Pulse</p>
+                </div>
+                <div class="settings-conditional-body" id="radio-pulse-controls-body" hidden>
+                  <label class="settings-label" for="radio-pulse-strength-slider">Pulse strength</label>
+                  <div class="editor-font-size-row">
+                    <input class="field editor-font-size-input" id="radio-pulse-strength-input" type="number" min="0" max="200" step="1" inputmode="numeric" />
+                    <input class="editor-font-size-slider" id="radio-pulse-strength-slider" type="range" min="0" max="200" step="1" />
+                  </div>
+                  <p class="field-subtext">How strong the radio pulse can be in Party Mode.</p>
+                </div>
               </div>
 
               <div class="settings-field audio-settings-column audio-ambient-section">
@@ -2675,6 +2866,38 @@
         </div>`;
       modalMainContentEl.insertBefore(radioPanel, shadow.querySelector("#page-about") || null);
     }
+
+    // Safety net for stale/cached radio templates: ensure waveform preview block exists.
+    const radioSectionEl = shadow.querySelector("#page-radio .settings-section");
+    if (radioSectionEl && !shadow.getElementById("waveform")) {
+      const waveformField = document.createElement("div");
+      waveformField.className = "settings-field";
+      waveformField.innerHTML = `
+        <div class="settings-label-row">
+          <span class="settings-label">Waveform Preview</span>
+        </div>
+        <div class="waveform-preview-wrap">
+          <div class="waveform-section" aria-label="Audio waveform preview">
+            <div class="waveform-filters" role="group" aria-label="Waveform channels">
+              <label><input type="checkbox" name="waveform-filter" value="music" checked /> Music</label>
+              <label><input type="checkbox" name="waveform-filter" value="sfx" checked /> SFX</label>
+              <label><input type="checkbox" name="waveform-filter" value="ambient" checked /> Ambient</label>
+            </div>
+            <div class="waveform-container">
+              <div id="waveform" role="img" aria-label="Audio waveform"></div>
+              <canvas id="waveform-canvas"></canvas>
+            </div>
+          </div>
+          <div class="waveform-factor-filters" role="radiogroup" aria-label="Waveform factor">
+            <label><input type="radio" name="waveform-factor" value="all" checked /> All</label>
+            <label><input type="radio" name="waveform-factor" value="beat" /> Beat only</label>
+            <label><input type="radio" name="waveform-factor" value="melody" /> Melody</label>
+            <label><input type="radio" name="waveform-factor" value="amplitude" /> Amplitude</label>
+          </div>
+        </div>`;
+      radioSectionEl.appendChild(waveformField);
+    }
+
     const sidebarNavEl = shadow.querySelector("#sidebar-nav");
     if (sidebarNavEl && !sidebarNavEl.querySelector('[data-page-target="usage"]')) {
       const usageBtn = document.createElement("button");
@@ -2849,7 +3072,12 @@
     const radioChannelSelect = byId("radio-channel-select");
     const radioChannelPrevBtn = byId("radio-channel-prev");
     const radioChannelNextBtn = byId("radio-channel-next");
+    const radioChannelShuffleBtn = byId("radio-channel-shuffle");
     const radioChannelStatus = byId("radio-channel-status");
+    const radioPulseSection = byId("radio-pulse-section");
+    const radioPulseControlsBody = byId("radio-pulse-controls-body");
+    const radioPulseStrengthInput = byId("radio-pulse-strength-input");
+    const radioPulseStrengthSlider = byId("radio-pulse-strength-slider");
     const sfxVolumeSlider = byId("sfx-volume-slider");
     const sfxVolumeValue = byId("sfx-volume-value");
     const sfxMuteBtn = byId("sfx-mute-btn");
@@ -2983,9 +3211,12 @@
     let partyBeatIntervalEma = 0;
     let partyBeatEnergyEma = 0;
     let partyBeatRmsEma = 0;
+    let partyBeatDrumEma = 0;
     let audioInfluenceBeatBoost = 0;
     let audioInfluenceLastBeatImpact = 0;
     let audioInfluenceLastFactorAt = 0;
+    let audioInfluencePeakEma = 0;
+    let audioInfluenceDrumEma = 0;
     let cleanupFloatingTooltip = null;
     let showFloatingTooltipForElement = () => {};
     let syncKonamiTooltipProgress = () => {};
@@ -2995,7 +3226,23 @@
     let partyBassEnergyEma = 0;
     let partyBassRmsEma = 0;
     let partyBassPeakEma = 0;
+    let partyBassDrumEma = 0;
+    let partyBassKickEma = 0;
+    let partyBassKickTransientEma = 0;
+    let partyBassHitEma = 0;
+    let partyRadioPulseLevel = 0;
     let partyBassLastPulseAt = 0;
+    let partyCursorTargetX = 0;
+    let partyCursorTargetY = 0;
+    let partyCursorCurrentX = 0;
+    let partyCursorCurrentY = 0;
+    let partyCursorTargetTiltX = 0;
+    let partyCursorTargetTiltY = 0;
+    let partyCursorCurrentTiltX = 0;
+    let partyCursorCurrentTiltY = 0;
+    let partyCursorRafId = 0;
+    let onPartyCursorPointerMove = null;
+    let onPartyCursorLeave = null;
     let partyHueCurrent = 0;
     let uiSfxAudioContext = null;
     let uiSfxMasterGain = null;
@@ -3004,6 +3251,11 @@
     let uiSfxLastClickAt = 0;
     let uiSfxLastConfettiAt = 0;
     let uiSfxLastSliderAt = 0;
+    const waveformTelemetry = (app._waveformTelemetry = app._waveformTelemetry || {
+      lastSfxAt: 0,
+      sfxStrength: 0,
+      ambientLevel: 0
+    });
     let radioStationValidationToken = 0;
     let radioStationApplyPending = false;
     let radioLastValidatedUrl = "";
@@ -3033,6 +3285,7 @@
       ? curveEditorCanvas.getContext("2d")
       : null;
     let curveEditorHitPoints = [];
+    let waveformInterpolatorFn = null;
 
     const setElementTooltip = (element, text) => {
       if (!element) return;
@@ -3496,6 +3749,16 @@
         global.removeEventListener("resize", onWindowResize);
         onWindowResize = null;
       }
+      if (onPartyCursorPointerMove) {
+        global.removeEventListener("pointermove", onPartyCursorPointerMove);
+        onPartyCursorPointerMove = null;
+      }
+      if (onPartyCursorLeave) {
+        global.removeEventListener("pointerleave", onPartyCursorLeave, true);
+        global.removeEventListener("blur", onPartyCursorLeave);
+        onPartyCursorLeave = null;
+      }
+      stopPartyCursorNudge({ immediate: true });
       if (pageHeightRafId) {
         global.cancelAnimationFrame(pageHeightRafId);
         pageHeightRafId = 0;
@@ -3573,6 +3836,9 @@
         }
       });
       ambientTrackState.clear();
+      if (app._waveformInterpolatorFn === waveformInterpolatorFn) {
+        app._waveformInterpolatorFn = null;
+      }
       host.remove();
     };
 
@@ -3675,6 +3941,31 @@
       return sfxRatio * blendScale;
     };
 
+    const pulseWaveformSfx = (strength = 1) => {
+      const safeStrength = clampNumber(strength, 0, 1, 0.5);
+      waveformTelemetry.lastSfxAt = Date.now();
+      waveformTelemetry.sfxStrength = Math.max(
+        clampNumber(waveformTelemetry.sfxStrength, 0, 1, 0) * 0.6,
+        safeStrength
+      );
+    };
+
+    const updateWaveformAmbientLevel = () => {
+      let activeCount = 0;
+      let activeVolumeRatioSum = 0;
+      AMBIENT_NOISE_TRACKS.forEach((track) => {
+        const enabled = isAmbientTrackEnabled(track.id);
+        if (!enabled) return;
+        const ratio = clampNumber(getAmbientTrackVolumePercent(track.id) / 100, 0, 1, 0);
+        if (ratio <= 0.0001) return;
+        activeCount += 1;
+        activeVolumeRatioSum += ratio;
+      });
+      waveformTelemetry.ambientLevel = activeCount > 0
+        ? clampNumber(activeVolumeRatioSum / Math.max(1, activeCount), 0, 1, 0)
+        : 0;
+    };
+
     const playUiSfxTone = ({
       frequency = 620,
       endFrequency = null,
@@ -3689,6 +3980,7 @@
       if (!ctx || !uiSfxMasterGain) return;
       const gainScale = getEffectiveSfxGainScale();
       if (gainScale <= 0.0001) return;
+      pulseWaveformSfx(clampNumber((gain * gainScale) * 16, 0.15, 1, 0.45));
       const startAt = ctx.currentTime + (Math.max(0, delayMs) / 1000);
       const oscillator = ctx.createOscillator();
       const toneGain = ctx.createGain();
@@ -3758,6 +4050,7 @@
       if (!ctx || !uiSfxMasterGain || !noiseBuffer) return;
       const gainScale = getEffectiveSfxGainScale();
       if (gainScale <= 0.0001) return;
+      pulseWaveformSfx(clampNumber((gain * gainScale) * 14, 0.12, 1, 0.4));
 
       const startAt = ctx.currentTime + (Math.max(0, delayMs) / 1000);
       const source = ctx.createBufferSource();
@@ -4665,10 +4958,86 @@
       partyBassEnergyEma = 0;
       partyBassRmsEma = 0;
       partyBassPeakEma = 0;
+      partyBassDrumEma = 0;
+      partyBassKickEma = 0;
+      partyBassKickTransientEma = 0;
+      partyBassHitEma = 0;
+      partyRadioPulseLevel = 0;
       partyBassLastPulseAt = 0;
       if (modalCard) {
         modalCard.style.setProperty("--modal-party-bass-scale", "1");
+        modalCard.style.setProperty("--radio-party-pulse-level", "0");
       }
+    };
+
+    const applyPartyCursorNudgeVars = () => {
+      if (!modalCard) return;
+      modalCard.style.setProperty("--modal-cursor-nudge-x", `${partyCursorCurrentX.toFixed(2)}px`);
+      modalCard.style.setProperty("--modal-cursor-nudge-y", `${partyCursorCurrentY.toFixed(2)}px`);
+      modalCard.style.setProperty("--modal-cursor-tilt-x", `${partyCursorCurrentTiltX.toFixed(2)}deg`);
+      modalCard.style.setProperty("--modal-cursor-tilt-y", `${partyCursorCurrentTiltY.toFixed(2)}deg`);
+    };
+
+    const stopPartyCursorNudge = ({ immediate = false } = {}) => {
+      partyCursorTargetX = 0;
+      partyCursorTargetY = 0;
+      partyCursorTargetTiltX = 0;
+      partyCursorTargetTiltY = 0;
+      if (immediate) {
+        partyCursorCurrentX = 0;
+        partyCursorCurrentY = 0;
+        partyCursorCurrentTiltX = 0;
+        partyCursorCurrentTiltY = 0;
+        applyPartyCursorNudgeVars();
+      }
+      if (partyCursorRafId) {
+        global.cancelAnimationFrame(partyCursorRafId);
+        partyCursorRafId = 0;
+      }
+    };
+
+    const tickPartyCursorNudge = () => {
+      partyCursorRafId = 0;
+      if (!modalCard) return;
+      const easing = 0.14;
+      partyCursorCurrentX += (partyCursorTargetX - partyCursorCurrentX) * easing;
+      partyCursorCurrentY += (partyCursorTargetY - partyCursorCurrentY) * easing;
+      partyCursorCurrentTiltX += (partyCursorTargetTiltX - partyCursorCurrentTiltX) * easing;
+      partyCursorCurrentTiltY += (partyCursorTargetTiltY - partyCursorCurrentTiltY) * easing;
+      applyPartyCursorNudgeVars();
+
+      const motionLeft =
+        Math.abs(partyCursorTargetX - partyCursorCurrentX)
+        + Math.abs(partyCursorTargetY - partyCursorCurrentY)
+        + Math.abs(partyCursorTargetTiltX - partyCursorCurrentTiltX)
+        + Math.abs(partyCursorTargetTiltY - partyCursorCurrentTiltY);
+      if (motionLeft > 0.03 || Math.abs(partyCursorCurrentX) > 0.03 || Math.abs(partyCursorCurrentY) > 0.03) {
+        partyCursorRafId = global.requestAnimationFrame(tickPartyCursorNudge);
+      }
+    };
+
+    const schedulePartyCursorNudge = () => {
+      if (partyCursorRafId) return;
+      partyCursorRafId = global.requestAnimationFrame(tickPartyCursorNudge);
+    };
+
+    const updatePartyCursorTargetsFromPointer = (clientX, clientY) => {
+      if (!modalCard) return;
+      if (settingsState.accentPartyMode !== true || isMotionDisabled()) {
+        stopPartyCursorNudge({ immediate: false });
+        return;
+      }
+      const vw = Math.max(1, global.innerWidth || document.documentElement.clientWidth || 1);
+      const vh = Math.max(1, global.innerHeight || document.documentElement.clientHeight || 1);
+      const nx = clampNumber(((clientX / vw) * 2) - 1, -1, 1, 0);
+      const ny = clampNumber(((clientY / vh) * 2) - 1, -1, 1, 0);
+      const maxNudgePx = 5.5;
+      const maxTiltDeg = 1.6;
+      partyCursorTargetX = nx * maxNudgePx;
+      partyCursorTargetY = ny * maxNudgePx;
+      partyCursorTargetTiltX = -ny * maxTiltDeg;
+      partyCursorTargetTiltY = nx * maxTiltDeg;
+      schedulePartyCursorNudge();
     };
 
     const pulseModalPartyBass = (beatPayload) => {
@@ -4681,61 +5050,186 @@
 
       const energy = clampNumber(Number(beatPayload && beatPayload.energy), 0, 1, 0);
       const rms = clampNumber(Number(beatPayload && beatPayload.rms), 0, 1, 0);
+      const payloadPeak = clampNumber(Number(beatPayload && beatPayload.peak), 0, 1, 0);
+      const spectrum = Array.isArray(beatPayload && beatPayload.spectrum) ? beatPayload.spectrum : [];
       const mode = String(beatPayload && beatPayload.mode || "beat");
       const now = global.performance ? global.performance.now() : Date.now();
       const intervalMs = clampNumber(Number(beatPayload && beatPayload.intervalMs), 90, 1600, 420);
+
+      let drumBand = energy;
+      let kickBias = energy;
+      let kickTransient = 0;
+      if (spectrum.length > 0) {
+        const kickEnd = Math.max(1, Math.floor(spectrum.length * 0.1));
+        const subEnd = Math.max(kickEnd + 1, Math.floor(spectrum.length * 0.2));
+        const lowEnd = Math.max(kickEnd + 1, Math.floor(spectrum.length * 0.28));
+        const lowMidEnd = Math.max(lowEnd + 1, Math.floor(spectrum.length * 0.5));
+        let kickSum = 0;
+        let subSum = 0;
+        let lowSum = 0;
+        let lowMidSum = 0;
+        for (let i = 0; i < kickEnd; i += 1) kickSum += clampNumber(spectrum[i], 0, 1, 0);
+        for (let i = 0; i < subEnd; i += 1) subSum += clampNumber(spectrum[i], 0, 1, 0);
+        for (let i = 0; i < lowEnd; i += 1) lowSum += clampNumber(spectrum[i], 0, 1, 0);
+        for (let i = lowEnd; i < lowMidEnd; i += 1) lowMidSum += clampNumber(spectrum[i], 0, 1, 0);
+        const kickAvg = kickSum / Math.max(1, kickEnd);
+        const subAvg = subSum / Math.max(1, subEnd);
+        const lowAvg = lowSum / Math.max(1, lowEnd);
+        const lowMidAvg = lowMidSum / Math.max(1, lowMidEnd - lowEnd);
+        drumBand = clampNumber((kickAvg * 0.72) + (lowAvg * 0.42) - (lowMidAvg * 0.34), 0, 1, energy);
+        kickBias = clampNumber((kickAvg * 0.84) + (subAvg * 0.34) - (lowMidAvg * 0.42), 0, 1, drumBand);
+      }
+
       partyBassEnergyEma = partyBassEnergyEma > 0
         ? ((partyBassEnergyEma * 0.84) + (energy * 0.16))
         : energy;
       partyBassRmsEma = partyBassRmsEma > 0
         ? ((partyBassRmsEma * 0.86) + (rms * 0.14))
         : rms;
+      partyBassDrumEma = partyBassDrumEma > 0
+        ? ((partyBassDrumEma * 0.82) + (drumBand * 0.18))
+        : drumBand;
+      const previousKickEma = partyBassKickEma > 0 ? partyBassKickEma : kickBias;
+      partyBassKickEma = partyBassKickEma > 0
+        ? ((partyBassKickEma * 0.8) + (kickBias * 0.2))
+        : kickBias;
+      kickTransient = Math.max(0, kickBias - (previousKickEma * 0.9));
+      partyBassKickTransientEma = partyBassKickTransientEma > 0
+        ? ((partyBassKickTransientEma * 0.68) + (kickTransient * 0.32))
+        : kickTransient;
 
-      if (mode === "fallback") return;
-
-      const baseline = (partyBassEnergyEma * 0.68) + (partyBassRmsEma * 0.32);
-      const instant = (energy * 0.7) + (rms * 0.3);
+      const baseline = (partyBassKickEma * 0.4) + (partyBassDrumEma * 0.36) + (partyBassEnergyEma * 0.16) + (partyBassRmsEma * 0.08);
+      const instant = (kickBias * 0.52) + (drumBand * 0.3) + (energy * 0.12) + (rms * 0.06);
       const spike = Math.max(0, instant - baseline);
       partyBassPeakEma = partyBassPeakEma > 0
         ? ((partyBassPeakEma * 0.88) + (spike * 0.12))
         : spike;
 
-      const bassDrive = Math.max(0, Math.min(1, (energy - 0.12) / 0.52));
+      const bassDrive = Math.max(0, Math.min(1, (drumBand - 0.11) / 0.48));
+      const kickDrive = Math.max(0, Math.min(1, (kickBias - 0.1) / 0.42));
       const rmsDrive = Math.max(0, Math.min(1, (rms - 0.018) / 0.09));
+      const peakDrive = Math.max(0, Math.min(1, (payloadPeak - 0.12) / 0.55));
+      const cadenceDrive = Math.max(0, Math.min(1, (560 - intervalMs) / 260));
+      const kickTransientDrive = Math.max(0, Math.min(1, (partyBassKickTransientEma * 3.8) + (peakDrive * 0.34)));
       const spikeFloor = Math.max(0.005, partyBassPeakEma * 0.6);
       const spikeCeil = Math.max(0.035, partyBassPeakEma * 2.2);
       const spikeDrive = clampNumber((spike - spikeFloor) / Math.max(0.0001, spikeCeil - spikeFloor), 0, 1, 0);
 
-      const isBeatMode = mode === "beat";
-      const pulseCooldownMs = isBeatMode ? 132 : 248;
+      const waveformPulseTelemetry = app && app._waveformPulseTelemetry
+        ? app._waveformPulseTelemetry
+        : null;
+      const waveformTelemetryUpdatedAt = waveformPulseTelemetry && Number.isFinite(Number(waveformPulseTelemetry.updatedAt))
+        ? Number(waveformPulseTelemetry.updatedAt)
+        : 0;
+      const waveformTelemetryAge = waveformTelemetryUpdatedAt > 0
+        ? Math.max(0, now - waveformTelemetryUpdatedAt)
+        : Number.POSITIVE_INFINITY;
+      const hasFreshWaveformTelemetry = waveformTelemetryAge <= 320;
+
+      const waveformHit = hasFreshWaveformTelemetry
+        ? clampNumber(Number(waveformPulseTelemetry.hitScore), 0, 1, 0)
+        : 0;
+      const waveformDrum = hasFreshWaveformTelemetry
+        ? clampNumber(Number(waveformPulseTelemetry.drumScore), 0, 1, 0)
+        : 0;
+      const waveformTransient = hasFreshWaveformTelemetry
+        ? clampNumber(Number(waveformPulseTelemetry.transientScore), 0, 1, 0)
+        : 0;
+      const waveformCadence = hasFreshWaveformTelemetry
+        ? clampNumber(Number(waveformPulseTelemetry.cadenceScore), 0, 1, 0)
+        : 0;
+      const waveformMode = hasFreshWaveformTelemetry
+        ? String(waveformPulseTelemetry.mode || mode)
+        : mode;
+
+      const drumImpact = clampNumber(
+        (kickDrive * 0.5)
+        + (kickTransientDrive * 0.34)
+        + (spikeDrive * 0.2)
+        + (cadenceDrive * 0.12),
+        0,
+        1,
+        0
+      );
+      const microImpact = clampNumber(
+        (rmsDrive * 0.36) + (peakDrive * 0.42) + (spikeDrive * 0.22),
+        0,
+        1,
+        0
+      );
+      const effectiveCadenceDrive = hasFreshWaveformTelemetry
+        ? Math.max(cadenceDrive, waveformCadence)
+        : cadenceDrive;
+      const isDrumHit = hasFreshWaveformTelemetry
+        ? (waveformDrum > 0.42 || (waveformTransient > 0.24 && waveformDrum > 0.24))
+        : (drumImpact > 0.34 || (kickTransientDrive > 0.26 && kickDrive > 0.24));
+
+      const pulseCooldownMs = Math.round(clampNumber(
+        intervalMs * (isDrumHit ? (0.2 - (effectiveCadenceDrive * 0.08)) : (0.29 - (effectiveCadenceDrive * 0.05))),
+        isDrumHit ? 34 : 56,
+        isDrumHit ? 124 : 180,
+        isDrumHit ? 82 : 122
+      ));
       if ((now - partyBassLastPulseAt) < pulseCooldownMs) return;
 
-      // Visualizer frames should only pulse on high spikes, not every frame.
-      if (!isBeatMode) {
-        const visualGate = energy > Math.max(0.08, partyBassEnergyEma * 1.12) && spikeDrive > 0.55;
-        if (!visualGate) return;
-      }
-
-      let beatDrive = Math.max(bassDrive, rmsDrive * 0.8);
-      beatDrive = isBeatMode
-        ? ((beatDrive * 0.72) + (spikeDrive * 0.56))
-        : ((beatDrive * 0.42) + (spikeDrive * 0.9));
-      if (beatDrive < 0.18) return;
+      let beatDrive = Math.max((kickDrive * 0.72) + (bassDrive * 0.28), (rmsDrive * 0.3) + (peakDrive * 0.7));
+      beatDrive = (beatDrive * 0.38) + (drumImpact * 0.58) + (kickTransientDrive * 0.34) + (cadenceDrive * 0.22) + (spikeDrive * 0.18);
+      const waveformDrivenHit = hasFreshWaveformTelemetry
+        ? clampNumber(
+          (waveformHit * 0.74)
+          + (waveformDrum * 0.3)
+          + (waveformTransient * 0.26)
+          + (spikeDrive * 0.14),
+          0,
+          1,
+          waveformHit
+        )
+        : beatDrive;
+      partyBassHitEma = partyBassHitEma > 0
+        ? ((partyBassHitEma * 0.82) + (waveformDrivenHit * 0.18))
+        : waveformDrivenHit;
+      const hitRise = Math.max(0, waveformDrivenHit - (partyBassHitEma * 0.93));
+      const beatDrivenThreshold = isDrumHit
+        ? 0.18
+        : (waveformMode === "beat" ? 0.28 : 0.38);
+      if (waveformDrivenHit < beatDrivenThreshold) return;
+      if (!isDrumHit && hitRise < 0.016) return;
 
       partyBassLastPulseAt = now;
-      const pulseScale = 1 + (0.002 + (beatDrive * 0.012));
-      partyBassScaleCurrent = Math.max(partyBassScaleCurrent * 0.94, pulseScale);
+      const bigPulseDrive = hasFreshWaveformTelemetry
+        ? clampNumber((waveformDrum * 0.72) + (waveformTransient * 0.4) + (effectiveCadenceDrive * 0.2), 0, 1, waveformDrum)
+        : clampNumber((drumImpact * 0.82) + (kickTransientDrive * 0.42) + (effectiveCadenceDrive * 0.18), 0, 1, drumImpact);
+      const subtlePulseDrive = hasFreshWaveformTelemetry
+        ? clampNumber((waveformDrivenHit * 0.74) + (microImpact * 0.26), 0, 1, waveformDrivenHit)
+        : clampNumber((microImpact * 0.6) + (beatDrive * 0.4), 0, 1, microImpact);
+      const pulseScale = isDrumHit
+        ? 1 + (0.0056 + (bigPulseDrive * 0.023))
+        : 1 + (0.0014 + (subtlePulseDrive * 0.0086));
+      const pulseStrengthMultiplier = clampNumber(
+        settingsState.radioPulseStrength,
+        RADIO_PULSE_STRENGTH_MIN,
+        RADIO_PULSE_STRENGTH_MAX,
+        DEFAULT_MODAL_SETTINGS.radioPulseStrength
+      ) / 100;
+      const adjustedPulseScale = 1 + ((pulseScale - 1) * pulseStrengthMultiplier);
+      partyBassScaleCurrent = Math.max(partyBassScaleCurrent * (isDrumHit ? 0.95 : 0.92), adjustedPulseScale);
+      partyRadioPulseLevel = clampNumber((partyBassScaleCurrent - 1) / 0.04, 0, 1, 0);
       modalCard.style.setProperty("--modal-party-bass-scale", partyBassScaleCurrent.toFixed(4));
+      modalCard.style.setProperty("--radio-party-pulse-level", partyRadioPulseLevel.toFixed(4));
 
       if (partyBassPulseResetTimer) {
         global.clearTimeout(partyBassPulseResetTimer);
       }
-      const releaseMs = Math.round(Math.max(120, Math.min(320, (intervalMs * 0.4) + 90)));
+      const releaseMs = isDrumHit
+        ? Math.round(clampNumber((intervalMs * (0.25 - (effectiveCadenceDrive * 0.06))) + 74, 72, 218, 128))
+        : Math.round(clampNumber((intervalMs * (0.16 - (effectiveCadenceDrive * 0.045))) + 46, 46, 134, 86));
       partyBassPulseResetTimer = global.setTimeout(() => {
         partyBassPulseResetTimer = 0;
         partyBassScaleCurrent = 1;
+        partyRadioPulseLevel = 0;
         if (!modalCard || settingsState.accentPartyMode !== true) return;
         modalCard.style.setProperty("--modal-party-bass-scale", "1");
+        modalCard.style.setProperty("--radio-party-pulse-level", "0");
       }, releaseMs);
     };
 
@@ -4781,6 +5275,7 @@
         accentPartyTimer = 0;
       }
       clearPartyBassPulse();
+      stopPartyCursorNudge({ immediate: true });
       setPartyModeActive(false);
     };
 
@@ -4817,31 +5312,54 @@
 
       const energy = clampNumber(Number(beatPayload && beatPayload.energy), 0, 1, 0.35);
       const rms = clampNumber(Number(beatPayload && beatPayload.rms), 0, 1, 0.03);
+      const peak = clampNumber(Number(beatPayload && beatPayload.peak), 0, 1, 0);
+      const spectrum = Array.isArray(beatPayload && beatPayload.spectrum) ? beatPayload.spectrum : [];
+
+      let drumBand = energy;
+      if (spectrum.length > 0) {
+        const kickEnd = Math.max(1, Math.floor(spectrum.length * 0.12));
+        const lowEnd = Math.max(kickEnd + 1, Math.floor(spectrum.length * 0.28));
+        let kickSum = 0;
+        let lowSum = 0;
+        for (let i = 0; i < kickEnd; i += 1) kickSum += clampNumber(spectrum[i], 0, 1, 0);
+        for (let i = 0; i < lowEnd; i += 1) lowSum += clampNumber(spectrum[i], 0, 1, 0);
+        const kickAvg = kickSum / Math.max(1, kickEnd);
+        const lowAvg = lowSum / Math.max(1, lowEnd);
+        drumBand = clampNumber((kickAvg * 0.76) + (lowAvg * 0.38), 0, 1, energy);
+      }
+
       const previousEnergyEma = partyBeatEnergyEma > 0 ? partyBeatEnergyEma : energy;
       const previousRmsEma = partyBeatRmsEma > 0 ? partyBeatRmsEma : rms;
+      const previousDrumEma = partyBeatDrumEma > 0 ? partyBeatDrumEma : drumBand;
       const energyDelta = energy - previousEnergyEma;
       const rmsDelta = rms - previousRmsEma;
+      const drumDelta = drumBand - previousDrumEma;
       partyBeatEnergyEma = partyBeatEnergyEma > 0
         ? ((partyBeatEnergyEma * 0.88) + (energy * 0.12))
         : energy;
       partyBeatRmsEma = partyBeatRmsEma > 0
         ? ((partyBeatRmsEma * 0.88) + (rms * 0.12))
         : rms;
+      partyBeatDrumEma = partyBeatDrumEma > 0
+        ? ((partyBeatDrumEma * 0.84) + (drumBand * 0.16))
+        : drumBand;
 
       const cadenceNormalized = Math.max(0, Math.min(1, (640 - partyBeatIntervalEma) / 360));
-      const energyNormalized = Math.max(0, Math.min(1, (energy - 0.16) / 0.56));
+      const energyNormalized = Math.max(0, Math.min(1, (drumBand - 0.16) / 0.54));
       const transientEnergy = Math.max(0, Math.min(1, Math.abs(energyDelta) * 3.8));
       const transientRms = Math.max(0, Math.min(1, Math.abs(rmsDelta) * 10));
-      const variability = Math.max(transientEnergy, transientRms);
+      const transientDrum = Math.max(0, Math.min(1, Math.abs(drumDelta) * 5.6));
+      const transientPeak = Math.max(0, Math.min(1, peak * 1.1));
+      const variability = Math.max(transientEnergy, transientRms, transientDrum, transientPeak);
       const strength = clampNumber(
         settingsState.audioBpmInfluenceStrength,
         AUDIO_BPM_INFLUENCE_STRENGTH_MIN,
         AUDIO_BPM_INFLUENCE_STRENGTH_MAX,
         DEFAULT_MODAL_SETTINGS.audioBpmInfluenceStrength
       ) / 100;
-      const reactiveScore = Math.max(0, Math.min(1, (cadenceNormalized * 0.42) + (energyNormalized * 0.38) + (variability * 0.2)));
+      const reactiveScore = Math.max(0, Math.min(1, (cadenceNormalized * 0.34) + (energyNormalized * 0.42) + (variability * 0.24)));
       const beatStep = (reactiveScore * 14) + (variability * 10) + (strength * 8);
-      const directionScore = (energyDelta * 0.72) + (rmsDelta * 0.28);
+      const directionScore = (drumDelta * 0.64) + (energyDelta * 0.24) + (rmsDelta * 0.12);
       const direction = directionScore < -0.0015 ? -1 : 1;
       partyHueCurrent = (partyHueCurrent + (beatStep * direction) + 360) % 360;
       applyPartyHueStyles(partyHueCurrent);
@@ -5412,6 +5930,7 @@
       entry.audio.volume = volumeRatio;
       if (!enabled || volumeRatio <= 0.0001) {
         stopAmbientTrack(trackId);
+        updateWaveformAmbientLevel();
         return;
       }
       if (entry.audio.paused || entry.audio.ended) {
@@ -5426,6 +5945,7 @@
           } catch {}
         }
       }
+      updateWaveformAmbientLevel();
     };
 
     const stopAllAmbientNoise = () => {
@@ -6491,13 +7011,43 @@
     const registerAudioInfluenceBeat = (beatPayload) => {
       const energy = clampNumber(Number(beatPayload && beatPayload.energy), 0, 1, 0.32);
       const rms = clampNumber(Number(beatPayload && beatPayload.rms), 0, 1, 0.03);
+      const peak = clampNumber(Number(beatPayload && beatPayload.peak), 0, 1, 0);
+      const spectrum = Array.isArray(beatPayload && beatPayload.spectrum) ? beatPayload.spectrum : [];
       const intervalMs = clampNumber(Number(beatPayload && beatPayload.intervalMs), 0, 2000, 710);
-      const cadence = Math.max(0, Math.min(1, (760 - intervalMs) / 520));
+
+      let drumBand = energy;
+      if (spectrum.length > 0) {
+        const kickEnd = Math.max(1, Math.floor(spectrum.length * 0.12));
+        const lowEnd = Math.max(kickEnd + 1, Math.floor(spectrum.length * 0.3));
+        const lowMidEnd = Math.max(lowEnd + 1, Math.floor(spectrum.length * 0.5));
+        let kickSum = 0;
+        let lowSum = 0;
+        let lowMidSum = 0;
+        for (let i = 0; i < kickEnd; i += 1) kickSum += clampNumber(spectrum[i], 0, 1, 0);
+        for (let i = 0; i < lowEnd; i += 1) lowSum += clampNumber(spectrum[i], 0, 1, 0);
+        for (let i = lowEnd; i < lowMidEnd; i += 1) lowMidSum += clampNumber(spectrum[i], 0, 1, 0);
+        const kickAvg = kickSum / Math.max(1, kickEnd);
+        const lowAvg = lowSum / Math.max(1, lowEnd);
+        const lowMidAvg = lowMidSum / Math.max(1, lowMidEnd - lowEnd);
+        drumBand = clampNumber((kickAvg * 0.74) + (lowAvg * 0.42) - (lowMidAvg * 0.32), 0, 1, energy);
+      }
+
+      audioInfluenceDrumEma = audioInfluenceDrumEma > 0
+        ? ((audioInfluenceDrumEma * 0.82) + (drumBand * 0.18))
+        : drumBand;
+      audioInfluencePeakEma = audioInfluencePeakEma > 0
+        ? ((audioInfluencePeakEma * 0.86) + (peak * 0.14))
+        : peak;
+
+      const cadence = Math.max(0, Math.min(1, (700 - intervalMs) / 460));
+      const drumDrive = Math.max(0, Math.min(1, (drumBand - 0.12) / 0.5));
       const energyDrive = Math.max(0, Math.min(1, (energy - 0.14) / 0.58));
       const rmsDrive = Math.max(0, Math.min(1, (rms - 0.018) / 0.09));
-      const beatImpact = (cadence * 0.45) + (energyDrive * 0.4) + (rmsDrive * 0.15);
+      const peakDelta = Math.max(0, peak - (audioInfluencePeakEma * 0.92));
+      const transientDrive = Math.max(0, Math.min(1, (peakDelta * 3.4) + (drumDrive * 0.28)));
+      const beatImpact = (cadence * 0.24) + (drumDrive * 0.5) + (transientDrive * 0.18) + (energyDrive * 0.06) + (rmsDrive * 0.02);
       audioInfluenceLastBeatImpact = beatImpact;
-      audioInfluenceBeatBoost = Math.max(0, Math.min(0.95, (audioInfluenceBeatBoost * 0.35) + (beatImpact * 0.75)));
+      audioInfluenceBeatBoost = Math.max(0, Math.min(0.95, (audioInfluenceBeatBoost * 0.3) + (beatImpact * 0.82)));
       audioInfluenceLastFactorAt = global.performance ? global.performance.now() : Date.now();
     };
 
@@ -7006,6 +7556,9 @@
       return clamp01(evaluatePresetInterpolation(settingsState.interpolatorPreset, x));
     };
 
+    waveformInterpolatorFn = (t) => getInterpolatorValueAt(t);
+    app._waveformInterpolatorFn = waveformInterpolatorFn;
+
     const buildCssLinearInterpolator = (sampleFn) => {
       if (typeof sampleFn !== "function") return null;
       const stopCount = 18;
@@ -7408,6 +7961,18 @@
       modalCard.style.setProperty("--physics-pop-ease", effectiveMotionEase);
       modalCard.style.setProperty("--physics-tooltip-ease", effectiveMotionEase);
       modalCard.style.setProperty("--accent-custom-hue", String(resolvedAccentHue));
+      modalCard.style.setProperty(
+        "--radio-party-strength",
+        String(clampNumber(
+          settingsState.radioPulseStrength,
+          RADIO_PULSE_STRENGTH_MIN,
+          RADIO_PULSE_STRENGTH_MAX,
+          DEFAULT_MODAL_SETTINGS.radioPulseStrength
+        ) / 100)
+      );
+      if (settingsState.accentPartyMode !== true || isMotionDisabled()) {
+        stopPartyCursorNudge({ immediate: settingsState.accentPartyMode !== true });
+      }
       modalCard.style.filter = `contrast(${Math.max(0.5, settingsState.accessibilityContrast / 100)}) saturate(${Math.max(0.5, settingsState.accessibilitySaturation / 100)})`;
       modalCard.style.setProperty(
         "--modal-scale",
@@ -7630,12 +8195,41 @@
       if (radioChannelNextBtn) {
         radioChannelNextBtn.disabled = radioStationApplyPending === true;
       }
+      if (radioChannelShuffleBtn) {
+        radioChannelShuffleBtn.disabled = radioStationApplyPending === true;
+      }
       if (radioChannelStatus) {
         if (radioStationApplyPending === true) {
           radioChannelStatus.textContent = "Checking radio channel availability...";
         } else {
           radioChannelStatus.textContent = buildRadioStatusText(selectedRadioStation, normalizedRadioStationUrl);
         }
+      }
+      if (radioPulseControlsBody) {
+        radioPulseControlsBody.hidden = settingsState.accentPartyMode !== true;
+        radioPulseControlsBody.setAttribute("aria-hidden", settingsState.accentPartyMode !== true ? "true" : "false");
+      }
+      if (radioPulseSection) {
+        radioPulseSection.hidden = settingsState.accentPartyMode !== true;
+        radioPulseSection.setAttribute("aria-hidden", settingsState.accentPartyMode !== true ? "true" : "false");
+      }
+      if (radioPulseStrengthSlider) {
+        radioPulseStrengthSlider.value = String(Math.round(clampNumber(
+          settingsState.radioPulseStrength,
+          RADIO_PULSE_STRENGTH_MIN,
+          RADIO_PULSE_STRENGTH_MAX,
+          DEFAULT_MODAL_SETTINGS.radioPulseStrength
+        )));
+        radioPulseStrengthSlider.disabled = settingsState.accentPartyMode !== true;
+      }
+      if (radioPulseStrengthInput) {
+        radioPulseStrengthInput.value = String(Math.round(clampNumber(
+          settingsState.radioPulseStrength,
+          RADIO_PULSE_STRENGTH_MIN,
+          RADIO_PULSE_STRENGTH_MAX,
+          DEFAULT_MODAL_SETTINGS.radioPulseStrength
+        )));
+        radioPulseStrengthInput.disabled = settingsState.accentPartyMode !== true;
       }
       if (sfxVolumeSlider) {
         const currentSfxVolume = snapSfxVolumeValue(
@@ -7973,7 +8567,8 @@
           commitModalSettings({
             keepRadioOn: DEFAULT_MODAL_SETTINGS.keepRadioOn,
             audioStreamSource: DEFAULT_MODAL_SETTINGS.audioStreamSource,
-            radioStationUrl: DEFAULT_MODAL_SETTINGS.radioStationUrl
+            radioStationUrl: DEFAULT_MODAL_SETTINGS.radioStationUrl,
+            radioPulseStrength: DEFAULT_MODAL_SETTINGS.radioPulseStrength
           });
           break;
         case "radioChannel":
@@ -8841,6 +9436,36 @@
       settingsState.radioStationUrl
     );
 
+    const getRadioStationsForNavigation = () => (
+      RADIO_STATION_OPTIONS_SORTED.length ? RADIO_STATION_OPTIONS_SORTED : RADIO_STATION_OPTIONS
+    );
+
+    const populateRadioChannelSelectOptions = () => {
+      if (!radioChannelSelect) return;
+      const stations = getRadioStationsForNavigation();
+      if (!stations.length) return;
+      const selectedUrl = normalizeRadioStationUrl(
+        settingsState.radioStationUrl,
+        DEFAULT_MODAL_SETTINGS.radioStationUrl
+      );
+      const fragment = document.createDocumentFragment();
+      stations.forEach((station) => {
+        if (!station || !station.url) return;
+        const option = document.createElement("option");
+        option.value = station.url;
+        option.textContent = String(station.label || station.url);
+        fragment.appendChild(option);
+      });
+      radioChannelSelect.innerHTML = "";
+      radioChannelSelect.appendChild(fragment);
+      radioChannelSelect.value = selectedUrl;
+      if (!radioChannelSelect.value && stations[0] && stations[0].url) {
+        radioChannelSelect.value = stations[0].url;
+      }
+    };
+
+    populateRadioChannelSelectOptions();
+
     if (audioStreamSourceButtons.length) {
       audioStreamSourceButtons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -8856,16 +9481,18 @@
     }
 
     const getRadioStationIndexByUrl = (stationUrl) => {
+      const stations = getRadioStationsForNavigation();
       const normalizedUrl = normalizeRadioStationUrl(stationUrl, settingsState.radioStationUrl).toLowerCase();
-      const index = RADIO_STATION_OPTIONS.findIndex((station) => String(station.url || "").trim().toLowerCase() === normalizedUrl);
+      const index = stations.findIndex((station) => String(station.url || "").trim().toLowerCase() === normalizedUrl);
       return index >= 0 ? index : 0;
     };
 
     const applyRadioSelectionByIndex = (index) => {
-      const total = RADIO_STATION_OPTIONS.length;
+      const stations = getRadioStationsForNavigation();
+      const total = stations.length;
       if (!total) return;
       const safeIndex = ((index % total) + total) % total;
-      const station = RADIO_STATION_OPTIONS[safeIndex];
+      const station = stations[safeIndex];
       if (!station || !station.url) return;
       if (radioChannelSelect) {
         radioChannelSelect.value = station.url;
@@ -8899,6 +9526,58 @@
         if (radioStationApplyPending) return;
         const currentIndex = getRadioStationIndexByUrl(getRequestedRadioStationUrl());
         applyRadioSelectionByIndex(currentIndex + 1);
+      });
+    }
+
+    if (radioChannelShuffleBtn) {
+      radioChannelShuffleBtn.addEventListener("click", () => {
+        if (radioStationApplyPending) return;
+        const stations = getRadioStationsForNavigation();
+        const total = stations.length;
+        if (!total) return;
+        if (total === 1) {
+          applyRadioSelectionByIndex(0);
+          return;
+        }
+        const currentIndex = getRadioStationIndexByUrl(getRequestedRadioStationUrl());
+        let nextIndex = currentIndex;
+        while (nextIndex === currentIndex) {
+          nextIndex = Math.floor(Math.random() * total);
+        }
+        applyRadioSelectionByIndex(nextIndex);
+      });
+    }
+
+    if (radioPulseStrengthSlider) {
+      radioPulseStrengthSlider.addEventListener("input", () => {
+        const value = Math.round(clampNumber(
+          radioPulseStrengthSlider.value,
+          RADIO_PULSE_STRENGTH_MIN,
+          RADIO_PULSE_STRENGTH_MAX,
+          settingsState.radioPulseStrength
+        ));
+        commitModalSettings({ radioPulseStrength: value });
+      });
+    }
+
+    if (radioPulseStrengthInput) {
+      const syncRadioPulseStrengthFromInput = () => {
+        const value = Math.round(clampNumber(
+          radioPulseStrengthInput.value,
+          RADIO_PULSE_STRENGTH_MIN,
+          RADIO_PULSE_STRENGTH_MAX,
+          settingsState.radioPulseStrength
+        ));
+        commitModalSettings({ radioPulseStrength: value });
+      };
+      radioPulseStrengthInput.addEventListener("change", syncRadioPulseStrengthFromInput);
+      radioPulseStrengthInput.addEventListener("blur", syncRadioPulseStrengthFromInput);
+      radioPulseStrengthInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          syncRadioPulseStrengthFromInput();
+          radioPulseStrengthInput.blur();
+        }
       });
     }
 
@@ -9505,6 +10184,18 @@
       resizeConfettiCanvas();
     };
     global.addEventListener("resize", onWindowResize);
+
+    onPartyCursorPointerMove = (event) => {
+      if (!event || event.pointerType === "touch") return;
+      updatePartyCursorTargetsFromPointer(event.clientX, event.clientY);
+    };
+    onPartyCursorLeave = () => {
+      stopPartyCursorNudge({ immediate: false });
+      schedulePartyCursorNudge();
+    };
+    global.addEventListener("pointermove", onPartyCursorPointerMove, { passive: true });
+    global.addEventListener("pointerleave", onPartyCursorLeave, true);
+    global.addEventListener("blur", onPartyCursorLeave);
 
     applyStatusAccent();
     syncLabelChipState();

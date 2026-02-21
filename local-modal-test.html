@@ -81,6 +81,7 @@
   <script src="./src/is-popover-open.js"></script>
   <script src="./src/create-modal-markup.js"></script>
   <script src="./src/modal-physics.js"></script>
+  <script src="./src/waveform.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.js"></script>
   <script src="./src/open-modal.js"></script>
   <script src="./src/bootstrap.js"></script>
@@ -105,6 +106,7 @@
       async function loadModalAssets() {
         const cssPaths = [
           "./styles/root.css",
+          "./styles/waveform.css",
           "./styles/modal.css",
           "./styles/inputs.css",
           "./styles/selects.css",
@@ -151,11 +153,22 @@
       }
 
       async function openModal() {
-        if (typeof app.openModal !== "function") {
-          throw new Error("ClickUpUpdateApp.openModal is unavailable.");
+        // Wait briefly for scripts to finish initializing. If openModal isn't available
+        // something failed during script load — log available app keys for debugging.
+        const start = Date.now();
+        const timeoutMs = 3000;
+        while (Date.now() - start < timeoutMs) {
+          if (globalThis.ClickUpUpdateApp && typeof globalThis.ClickUpUpdateApp.openModal === 'function') break;
+          await new Promise(r => setTimeout(r, 50));
         }
+
+        if (!globalThis.ClickUpUpdateApp || typeof globalThis.ClickUpUpdateApp.openModal !== "function") {
+          console.error('ClickUpUpdateApp is:', globalThis.ClickUpUpdateApp);
+          throw new Error("ClickUpUpdateApp.openModal is unavailable. Check console for load errors.");
+        }
+
         await loadModalAssets();
-        app.openModal(editor);
+        globalThis.ClickUpUpdateApp.openModal(editor);
       }
 
       openButton.addEventListener("click", function () {
