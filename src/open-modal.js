@@ -16,14 +16,159 @@
   const LOFI_STREAM_URL = "https://ec3.yesstreaming.net:3755/stream";
   const RADIO_STATION_OPTIONS = Object.freeze([
     Object.freeze({
-      id: "zeno-tabzverz0fctv",
-      label: "Zeno - tabzverz0fctv",
-      url: "https://stream.zeno.fm/tabzverz0fctv"
-    }),
-    Object.freeze({
       id: "yesstreaming-ec6-1455",
       label: "Yesstreaming - ec6:1455",
       url: "https://ec6.yesstreaming.net:1455/stream"
+    }),
+    Object.freeze({
+      id: "yesfm-manila",
+      label: "YES FM Manila",
+      url: "https://azura.yesfm.com.ph/listen/yes_fm_manila/radio.mp3"
+    }),
+    Object.freeze({
+      id: "radyonatin-dipolog",
+      label: "Radyo Natin - Dipolog",
+      url: "https://mbc.radyonatinfm.com:8010/dipolog"
+    }),
+    Object.freeze({
+      id: "edmdnb-radio",
+      label: "EDM DnB",
+      url: "https://edmdnb.com:8000/radio.mp3"
+    }),
+    Object.freeze({
+      id: "activo199-latin",
+      label: "Activo 199 FM (Latin)",
+      url: "https://s11.citrus3.com:2020/stream/activo199fm"
+    }),
+    Object.freeze({
+      id: "bbc-radio-two-hls",
+      label: "BBC Radio Two (HLS)",
+      url: "https://as-hls-ww-live.akamaized.net/pool_74208725/live/ww/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d96000.norewind.m3u8"
+    }),
+    Object.freeze({
+      id: "bbc-radio-one-hls",
+      label: "BBC Radio One (HLS)",
+      url: "https://as-hls-ww.live.cf.md.bbci.co.uk/pool_01505109/live/ww/bbc_radio_one/bbc_radio_one.isml/bbc_radio_one-audio%3d96000.norewind.m3u8"
+    }),
+    Object.freeze({
+      id: "gayfm-silvacast",
+      label: "GAYFM",
+      url: "https://icepool.silvacast.com/GAYFM.mp3"
+    }),
+    Object.freeze({
+      id: "bigfm-edm-progressive",
+      label: "bigFM EDM & Progressive",
+      url: "https://audiotainment-sw.streamabc.net/atsw-edm-mp3-128-9914164"
+    }),
+    Object.freeze({
+      id: "powerhit-christian",
+      label: "PowerHit Christian Radio",
+      url: "https://stream-179.zeno.fm/7t45x7pnwakvv"
+    }),
+    Object.freeze({
+      id: "starfm-philippines",
+      label: "StarFM Philippines",
+      url: "https://stream-143.zeno.fm/g1pmt17nz9duv"
+    }),
+    Object.freeze({
+      id: "myx-p-pop",
+      label: "MYX P-Pop",
+      url: "https://22283.live.streamtheworld.com/MYXPPOPAAC.aac"
+    }),
+    Object.freeze({
+      id: "myx-philippines",
+      label: "MYX Philippines",
+      url: "https://opentune.net/stream?url=http%3A%2F%2F28093.live.streamtheworld.com%3A3690%2FMYXFM_SC"
+    }),
+    Object.freeze({
+      id: "budots-fm-989",
+      label: "Budots FM 98.9",
+      url: "https://stream-178.zeno.fm/2uhuu5hvzqzuv"
+    }),
+    Object.freeze({
+      id: "classicsradio-uk1",
+      label: "Classics Radio - UK1",
+      url: "https://uk1.internet-radio.com/proxy/classicsradio?mp=/stream"
+    }),
+    Object.freeze({
+      id: "metal-rock-fm",
+      label: "Metal Rock FM",
+      url: "https://kathy.torontocast.com:2820/stream/1/"
+    }),
+    Object.freeze({
+      id: "radiomerge-uk7",
+      label: "Merge 104.8 - UK7",
+      url: "https://uk7.internet-radio.com/proxy/radiomerge?mp=/stream;"
+    }),
+    Object.freeze({
+      id: "hospital-radio-uk1",
+      label: "Hospital Radio - UK1",
+      url: "https://uk1.internet-radio.com/proxy/hospital?mp=/stream;"
+    }),
+    Object.freeze({
+      id: "urbanchic-uk2",
+      label: "Urban Chic - UK2",
+      url: "https://uk2.internet-radio.com/proxy/urbanchic?mp=/stream;"
+    }),
+    Object.freeze({
+      id: "radiomonster-rock-ultra",
+      label: "RadioMonster - Rock Ultra",
+      url: "https://ic.radiomonster.fm/rock.ultra"
+    }),
+    Object.freeze({
+      id: "webmusik-laut",
+      label: "Webmusik",
+      url: "https://webmusik.stream.laut.fm/webmusik"
+    }),
+    Object.freeze({
+      id: "pinknoise-uk1",
+      label: "Pink Noise - UK1",
+      url: "https://uk1.internet-radio.com/proxy/pinknoise?mp=/stream;"
+    }),
+    Object.freeze({
+      id: "live365-a20450",
+      label: "Live365 - a20450",
+      url: "https://das-edge15-live365-dal02.cdnstream.com/a20450"
+    }),
+    Object.freeze({
+      id: "jpop-powerplay-9j",
+      label: "9J-Pop Powerplay",
+      url: "https://kathy.torontocast.com:3560/;"
+    }),
+    Object.freeze({
+      id: "jrock-powerplay",
+      label: "J-Rock Powerplay",
+      url: "https://kathy.torontocast.com:3340/;"
+    }),
+    Object.freeze({
+      id: "bamm-radio",
+      label: "BAMM Radio",
+      url: "https://radio35.virtualtronics.com:20040/;"
+    }),
+    Object.freeze({
+      id: "box-jpop-city-pop",
+      label: "BOX - Japan City Pop",
+      url: "https://boxradio-edge-00.streamafrica.net/jpopchill"
+    }),
+    Object.freeze({
+      id: "otaku-music-radio",
+      label: "Otaku Music Radio",
+      url: "https://kathy.torontocast.com:2880/1.mp3"
+    }),
+    Object.freeze({
+      id: "ifm-philippines",
+      label: "iFM Philippines",
+      url: "https://magic.radioca.st/stream"
+    }),
+    Object.freeze({
+      id: "up2dance",
+      label: "Up2Dance",
+      url: "https://icecast.live/up2dance"
+    }),
+    Object.freeze({
+      id: "zeno-tabzverz0fctv",
+      label: "Zeno - tabzverz0fctv",
+      url: "https://stream.zeno.fm/tabzverz0fctv"
     }),
     Object.freeze({
       id: "zeno-60cb36c29heuv",
@@ -34,26 +179,6 @@
       id: "zeno-sh37pvfd938uv",
       label: "Zeno - sh37pvfd938uv",
       url: "https://stream-142.zeno.fm/sh37pvfd938uv"
-    }),
-    Object.freeze({
-      id: "radioboss-c22",
-      label: "RadioBoss - c22/autodj",
-      url: "https://c22.radioboss.fm:8808/autodj"
-    }),
-    Object.freeze({
-      id: "live-streams-mscp3",
-      label: "Live Streams NL - mscp3",
-      url: "https://mscp3.live-streams.nl:8020/radio"
-    }),
-    Object.freeze({
-      id: "radiomerge-uk7",
-      label: "RadioMerge - UK7",
-      url: "https://uk7.internet-radio.com/proxy/radiomerge?mp=/stream;"
-    }),
-    Object.freeze({
-      id: "magic-radiocast",
-      label: "Magic RadioCast",
-      url: "https://magic.radioca.st/stream/1/"
     }),
     Object.freeze({
       id: "starfm-zamboanga",
@@ -107,6 +232,12 @@
   ]);
   const AMBIENT_NOISE_IDS = new Set(AMBIENT_NOISE_TRACKS.map((track) => track.id));
   const RADIO_STATION_URLS = new Set(RADIO_STATION_OPTIONS.map((station) => String(station.url || "").trim().toLowerCase()));
+  const REMOVED_RADIO_STATION_URLS = new Set([
+    "http://c22.radioboss.fm:8808/autodj",
+    "https://c22.radioboss.fm:8808/autodj",
+    "http://mscp3.live-streams.nl:8020/radio",
+    "https://mscp3.live-streams.nl:8020/radio"
+  ]);
   const DEFAULT_RADIO_STATION_URL = RADIO_STATION_OPTIONS[0].url;
   const LOFI_VOLUME_STORAGE_KEY = "clickup-update-modal.lofi.volume.v1";
   const MAX_DRAFTS = 40;
@@ -298,20 +429,18 @@
   }
 
   function normalizeRadioStationUrl(value, fallback = DEFAULT_RADIO_STATION_URL) {
-    const fallbackUrl = String(fallback || DEFAULT_RADIO_STATION_URL).trim() || DEFAULT_RADIO_STATION_URL;
-    const canonicalizeRadioUrl = (url) => {
-      const rawUrl = String(url == null ? "" : url).trim();
-      if (rawUrl === "http://c22.radioboss.fm:8808/autodj") return "https://c22.radioboss.fm:8808/autodj";
-      if (rawUrl === "http://mscp3.live-streams.nl:8020/radio") return "https://mscp3.live-streams.nl:8020/radio";
-      return rawUrl;
-    };
-    const canonicalFallback = canonicalizeRadioUrl(fallbackUrl) || fallbackUrl;
-    const raw = canonicalizeRadioUrl(value);
-    if (!raw) return canonicalFallback;
+    const fallbackRaw = String(fallback || DEFAULT_RADIO_STATION_URL).trim() || DEFAULT_RADIO_STATION_URL;
+    const fallbackNormalized = fallbackRaw.toLowerCase();
+    const safeFallback = RADIO_STATION_URLS.has(fallbackNormalized)
+      ? fallbackRaw
+      : DEFAULT_RADIO_STATION_URL;
+    const raw = String(value == null ? "" : value).trim();
+    if (!raw) return safeFallback;
     const normalized = raw.toLowerCase();
-    if (!RADIO_STATION_URLS.has(normalized)) return canonicalFallback;
+    if (REMOVED_RADIO_STATION_URLS.has(normalized)) return safeFallback;
+    if (!RADIO_STATION_URLS.has(normalized)) return safeFallback;
     const match = RADIO_STATION_OPTIONS.find((station) => String(station.url || "").trim().toLowerCase() === normalized);
-    return match ? match.url : canonicalFallback;
+    return match ? match.url : safeFallback;
   }
 
   function getRadioStationByUrl(url) {
@@ -1500,8 +1629,9 @@
 
     const setStreamUrl = (url, { restartPlayback = true } = {}) => {
       let nextUrl = String(url || "").trim();
-      if (nextUrl === "http://c22.radioboss.fm:8808/autodj") nextUrl = "https://c22.radioboss.fm:8808/autodj";
-      if (nextUrl === "http://mscp3.live-streams.nl:8020/radio") nextUrl = "https://mscp3.live-streams.nl:8020/radio";
+      if (nextUrl && nextUrl !== LOFI_STREAM_URL) {
+        nextUrl = normalizeRadioStationUrl(nextUrl, DEFAULT_RADIO_STATION_URL);
+      }
       if (!nextUrl) return false;
       if (nextUrl === currentStreamUrl) return true;
       const wasPlaying = state.playing;
@@ -2009,14 +2139,39 @@
                   <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-prev" type="button">Prev</button>
                   <div class="select-wrap settings-select-wrap">
                     <select class="field settings-select" id="radio-channel-select">
+                      <option value="https://ec6.yesstreaming.net:1455/stream">Yesstreaming - ec6:1455</option>
+                      <option value="https://azura.yesfm.com.ph/listen/yes_fm_manila/radio.mp3">YES FM Manila</option>
+                      <option value="https://mbc.radyonatinfm.com:8010/dipolog">Radyo Natin - Dipolog</option>
+                      <option value="https://edmdnb.com:8000/radio.mp3">EDM DnB</option>
+                      <option value="https://s11.citrus3.com:2020/stream/activo199fm">Activo 199 FM (Latin)</option>
+                      <option value="https://as-hls-ww-live.akamaized.net/pool_74208725/live/ww/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d96000.norewind.m3u8">BBC Radio Two (HLS)</option>
+                      <option value="https://as-hls-ww.live.cf.md.bbci.co.uk/pool_01505109/live/ww/bbc_radio_one/bbc_radio_one.isml/bbc_radio_one-audio%3d96000.norewind.m3u8">BBC Radio One (HLS)</option>
+                      <option value="https://icepool.silvacast.com/GAYFM.mp3">GAYFM</option>
+                      <option value="https://audiotainment-sw.streamabc.net/atsw-edm-mp3-128-9914164">bigFM EDM & Progressive</option>
+                      <option value="https://stream-179.zeno.fm/7t45x7pnwakvv">PowerHit Christian Radio</option>
+                      <option value="https://stream-143.zeno.fm/g1pmt17nz9duv">StarFM Philippines</option>
+                      <option value="https://22283.live.streamtheworld.com/MYXPPOPAAC.aac">MYX P-Pop</option>
+                      <option value="https://opentune.net/stream?url=http%3A%2F%2F28093.live.streamtheworld.com%3A3690%2FMYXFM_SC">MYX Philippines</option>
+                      <option value="https://stream-178.zeno.fm/2uhuu5hvzqzuv">Budots FM 98.9</option>
+                      <option value="https://uk1.internet-radio.com/proxy/classicsradio?mp=/stream">Classics Radio - UK1</option>
+                      <option value="https://kathy.torontocast.com:2820/stream/1/">Metal Rock FM</option>
+                      <option value="https://uk7.internet-radio.com/proxy/radiomerge?mp=/stream;">Merge 104.8 - UK7</option>
+                      <option value="https://uk1.internet-radio.com/proxy/hospital?mp=/stream;">Hospital Radio - UK1</option>
+                      <option value="https://uk2.internet-radio.com/proxy/urbanchic?mp=/stream;">Urban Chic - UK2</option>
+                      <option value="https://ic.radiomonster.fm/rock.ultra">RadioMonster - Rock Ultra</option>
+                      <option value="https://webmusik.stream.laut.fm/webmusik">Webmusik</option>
+                      <option value="https://uk1.internet-radio.com/proxy/pinknoise?mp=/stream;">Pink Noise - UK1</option>
+                      <option value="https://das-edge15-live365-dal02.cdnstream.com/a20450">Live365 - a20450</option>
+                      <option value="https://kathy.torontocast.com:3560/;">9J-Pop Powerplay</option>
+                      <option value="https://kathy.torontocast.com:3340/;">J-Rock Powerplay</option>
+                      <option value="https://radio35.virtualtronics.com:20040/;">BAMM Radio</option>
+                      <option value="https://boxradio-edge-00.streamafrica.net/jpopchill">BOX - Japan City Pop</option>
+                      <option value="https://kathy.torontocast.com:2880/1.mp3">Otaku Music Radio</option>
+                      <option value="https://magic.radioca.st/stream">iFM Philippines</option>
+                      <option value="https://icecast.live/up2dance">Up2Dance</option>
                       <option value="https://stream.zeno.fm/tabzverz0fctv">Zeno - tabzverz0fctv</option>
                       <option value="https://stream-148.zeno.fm/60cb36c29heuv">Zeno - 60cb36c29heuv</option>
                       <option value="https://stream-142.zeno.fm/sh37pvfd938uv">Zeno - sh37pvfd938uv</option>
-                      <option value="https://ec6.yesstreaming.net:1455/stream">Yesstreaming - ec6:1455</option>
-                      <option value="https://c22.radioboss.fm:8808/autodj">RadioBoss - c22/autodj</option>
-                      <option value="https://mscp3.live-streams.nl:8020/radio">Live Streams NL - mscp3</option>
-                      <option value="https://uk7.internet-radio.com/proxy/radiomerge?mp=/stream;">RadioMerge - UK7</option>
-                      <option value="https://magic.radioca.st/stream/1/">Magic RadioCast</option>
                       <option value="https://stream-142.zeno.fm/sfaqs2c29heuv">Star FM - Zamboanga</option>
                     </select>
                     <span class="select-icon" aria-hidden="true"></span>
