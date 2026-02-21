@@ -513,6 +513,15 @@
   z-index: 2;
 }
 
+.modal-card[data-resolved-theme="light"] .sidebar-page-btn--party-halfkey {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--surface-button) 88%, #7f90ad 12%) 0%,
+    color-mix(in oklab, var(--surface-button-soft) 78%, #6f82a3 22%) 100%
+  );
+  border-color: color-mix(in oklab, var(--surface-button-primary-soft) 62%, var(--border-soft) 38%);
+}
+
 .sidebar-page-btn--party-halfkey > span {
   opacity: 0;
   user-select: none;
