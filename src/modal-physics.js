@@ -13,13 +13,22 @@
     const getPhysicsStrength = typeof config.getPhysicsStrength === "function"
       ? config.getPhysicsStrength
       : (() => 0);
+    const getEffectivePhysicsIntensity = typeof config.getEffectivePhysicsIntensity === "function"
+      ? config.getEffectivePhysicsIntensity
+      : (() => Math.max(0, getPhysicsStrength() * 100));
     const getInterpolatorValueAt = typeof config.getInterpolatorValueAt === "function"
       ? config.getInterpolatorValueAt
       : ((t) => t);
+    const SPAM_STREAK_WINDOW_MS = 260;
+    const SPAM_STREAK_RESET_MS = 900;
+    const SPAM_STREAK_TRIGGER_COUNT = 6;
 
     let physicsFrame = 0;
     let physicsLastTick = 0;
     let decayStartTime = 0;
+    let spamLastTargetKey = "";
+    let spamStreakCount = 0;
+    let spamLastAt = 0;
     const decayStart = {
       nudgeX: 0,
       nudgeY: 0,
@@ -52,6 +61,9 @@
       decayStart.tiltY = 0;
       decayStart.pressScale = 1;
       decayStartTime = 0;
+      spamLastTargetKey = "";
+      spamStreakCount = 0;
+      spamLastAt = 0;
       modalCard.style.setProperty("--modal-nudge-x", "0px");
       modalCard.style.setProperty("--modal-nudge-y", "0px");
       modalCard.style.setProperty("--modal-tilt-x", "0deg");
@@ -64,6 +76,56 @@
         numControls.style.setProperty("--control-tilt-x", "0deg");
         numControls.style.setProperty("--control-tilt-y", "0deg");
       }
+    };
+
+    const getSpamTargetKey = (event) => {
+      if (!event || !(event.target instanceof Element)) return "";
+      const root = event.target.closest(
+        "[data-physics-spam-key], .num-controls, .settings-segmented, .settings-switch, .sidebar-page-btn, .settings-anchor-btn, .btn, button, input, textarea, select, [role='tab'], [role='button']"
+      );
+      const target = root || event.target;
+      if (!(target instanceof Element)) return "";
+      const tag = String(target.tagName || "").toLowerCase() || "node";
+      const key = String(
+        target.getAttribute("data-physics-spam-key")
+        || target.id
+        || target.getAttribute("name")
+        || target.getAttribute("data-page-target")
+        || target.getAttribute("data-settings-anchor-target")
+        || target.getAttribute("data-theme-option")
+        || target.getAttribute("data-density-option")
+        || target.getAttribute("data-interpolator-mode")
+        || target.getAttribute("data-copy-format")
+        || ""
+      ).trim();
+      if (key) return `${tag}:${key}`;
+      const classHint = String(target.className || "").trim().split(/\s+/).filter(Boolean).slice(0, 3).join(".");
+      return `${tag}:${classHint || "anon"}`;
+    };
+
+    const registerSpamStreak = (event) => {
+      const now = global.performance ? global.performance.now() : Date.now();
+      const key = getSpamTargetKey(event);
+      if (!key) {
+        spamLastTargetKey = "";
+        spamStreakCount = 0;
+        spamLastAt = now;
+        return { count: 0, active: false };
+      }
+      const elapsed = now - spamLastAt;
+      if (spamLastTargetKey !== key || elapsed > SPAM_STREAK_RESET_MS) {
+        spamLastTargetKey = key;
+        spamStreakCount = 1;
+      } else if (elapsed <= SPAM_STREAK_WINDOW_MS) {
+        spamStreakCount += 1;
+      } else {
+        spamStreakCount = Math.max(1, spamStreakCount - 1);
+      }
+      spamLastAt = now;
+      return {
+        count: spamStreakCount,
+        active: spamStreakCount >= SPAM_STREAK_TRIGGER_COUNT
+      };
     };
 
     const renderCurrent = () => {
@@ -164,13 +226,37 @@
       const pressScale = Math.max(0.88, 1 - Math.min(0.12, scaleLossRaw));
       const pressOriginX = Math.max(18, Math.min(82, 50 + xRatio * 32));
       const pressOriginY = Math.max(18, Math.min(82, 50 + yRatio * 32));
+
+      const spamStreak = registerSpamStreak(event);
+      const nudgeXClamp = spamStreak.active ? 28 : 24;
+      const nudgeYClamp = spamStreak.active ? 24 : 20;
+      const tiltXClamp = spamStreak.active ? 30 : 18;
+      const tiltYClamp = spamStreak.active ? 34 : 18;
+      const minPressScale = spamStreak.active ? 0.42 : 0.84;
+
       // Apply impulse immediately; animation speed only affects return-to-rest timing.
       const additiveGain = 1;
-      physicsCurrent.nudgeX = Math.max(-24, Math.min(24, physicsCurrent.nudgeX + (nudgeX * additiveGain)));
-      physicsCurrent.nudgeY = Math.max(-20, Math.min(20, physicsCurrent.nudgeY + (nudgeY * additiveGain)));
-      physicsCurrent.tiltX = Math.max(-18, Math.min(18, physicsCurrent.tiltX + (tiltX * additiveGain)));
-      physicsCurrent.tiltY = Math.max(-18, Math.min(18, physicsCurrent.tiltY + (tiltY * additiveGain)));
-      physicsCurrent.pressScale = Math.max(0.84, Math.min(1, Math.min(physicsCurrent.pressScale, pressScale)));
+      physicsCurrent.nudgeX = Math.max(-nudgeXClamp, Math.min(nudgeXClamp, physicsCurrent.nudgeX + (nudgeX * additiveGain)));
+      physicsCurrent.nudgeY = Math.max(-nudgeYClamp, Math.min(nudgeYClamp, physicsCurrent.nudgeY + (nudgeY * additiveGain)));
+      physicsCurrent.tiltX = Math.max(-tiltXClamp, Math.min(tiltXClamp, physicsCurrent.tiltX + (tiltX * additiveGain)));
+      physicsCurrent.tiltY = Math.max(-tiltYClamp, Math.min(tiltYClamp, physicsCurrent.tiltY + (tiltY * additiveGain)));
+      physicsCurrent.pressScale = Math.max(minPressScale, Math.min(1, Math.min(physicsCurrent.pressScale, pressScale)));
+
+      if (spamStreak.active) {
+        const overdrive = Math.max(0, Math.min(1, (spamStreak.count - SPAM_STREAK_TRIGGER_COUNT + 1) / 5));
+        const funnyScale = Math.max(0.42, 0.74 - (overdrive * 0.24));
+        const tiltDirectionY = Math.abs(xRatio) > 0.08 ? Math.sign(xRatio) : (Math.random() < 0.5 ? -1 : 1);
+        const tiltDirectionX = Math.abs(yRatio) > 0.08 ? -Math.sign(yRatio) : (Math.random() < 0.5 ? -1 : 1);
+        const extraTiltY = tiltDirectionY * (16 + (overdrive * 14));
+        const extraTiltX = tiltDirectionX * (10 + (overdrive * 10));
+        const extraNudgeX = extraTiltY * (0.52 + (overdrive * 0.25));
+        const extraNudgeY = -Math.abs(extraTiltX) * (0.3 + (overdrive * 0.22));
+        physicsCurrent.pressScale = Math.max(0.42, Math.min(physicsCurrent.pressScale, funnyScale));
+        physicsCurrent.tiltX = Math.max(-tiltXClamp, Math.min(tiltXClamp, physicsCurrent.tiltX + extraTiltX));
+        physicsCurrent.tiltY = Math.max(-tiltYClamp, Math.min(tiltYClamp, physicsCurrent.tiltY + extraTiltY));
+        physicsCurrent.nudgeX = Math.max(-nudgeXClamp, Math.min(nudgeXClamp, physicsCurrent.nudgeX + extraNudgeX));
+        physicsCurrent.nudgeY = Math.max(-nudgeYClamp, Math.min(nudgeYClamp, physicsCurrent.nudgeY + extraNudgeY));
+      }
       modalCard.style.setProperty("--modal-press-origin-x", `${pressOriginX.toFixed(2)}%`);
       modalCard.style.setProperty("--modal-press-origin-y", `${pressOriginY.toFixed(2)}%`);
       decayStart.nudgeX = physicsCurrent.nudgeX;

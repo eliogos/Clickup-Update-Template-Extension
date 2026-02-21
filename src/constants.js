@@ -7,7 +7,7 @@
     global.GM_info.script &&
     global.GM_info.script.version
       ? String(global.GM_info.script.version)
-      : "14.3.0";
+      : "15.0.0";
   const scriptUpdateUrl =
     global.GM_info &&
     global.GM_info.script &&

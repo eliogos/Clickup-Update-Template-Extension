@@ -167,29 +167,19 @@ select.field {
   transition: none !important;
 }
 
+.modal-card[data-motion-disabled="true"] .select-wrap select.field:open option {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 .select-wrap select.field option:hover {
   background: color-mix(in oklab, var(--surface-button) 60%, transparent);
   border-color: color-mix(in oklab, var(--border-soft) 85%, transparent);
 }
 
-.status-select option:nth-child(1):hover {
-  background: rgba(var(--status-color-not-started-rgb), 0.2);
-  border-color: rgba(var(--status-color-not-started-rgb), 0.5);
-}
-
-.status-select option:nth-child(2):hover {
-  background: rgba(var(--status-color-in-progress-rgb), 0.2);
-  border-color: rgba(var(--status-color-in-progress-rgb), 0.5);
-}
-
-.status-select option:nth-child(3):hover {
-  background: rgba(var(--status-color-for-qa-rgb), 0.2);
-  border-color: rgba(var(--status-color-for-qa-rgb), 0.5);
-}
-
-.status-select option:nth-child(4):hover {
-  background: rgba(var(--status-color-completed-rgb), 0.2);
-  border-color: rgba(var(--status-color-completed-rgb), 0.5);
+.status-select option:hover {
+  background: color-mix(in oklab, var(--status-accent) 24%, transparent);
+  border-color: color-mix(in oklab, var(--status-accent) 70%, transparent);
 }
 
 .select-wrap select.field option:checked {

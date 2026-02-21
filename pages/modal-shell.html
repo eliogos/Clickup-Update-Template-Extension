@@ -11,8 +11,8 @@
         </p>
       </div>
       <div class="card-header-actions">
-        <input class="lofi-volume" id="lofi-volume" type="range" min="0" max="100" step="1" value="35" aria-label="Lo-fi volume" title="Lo-fi volume" />
-        <button class="icon-close-btn lofi-toggle-btn" id="lofi-toggle" type="button" aria-label="Pause lo-fi stream [Space]" title="Pause/Play music [Space] (when not typing)">
+        <input class="lofi-volume" id="lofi-volume" type="range" min="0" max="100" step="1" value="35" aria-label="Music volume" title="Music volume" />
+        <button class="icon-close-btn lofi-toggle-btn" id="lofi-toggle" type="button" aria-label="Pause music stream [Space]" title="Pause/Play music [Space] (when not typing)">
           <span class="material-symbols-outlined" aria-hidden="true">pause</span>
         </button>
         <button class="icon-close-btn" id="close-modal" type="button" aria-label="Close [Esc]" title="Close [Esc]">
@@ -41,6 +41,14 @@
               <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
               <span>Drafts</span>
             </button>
+            <button class="sidebar-page-btn" type="button" data-page-target="usage">
+              <span class="material-symbols-outlined" aria-hidden="true">database</span>
+              <span>Usage</span>
+            </button>
+            <button class="sidebar-page-btn" type="button" data-page-target="radio">
+              <span class="material-symbols-outlined" aria-hidden="true">radio</span>
+              <span>Radio</span>
+            </button>
             <button class="sidebar-page-btn" type="button" data-page-target="about">
               <span class="material-symbols-outlined" aria-hidden="true">info</span>
               <span>About</span>
@@ -55,11 +63,14 @@
           {{PAGE_SETTINGS}}
           {{PAGE_VARIABLES}}
           {{PAGE_DRAFTS}}
+          {{PAGE_USAGE}}
+          {{PAGE_RADIO}}
           {{PAGE_ABOUT}}
         </div>
       </div>
+      {{MODAL_CONFETTI_OVERLAY}}
       {{SETTINGS_ANCHOR_RAIL}}
     </div>
-    <div class="modal-toast" id="modal-toast" hidden></div>
+    {{MODAL_TOAST}}
   </section>
 </div>

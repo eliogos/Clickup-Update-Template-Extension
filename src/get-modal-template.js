@@ -2,9 +2,9 @@
   "use strict";
 
   const app = (global.ClickUpUpdateApp = global.ClickUpUpdateApp || {});
-  const PAGE_TOKEN_PATTERN = /{{\s*(PAGE_EDITOR|PAGE_SETTINGS|PAGE_VARIABLES|PAGE_DRAFTS|PAGE_ABOUT)\s*}}/g;
-  const SHELL_TOKEN_PATTERN = /{{\s*(SETTINGS_ANCHOR_RAIL)\s*}}/g;
-  const SETTINGS_PAGE_TOKEN_PATTERN = /{{\s*(SETTINGS_SECTION_TRIGGER|SETTINGS_SECTION_APPEARANCE|SETTINGS_SECTION_TYPOGRAPHY|SETTINGS_SECTION_OVERLAY|SETTINGS_SECTION_AUDIO|SETTINGS_SECTION_ACCESSIBILITY|SETTINGS_SECTION_ANIMATION)\s*}}/g;
+  const PAGE_TOKEN_PATTERN = /{{\s*(PAGE_EDITOR|PAGE_SETTINGS|PAGE_VARIABLES|PAGE_DRAFTS|PAGE_USAGE|PAGE_AUDIO|PAGE_RADIO|PAGE_ABOUT)\s*}}/g;
+  const SHELL_TOKEN_PATTERN = /{{\s*(SETTINGS_ANCHOR_RAIL|MODAL_TOAST|MODAL_CONFETTI_OVERLAY)\s*}}/g;
+  const SETTINGS_PAGE_TOKEN_PATTERN = /{{\s*(SETTINGS_SECTION_TRIGGER|SETTINGS_SECTION_APPEARANCE|SETTINGS_SECTION_TYPOGRAPHY|SETTINGS_SECTION_OVERLAY|SETTINGS_SECTION_AUDIO|SETTINGS_SECTION_ACCESSIBILITY|SETTINGS_SECTION_ANIMATION|SETTINGS_SECTION_AI_SEARCH_PROVIDER|SETTINGS_SECTION_PHYSICS)\s*}}/g;
 
   function readResource(resourceName) {
     if (typeof GM_getResourceText !== "function") return "";
@@ -23,6 +23,9 @@
       PAGE_SETTINGS: pageTemplates.settings || "",
       PAGE_VARIABLES: pageTemplates.variables || "",
       PAGE_DRAFTS: pageTemplates.drafts || "",
+      PAGE_USAGE: pageTemplates.usage || "",
+      PAGE_AUDIO: pageTemplates.radio || pageTemplates.audio || "",
+      PAGE_RADIO: pageTemplates.radio || pageTemplates.audio || "",
       PAGE_ABOUT: pageTemplates.about || ""
     };
 
@@ -30,6 +33,8 @@
       .replace(PAGE_TOKEN_PATTERN, (full, token) => pageMap[token] || "")
       .replace(SHELL_TOKEN_PATTERN, (full, token) => {
         if (token === "SETTINGS_ANCHOR_RAIL") return pageTemplates.settingsAnchor || "";
+        if (token === "MODAL_TOAST") return pageTemplates.modalToast || "";
+        if (token === "MODAL_CONFETTI_OVERLAY") return pageTemplates.modalConfettiOverlay || "";
         return "";
       });
   }
@@ -43,9 +48,29 @@
       SETTINGS_SECTION_OVERLAY: sectionTemplates.overlay || "",
       SETTINGS_SECTION_AUDIO: sectionTemplates.audio || "",
       SETTINGS_SECTION_ACCESSIBILITY: sectionTemplates.accessibility || "",
-      SETTINGS_SECTION_ANIMATION: sectionTemplates.animation || ""
+      SETTINGS_SECTION_ANIMATION: sectionTemplates.animation || "",
+      SETTINGS_SECTION_AI_SEARCH_PROVIDER: sectionTemplates.aiSearchProvider || "",
+      SETTINGS_SECTION_PHYSICS: sectionTemplates.physics || ""
     };
-    return settingsTemplate.replace(SETTINGS_PAGE_TOKEN_PATTERN, (full, token) => sectionMap[token] || "");
+    let assembled = settingsTemplate.replace(SETTINGS_PAGE_TOKEN_PATTERN, (full, token) => sectionMap[token] || "");
+
+    // Backward-compat: if an older settings template is loaded (without the new token),
+    // still render the Physics section at the end.
+    if (
+      sectionTemplates.physics &&
+      !/id=["']settings-section-physics["']/i.test(assembled)
+    ) {
+      if (/<\/div>\s*<\/div>\s*<\/section>\s*$/i.test(assembled)) {
+        assembled = assembled.replace(
+          /<\/div>\s*<\/div>\s*<\/section>\s*$/i,
+          `${sectionTemplates.physics}\n    </div>\n  </div>\n</section>`
+        );
+      } else {
+        assembled += sectionTemplates.physics;
+      }
+    }
+
+    return assembled;
   }
 
   app.getModalTemplate = function getModalTemplate() {
@@ -63,7 +88,9 @@
         overlay: readResource("modalPageSettingsSectionOverlay"),
         audio: readResource("modalPageSettingsSectionAudio"),
         accessibility: readResource("modalPageSettingsSectionAccessibility"),
-        animation: readResource("modalPageSettingsSectionAnimation")
+        animation: readResource("modalPageSettingsSectionAnimation"),
+        aiSearchProvider: readResource("modalPageSettingsSectionAiSearchProvider"),
+        physics: readResource("modalPageSettingsSectionPhysics")
       }
     );
 
@@ -72,8 +99,12 @@
       settings: settingsPage || readResource("modalPageSettings"),
       variables: readResource("modalPageVariables"),
       drafts: readResource("modalPageDrafts"),
+      usage: readResource("modalPageUsage"),
+      radio: readResource("modalPageRadio") || readResource("modalPageAudio"),
       about: readResource("modalPageAbout"),
-      settingsAnchor: readResource("modalPageSettingsAnchorRail")
+      settingsAnchor: readResource("modalPageSettingsAnchorRail"),
+      modalToast: readResource("modalFragmentToast"),
+      modalConfettiOverlay: readResource("modalFragmentConfettiOverlay")
     };
 
     const assembled = assembleTemplate(shellTemplate, pageTemplates);

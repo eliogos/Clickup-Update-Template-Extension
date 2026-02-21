@@ -3,7 +3,7 @@
 
         <div class="settings-field">
           <div class="settings-label-row">
-            <label class="settings-label">Theme</label>
+            <label class="settings-label">Theme <span class="floating-tooltip-pill floating-tooltip-pill-value settings-shortcut-pill">1</span></label>
             <button class="settings-reset-btn" type="button" data-reset-setting="theme" title="Reset theme">
               <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
             </button>
@@ -13,12 +13,12 @@
             <button class="settings-segment-btn" type="button" data-theme-option="auto">Auto</button>
             <button class="settings-segment-btn" type="button" data-theme-option="dark">Dark</button>
           </div>
-          <p class="field-subtext">Auto follows device color scheme.</p>
+          <p class="field-subtext">Auto matches your system light/dark setting.</p>
         </div>
 
         <div class="settings-field">
           <div class="settings-label-row">
-            <label class="settings-label">Density</label>
+            <label class="settings-label">Density and UI Scale <span class="floating-tooltip-pill floating-tooltip-pill-value settings-shortcut-pill">2</span></label>
             <button class="settings-reset-btn" type="button" data-reset-setting="density" title="Reset density">
               <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
             </button>
@@ -28,7 +28,7 @@
             <button class="settings-segment-btn" type="button" data-density-option="comfortable">Comfortable</button>
             <button class="settings-segment-btn" type="button" data-density-option="spacious">Spacious</button>
           </div>
-          <p class="field-subtext">Changes top/bottom paddings and spacing between components.</p>
+          <p class="field-subtext">Adjusts spacing so the layout feels tighter or roomier.</p>
         </div>
 
         <div class="settings-field">
@@ -38,7 +38,7 @@
               <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
             </button>
           </div>
-          <p class="field-subtext">Sets the main accent (default blue) used by primary actions, focus styles, and progress accents.</p>
+          <p class="field-subtext">Choose the accent color used for primary buttons, highlights, and focus states.</p>
           <div class="accent-palette" role="group" aria-label="Accent color presets">
             <button class="accent-swatch-btn" type="button" data-accent-preset="blue" title="Blue">
               <span class="accent-swatch-dot" style="--accent-dot-color:hsl(218 84% 56%);"></span>
@@ -68,6 +68,9 @@
               <span class="accent-swatch-dot accent-swatch-dot-custom"></span>
               <span class="material-symbols-outlined accent-swatch-check" aria-hidden="true">check</span>
             </button>
+            <button class="accent-swatch-btn accent-swatch-party" id="accent-party-toggle" type="button" aria-pressed="false" title="Party mode">
+              <span aria-hidden="true">&#127881;</span>
+            </button>
           </div>
           <div class="accent-custom-popover" id="accent-custom-popover" popover="auto" aria-label="Custom accent hue">
             <div class="accent-custom-header">
@@ -79,7 +82,7 @@
               <span class="accent-hue-thumb" id="accent-hue-thumb"></span>
             </div>
             <input class="accent-hue-slider" id="accent-hue-slider" type="range" min="0" max="360" step="1" value="218" />
-            <p class="field-subtext">Hue only. Saturation and brightness are fixed for consistency.</p>
+            <p class="field-subtext">Pick the hue only. Saturation and brightness stay fixed for consistency.</p>
           </div>
         </div>
       </section>

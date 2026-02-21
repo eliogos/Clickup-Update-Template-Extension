@@ -4,6 +4,35 @@ Userscript that opens a modal in ClickUp using a configurable trigger, then inse
 
 ## What's New
 
+### 15.0.0 (2026-02-21)
+- Major settings and UX expansion across modal pages, including:
+  - New `Radio` page for music/SFX controls.
+  - New `Usage` page and richer `About` references/tools section.
+  - Split settings sections and templates with additional runtime safety fallbacks.
+- Added custom expression editor upgrades:
+  - Contenteditable-style expression workflow, inline AI actions, evaluate/save flow.
+  - Word wrap control and improved monospace/syntax presentation behavior.
+  - Better invalid-expression handling and keybind safety behavior.
+- Added broader audio system features:
+  - Radio channel selector with prev/next controls and provider options.
+  - Ambient noise layers (additive, per-layer volume, emoji toggles).
+  - `Keep Radio on` option for background listening after modal close.
+  - Expanded SFX behavior and party mode audio/visual effects tuning.
+- Added stronger accessibility and theming polish:
+  - Better color-vision support across status/subtext/tooltips.
+  - Density/font-scale propagation to more UI elements.
+  - Consistent accent/themed values for controls and tooltips.
+- Added party-mode improvements:
+  - Reduced lag by shifting to animation-driven behavior where applicable.
+  - Beat/visualizer-driven modal pulse with tuned subtle scaling.
+  - Konami overlay/key feedback enhancements.
+- Added interaction/layout updates:
+  - Sidebar collapse now extends main content area.
+  - Footer alignment/persistence refinements.
+  - Dropdown and menu animation/positioning fixes.
+  - Multiple control sizing updates for spacious density mode.
+- Bumped script version to major release `15.0.0`.
+
 ### 14.3.1 (2026-02-20)
 - Fixed settings switch scroll jumps by anchoring the current section during updates.
 - Added pill styling for tooltip values/shortcuts and added lo-fi volume value to tooltip.

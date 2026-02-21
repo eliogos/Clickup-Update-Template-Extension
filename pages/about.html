@@ -14,60 +14,105 @@
       <section class="settings-section">
         <p class="settings-section-title">Credits</p>
         <div class="note note-credit">{{CREDIT_HTML}} - v{{APP_VERSION}}</div>
-        <p class="field-subtext">Built for Tampermonkey userscript workflow inside ClickUp.</p>
+        <p class="field-subtext">Built for a Tampermonkey workflow inside ClickUp.</p>
       </section>
 
       <section class="settings-section">
-        <p class="settings-section-title">References</p>
+        <p class="settings-section-title">Inspiration & References</p>
         <ul class="about-ref-list">
           <li>
             <a href="https://ant.design/" target="_blank" rel="noopener noreferrer">Ant Design</a>
-            <span>Primary component behavior and visual rhythm reference.</span>
+            <span>Inspiration for component behavior and visual rhythm.</span>
           </li>
           <li>
             <a href="https://ant.design/components/overview/" target="_blank" rel="noopener noreferrer">Ant Design Components Overview</a>
-            <span>Interaction/state references for controls, popups, and forms.</span>
-          </li>
-          <li>
-            <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Tampermonkey</a>
-            <span>Userscript manager runtime and update lifecycle.</span>
-          </li>
-          <li>
-            <a href="https://fonts.google.com/icons" target="_blank" rel="noopener noreferrer">Material Symbols</a>
-            <span>Icon set used throughout modal actions and navigation.</span>
-          </li>
-          <li>
-            <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a>
-            <span>UI and monospace font families in the modal.</span>
+            <span>Inspiration for control states and interaction patterns.</span>
           </li>
           <li>
             <a href="https://developer.mozilla.org/" target="_blank" rel="noopener noreferrer">MDN Web Docs</a>
-            <span>Popover and modern CSS/JS behavior references.</span>
+            <span>Reference for popovers and modern CSS/JS behavior.</span>
+          </li>
+          <li>
+            <a href="https://en.wikipedia.org/wiki/Konami_Code" target="_blank" rel="noopener noreferrer">Konami Code</a>
+            <span>Reference for the hidden party mode unlock sequence.</span>
           </li>
         </ul>
       </section>
 
       <section class="settings-section">
-        <p class="settings-section-title">Version History</p>
-        <p class="field-subtext">View the version history in the repository.</p>
-        <div class="about-update-actions">
-          <a class="btn" href="https://github.com/eliogos/clickup-task-update-template#whats-new" target="_blank" rel="noopener noreferrer">
-            <span class="material-symbols-outlined" aria-hidden="true">history</span>
-            <span>View Version History</span>
-          </a>
-        </div>
+        <p class="settings-section-title">Tools Used</p>
+        <ul class="about-ref-list">
+          <li>
+            <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Tampermonkey</a>
+            <span>Runs and updates this userscript.</span>
+          </li>
+          <li>
+            <a href="https://fonts.google.com/icons" target="_blank" rel="noopener noreferrer">Material Symbols</a>
+            <span>Icon set used across the modal UI.</span>
+          </li>
+          <li>
+            <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google Fonts</a>
+            <span>Font source for UI and monospace text.</span>
+          </li>
+          <li>
+            <a href="https://mathjs.org/" target="_blank" rel="noopener noreferrer">Math.js</a>
+            <span>Powers custom interpolation expressions.</span>
+          </li>
+          <li>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API" target="_blank" rel="noopener noreferrer">Web Audio API</a>
+            <span>Generates button click and typing SFX directly in the browser.</span>
+          </li>
+          <li>
+            <a href="https://ec3.yesstreaming.net:3755/stream" target="_blank" rel="noopener noreferrer">Lo-fi Stream (YesStreaming)</a>
+            <span>Audio stream used for the in-modal music player.</span>
+          </li>
+          <li>
+            <a href="https://pixabay.com/music/" target="_blank" rel="noopener noreferrer">Pixabay Audio</a>
+            <span>Source for ambient layers and confetti celebration sound effects.</span>
+          </li>
+          <li>
+            <a href="https://zeno.fm/" target="_blank" rel="noopener noreferrer">Zeno.FM</a>
+            <span>Provider used by several radio channels in the Radio page.</span>
+          </li>
+          <li>
+            <a href="https://yesstreaming.com/" target="_blank" rel="noopener noreferrer">YesStreaming</a>
+            <span>Provider used by default stream and radio channel options.</span>
+          </li>
+        </ul>
       </section>
 
-      <section class="settings-section">
-        <p class="settings-section-title">Updates</p>
-        <p class="field-subtext">Checks for updates in the repository.</p>
-        <div class="about-update-actions">
-          <button class="btn" id="check-updates" type="button">
-            <span class="material-symbols-outlined" aria-hidden="true">system_update_alt</span>
-            <span>Check Updates</span>
-          </button>
+      <div class="settings-two-column">
+        <section class="settings-section">
+          <div class="about-update-layout">
+            <div class="about-update-copy">
+              <p class="settings-section-title">Version History</p>
+              <p class="field-subtext">Open the repository changelog.</p>
+            </div>
+            <div class="about-update-actions">
+              <a class="btn" href="https://github.com/eliogos/clickup-task-update-template#whats-new" target="_blank" rel="noopener noreferrer">
+                <span class="material-symbols-outlined" aria-hidden="true">history</span>
+                <span>View Version History</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <div class="about-update-layout">
+            <div class="about-update-copy">
+              <p class="settings-section-title">Updates</p>
+              <p class="field-subtext">Checks the repository for newer versions.</p>
+              <p class="field-subtext">Always refresh ClickUp after every update.</p>
+            </div>
+            <div class="about-update-actions">
+              <button class="btn" id="check-updates" type="button">
+                <span class="material-symbols-outlined" aria-hidden="true">system_update_alt</span>
+                <span>Check Updates</span>
+              </button>
+            </div>
+          </div>
+        </section>
         </div>
-      </section>
     </div>
   </div>
 </section>

@@ -1,18 +1,50 @@
 <section class="settings-section" id="settings-section-audio" data-settings-anchor="Audio">
         <p class="settings-section-title">Audio</p>
+        <p class="field-subtext">Advanced audio influence settings. Music and SFX are in the Radio page.</p>
 
         <div class="settings-field">
           <div class="settings-label-row">
-            <span class="settings-label">Music Autoplay</span>
-            <button class="settings-reset-btn" type="button" data-reset-setting="musicAutoplay" title="Reset music autoplay">
+            <span class="settings-label">Influence animation, physics, and party mode</span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="audioBpmInfluence" title="Reset BPM influence">
               <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
             </button>
           </div>
-          <label class="settings-switch" for="lofi-autoplay">
-            <input type="checkbox" id="lofi-autoplay" checked />
+          <label class="settings-switch" for="audio-bpm-influence-enabled">
+            <input type="checkbox" id="audio-bpm-influence-enabled" />
             <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
-            <span class="settings-switch-text">Autoplay lo-fi stream when opening the modal</span>
+            <span class="settings-switch-text">Influence animation, physics, and party mode</span>
           </label>
+          <div class="settings-conditional-body" id="audio-bpm-influence-body" hidden>
+            <div class="settings-label-row">
+              <label class="settings-label" for="audio-bpm-influence-mode-slider">Influence Target</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="audioBpmInfluenceMode" title="Reset influence target">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="animation-speed-wrap">
+              <input class="editor-font-size-slider animation-speed-slider" id="audio-bpm-influence-mode-slider" type="range" min="0" max="2" step="1" />
+              <div class="animation-speed-labels animation-speed-labels-3" aria-hidden="true">
+                <span>Animation</span>
+                <span>Both</span>
+                <span>Physics</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-field">
+          <div class="settings-label-row">
+            <label class="settings-label" for="audio-bpm-influence-strength-slider">Influence Strength</label>
+            <button class="settings-reset-btn" type="button" data-reset-setting="audioBpmInfluenceStrength" title="Reset influence strength">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <div class="editor-font-size-row">
+            <input class="field editor-font-size-input" id="audio-bpm-influence-strength-input" type="number" min="0" max="100" step="1" inputmode="numeric" />
+            <input class="editor-font-size-slider" id="audio-bpm-influence-strength-slider" type="range" min="0" max="100" step="1" />
+          </div>
+          <p class="field-subtext">How much BPM changes affect movement feel.</p>
+          <p class="field-subtext" id="audio-bpm-influence-preview">Current BPM: 84. Influence factor: x1.00.</p>
         </div>
 
       </section>

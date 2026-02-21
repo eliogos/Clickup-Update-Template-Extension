@@ -1,0 +1,40 @@
+<section class="page-panel" data-page="usage" id="page-usage" hidden>
+  <div class="page-scroll">
+    <div class="settings-page-content">
+      <section class="settings-section">
+        <p class="settings-section-title">Local Storage Usage</p>
+        <p class="field-subtext">Quick look at your saved data footprint on this ClickUp origin.</p>
+        <div class="usage-meter" id="usage-storage-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Local storage usage">
+          <span class="usage-meter-fill" id="usage-storage-fill"></span>
+        </div>
+        <p class="field-subtext" id="usage-storage-text">Using 0 B of 5.00 MiB (0.00%).</p>
+        <div class="settings-two-column">
+          <div class="settings-field">
+            <p class="settings-label">Drafts</p>
+            <div class="usage-meter" id="usage-drafts-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Drafts storage usage">
+              <span class="usage-meter-fill" id="usage-drafts-fill"></span>
+            </div>
+            <p class="field-subtext" id="usage-drafts-text">0 B (0.00%).</p>
+          </div>
+          <div class="settings-field">
+            <p class="settings-label">Settings</p>
+            <div class="usage-meter" id="usage-settings-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Settings storage usage">
+              <span class="usage-meter-fill" id="usage-settings-fill"></span>
+            </div>
+            <p class="field-subtext" id="usage-settings-text">0 B (0.00%).</p>
+          </div>
+        </div>
+        <p class="field-subtext" id="usage-storage-limit-note">
+          Estimated localStorage limit is around 5 MiB on most browsers.
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria" target="_blank" rel="noopener noreferrer">See browser quota notes.</a>
+        </p>
+        <div class="settings-inline-actions">
+          <button class="btn btn-secondary" id="usage-reset-settings-btn" type="button">
+            <span class="material-symbols-outlined" aria-hidden="true">delete_sweep</span>
+            Reset Settings
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

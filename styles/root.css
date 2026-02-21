@@ -14,7 +14,7 @@
   --modal-opacity: 1;
   --overlay-blur: 2;
   --overlay-opacity: 64;
-  --card-max-width: 1100px;
+  --card-max-width: 1220px;
   --active-page-height: 480px;
 
   --space-1: 6px;
@@ -27,6 +27,7 @@
   --settings-gap: 14px;
   --section-gap: 14px;
   --settings-field-gap: 10px;
+  --settings-two-column-gap: 18px;
   --field-py: 10px;
   --field-px: 12px;
   --control-height: 36px;
@@ -36,12 +37,12 @@
   --radius-m: 12px;
   --radius-l: 16px;
 
-  --surface-card-strong: #141c2c;
-  --surface-card-soft: #192538;
-  --surface-main: #111a2a;
-  --surface-main-soft: #172237;
-  --surface-sidebar: #0f1726;
-  --surface-sidebar-soft: #141f31;
+  --surface-card-strong: #101827;
+  --surface-card-soft: #152133;
+  --surface-main: #0d1625;
+  --surface-main-soft: #121e31;
+  --surface-sidebar: #0b1422;
+  --surface-sidebar-soft: #101a2b;
   --surface-field: #0d1626;
   --surface-field-soft: #121d31;
   --surface-picker: #1a2438;
@@ -78,6 +79,13 @@
   --status-color-for-qa-rgb: 201, 151, 28;
   --status-color-completed: #2f9a53;
   --status-color-completed-rgb: 47, 154, 83;
+  --tone-success: #4fd38a;
+  --tone-success-rgb: 79, 211, 138;
+  --tone-error: #d85b5b;
+  --tone-error-rgb: 216, 91, 91;
+  --tone-warning: #d9ae3b;
+  --tone-warning-rgb: 217, 174, 59;
+  --tone-muted-emphasis: #f6d885;
 
   --swatch-red-strong: #e53935;
   --swatch-orange-strong: #fb8c00;
@@ -107,6 +115,7 @@
   --settings-gap: 10px;
   --section-gap: 10px;
   --settings-field-gap: 8px;
+  --settings-two-column-gap: 14px;
   --field-py: 8px;
   --field-px: 10px;
   --control-height: 32px;
@@ -123,6 +132,7 @@
   --settings-gap: 24px;
   --section-gap: 28px;
   --settings-field-gap: 16px;
+  --settings-two-column-gap: 30px;
   --field-py: 18px;
   --field-px: 20px;
   --control-height: 52px;
@@ -195,6 +205,13 @@
   --status-color-for-qa-rgb: 209, 142, 24;
   --status-color-completed: #0a8d89;
   --status-color-completed-rgb: 10, 141, 137;
+  --tone-success: #35b7c4;
+  --tone-success-rgb: 53, 183, 196;
+  --tone-error: #c86da7;
+  --tone-error-rgb: 200, 109, 167;
+  --tone-warning: #dfad3f;
+  --tone-warning-rgb: 223, 173, 63;
+  --tone-muted-emphasis: #dbc07a;
   --swatch-red-strong: #c77f00;
   --swatch-orange-strong: #e3a700;
   --swatch-yellow-strong: #f0d442;
@@ -243,6 +260,13 @@
   --status-color-for-qa-rgb: 212, 139, 24;
   --status-color-completed: #0b8f8a;
   --status-color-completed-rgb: 11, 143, 138;
+  --tone-success: #3bafc7;
+  --tone-success-rgb: 59, 175, 199;
+  --tone-error: #b679cf;
+  --tone-error-rgb: 182, 121, 207;
+  --tone-warning: #e1ab3d;
+  --tone-warning-rgb: 225, 171, 61;
+  --tone-muted-emphasis: #d9bc76;
   --swatch-red-strong: #d08400;
   --swatch-orange-strong: #e9a200;
   --swatch-yellow-strong: #f0d44a;
@@ -291,6 +315,13 @@
   --status-color-for-qa-rgb: 106, 97, 207;
   --status-color-completed: #2b8d5f;
   --status-color-completed-rgb: 43, 141, 95;
+  --tone-success: #2e9f6c;
+  --tone-success-rgb: 46, 159, 108;
+  --tone-error: #c34f7b;
+  --tone-error-rgb: 195, 79, 123;
+  --tone-warning: #8f82df;
+  --tone-warning-rgb: 143, 130, 223;
+  --tone-muted-emphasis: #b4a7ea;
   --swatch-red-strong: #d54e5b;
   --swatch-orange-strong: #d2872f;
   --swatch-yellow-strong: #7c6ad8;

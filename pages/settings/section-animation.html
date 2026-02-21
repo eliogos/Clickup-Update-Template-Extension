@@ -1,4 +1,4 @@
-<section class="settings-section" id="settings-section-animation" data-settings-anchor="Animation">
+﻿<section class="settings-section" id="settings-section-animation" data-settings-anchor="Animation">
         <p class="settings-section-title">Animation</p>
         <div class="settings-field">
           <div class="settings-label-row">
@@ -28,20 +28,20 @@
               <span>Off</span>
             </div>
           </div>
-          <p class="field-subtext">Preset speed curve for UI motion and physics return. Off disables motion.</p>
+          <p class="field-subtext">Controls how fast UI animations play. Off turns motion off.</p>
         </div>
 
         <div class="settings-field">
           <div class="settings-label-row">
-            <span class="settings-label">Interpolator</span>
+            <span class="settings-label">Interpolator <span class="interpolator-nerd-rating" data-tooltip="Nerd rating" aria-label="Nerd rating 1 of 3">&#129299;</span></span>
             <button class="settings-reset-btn" type="button" data-reset-setting="interpolator" title="Reset interpolator">
               <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
             </button>
           </div>
           <div class="settings-segmented" id="interpolator-mode-group" role="tablist" aria-label="Interpolator mode">
             <button class="settings-segment-btn" id="interpolator-tab-preset" type="button" role="tab" aria-controls="interpolator-mode-preset" data-interpolator-mode="preset">Preset</button>
-            <button class="settings-segment-btn" id="interpolator-tab-expression" type="button" role="tab" aria-controls="interpolator-mode-expression" data-interpolator-mode="expression">Expression</button>
-            <button class="settings-segment-btn" id="interpolator-tab-curve" type="button" role="tab" aria-controls="interpolator-mode-curve" data-interpolator-mode="curve">Curve</button>
+            <button class="settings-segment-btn" id="interpolator-tab-curve" type="button" role="tab" aria-controls="interpolator-mode-curve" data-interpolator-mode="curve">Curve <span class="experimental-pill">Experimental</span></button>
+            <button class="settings-segment-btn" id="interpolator-tab-expression" type="button" role="tab" aria-controls="interpolator-mode-expression" data-interpolator-mode="expression">Expression <span class="experimental-pill">Experimental</span></button>
           </div>
 
           <div class="settings-interpolator-mode" id="interpolator-mode-preset" role="tabpanel" aria-labelledby="interpolator-tab-preset">
@@ -56,13 +56,52 @@
               </select>
               <span class="select-icon" aria-hidden="true"></span>
             </div>
-            <p class="field-subtext">Default uses current adaptive easing behavior.</p>
+            <p class="field-subtext">Default gives smooth motion for most interactions.</p>
           </div>
 
           <div class="settings-interpolator-mode" id="interpolator-mode-expression" role="tabpanel" aria-labelledby="interpolator-tab-expression" hidden>
             <label class="settings-label" for="interpolator-expression">Expression f(t)</label>
-            <input class="field" id="interpolator-expression" type="text" spellcheck="false" autocomplete="off" />
-            <p class="field-subtext">Math.js expression with <code>t</code>, <code>lerp(a,b,t)</code>, and constants like <code>pi</code> (or <code>pi()</code>).</p>
+            <div class="expression-editor-layout">
+              <div class="expression-editor-wrap" id="interpolator-expression-editor">
+                <div
+                  class="field expression-editor-input"
+                  id="interpolator-expression"
+                  contenteditable="true"
+                  role="textbox"
+                  aria-multiline="true"
+                  spellcheck="false"
+                  autocomplete="off"
+                ></div>
+              </div>
+              <div class="expression-editor-side-top">
+                <a
+                  class="btn expression-editor-side-btn ai-special-btn"
+                  id="interpolator-ask-ai-link"
+                  href="https://chatgpt.com/"
+                  rel="noopener noreferrer"
+                  data-tooltip="Ask AI about interpolation expressions"
+                  aria-label="Ask AI about interpolation expressions"
+                ><span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span><span>Ask</span></a>
+                <a
+                  class="btn expression-editor-side-btn ai-special-btn"
+                  id="interpolator-explain-expression-link"
+                  href="https://chatgpt.com/"
+                  rel="noopener noreferrer"
+                  data-tooltip="Explain current expression"
+                  aria-label="Explain current expression"
+                ><span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span><span>Explain</span></a>
+              </div>
+              <div class="expression-editor-side-bottom">
+                <button class="btn btn-primary expression-editor-side-btn expression-editor-save-btn" id="interpolator-expression-save" type="button">Evaluate and Save</button>
+              </div>
+            </div>
+            <label class="append-number-wrap settings-checkbox" for="interpolator-word-wrap">
+              <input type="checkbox" id="interpolator-word-wrap" checked />
+              <span>Word wrap</span>
+            </label>
+            <p class="field-subtext">Use a <a class="settings-inline-link" href="https://mathjs.org/docs/expressions/syntax.html" target="_blank" rel="noopener noreferrer">Math.js</a> formula with <code>t</code> from 0 to 1. Example: <code>1 - pow(1 - t, 2)</code>.</p>
+            <p class="field-subtext">Applies globally to modal motion, including button presses, dropdown items, and tooltips.</p>
+            <p class="field-subtext field-subtext-success" id="interpolator-expression-valid" hidden>Expression is valid.</p>
             <p class="field-subtext field-subtext-error" id="interpolator-expression-error" hidden>Invalid expression.</p>
           </div>
 
@@ -84,66 +123,9 @@
                 </label>
               </div>
             </div>
-            <p class="field-subtext">Drag points to shape the curve. Click graph to add a control point; double-click a custom point to remove.</p>
+            <p class="field-subtext">Drag points to shape motion. Click to add a point, and double-click a custom point to remove.</p>
           </div>
         </div>
 
-        <div class="settings-field">
-          <div class="settings-label-row">
-            <span class="settings-label">Reduced Motion</span>
-            <button class="settings-reset-btn" type="button" data-reset-setting="animationFollowDevice" title="Reset reduced motion">
-              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
-            </button>
-          </div>
-          <label class="settings-switch" for="animation-follow-device">
-            <input type="checkbox" id="animation-follow-device" />
-            <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
-            <span class="settings-switch-text">Use device reduced motion preference</span>
-          </label>
-          <p class="field-subtext">When enabled, device reduced motion reduces or disables non-essential animations.</p>
-        </div>
-
-        <div class="settings-field" id="physics-intensity-field">
-          <div class="settings-label-row">
-            <span class="settings-label">Physics Effects</span>
-            <button class="settings-reset-btn" type="button" data-reset-setting="physicsEnabled" title="Reset physics effects">
-              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
-            </button>
-          </div>
-          <label class="settings-switch" for="animation-enable-physics">
-            <input type="checkbox" id="animation-enable-physics" checked />
-            <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
-            <span class="settings-switch-text">Enable physics effects</span>
-          </label>
-          <p class="field-subtext">Adds press/tilt feedback on controls like incrementers.</p>
-          <div class="settings-conditional-body" id="physics-intensity-body">
-            <div class="settings-label-row">
-              <label class="settings-label" for="physics-intensity-slider">Physics Intensity</label>
-              <button class="settings-reset-btn" type="button" data-reset-setting="physicsIntensity" title="Reset physics intensity">
-                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
-              </button>
-            </div>
-            <div class="editor-font-size-row">
-              <input class="field editor-font-size-input" id="physics-intensity-input" type="number" min="0" max="100" step="1" inputmode="numeric" />
-              <input class="editor-font-size-slider" id="physics-intensity-slider" type="range" min="0" max="100" step="1" />
-            </div>
-            <label class="settings-switch" for="physics-sync-music">
-              <input type="checkbox" id="physics-sync-music" />
-              <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
-              <span class="settings-switch-text">Sync to music BPM</span>
-            </label>
-            <div class="physics-sync-tools" id="physics-sync-tools" hidden>
-              <p class="field-subtext physics-sync-bpm-readout">Current BPM: <strong id="physics-sync-bpm-value">84</strong></p>
-              <div class="physics-bpm-offset-row">
-                <label class="settings-label" for="physics-bpm-offset-input">BPM Offset</label>
-                <div class="num-controls physics-bpm-offset-control" role="group" aria-label="BPM offset controls">
-                  <button class="num-btn" id="physics-bpm-offset-dec" type="button" title="Decrease BPM offset">-</button>
-                  <input class="num-input" id="physics-bpm-offset-input" type="number" min="-40" max="40" step="1" inputmode="numeric" />
-                  <button class="num-btn" id="physics-bpm-offset-inc" type="button" title="Increase BPM offset">+</button>
-                </div>
-              </div>
-            </div>
-            <p class="field-subtext" id="physics-sync-bpm-hint">Controls tilt and modal nudge strength.</p>
-          </div>
-        </div>
       </section>
+

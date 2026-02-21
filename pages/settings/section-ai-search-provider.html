@@ -1,0 +1,39 @@
+<section class="settings-section" id="settings-section-ai-search-provider" data-settings-anchor="AI Search">
+        <p class="settings-section-title">AI Search Engine</p>
+        <div class="settings-field ai-provider-field">
+          <div class="settings-label-row">
+            <span class="settings-label">Engine</span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="aiQueryProvider" title="Reset AI search engine">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <div class="ai-provider-grid" role="radiogroup" aria-label="AI Search Engine">
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="chatgpt" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=64" alt="" aria-hidden="true" />
+              <span>ChatGPT</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="claude" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" aria-hidden="true" />
+              <span>Claude</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="perplexity" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/perplexity/ffffff" alt="" aria-hidden="true" />
+              <span>Perplexity</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="grok" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/x/ffffff" alt="" aria-hidden="true" />
+              <span>Grok</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="gemini" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/googlegemini/ffffff" alt="" aria-hidden="true" />
+              <span>Gemini</span>
+            </label>
+          </div>
+          <p class="field-subtext">Currently used for interpolation Ask/Explain actions.</p>
+        </div>
+      </section>

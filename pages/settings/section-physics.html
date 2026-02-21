@@ -1,0 +1,30 @@
+<section class="settings-section" id="settings-section-physics" data-settings-anchor="Physics">
+        <p class="settings-section-title">Physics</p>
+        <div class="settings-field" id="physics-intensity-field">
+          <div class="settings-label-row">
+            <span class="settings-label">Physics Effects <span class="floating-tooltip-pill floating-tooltip-pill-value settings-shortcut-pill">P</span></span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="physicsEnabled" title="Reset physics effects">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <label class="settings-switch" for="animation-enable-physics">
+            <input type="checkbox" id="animation-enable-physics" checked />
+            <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+            <span class="settings-switch-text">Enable physics effects</span>
+          </label>
+          <p class="field-subtext">Adds subtle bounce and tilt feedback to controls.</p>
+          <div class="settings-conditional-body" id="physics-intensity-body">
+            <div class="settings-label-row">
+              <label class="settings-label" for="physics-intensity-slider">Physics Intensity</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="physicsIntensity" title="Reset physics intensity">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="physics-intensity-input" type="number" min="0" max="500" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="physics-intensity-slider" type="range" min="0" max="500" step="1" />
+            </div>
+            <p class="field-subtext">Changes how strong the bounce and tilt feel.</p>
+          </div>
+        </div>
+      </section>

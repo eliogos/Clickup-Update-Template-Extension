@@ -64,7 +64,7 @@ textarea.field {
 .label-suggestions {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
   width: 100%;
 }
@@ -258,8 +258,8 @@ textarea.field {
 
 .field.input-error,
 .num-controls.input-error {
-  border-color: #d85b5b;
-  box-shadow: 0 0 0 2px rgba(216, 91, 91, 0.18);
+  border-color: var(--tone-error, #d85b5b);
+  box-shadow: 0 0 0 2px rgba(var(--tone-error-rgb, 216, 91, 91), 0.2);
 }
 
 .field-subtext {
@@ -270,19 +270,27 @@ textarea.field {
 }
 
 .field-subtext-error {
-  color: #d85b5b;
+  color: var(--tone-error, #d85b5b);
 }
 
 .field-subtext-warning {
-  color: #d9ae3b;
+  color: var(--tone-warning, #d9ae3b);
+}
+
+.field-subtext-success {
+  color: var(--tone-success, #4fd38a);
 }
 
 .field-subtext.field-subtext-error {
-  color: #d85b5b !important;
+  color: var(--tone-error, #d85b5b) !important;
 }
 
 .field-subtext.field-subtext-warning {
-  color: #d9ae3b !important;
+  color: var(--tone-warning, #d9ae3b) !important;
+}
+
+.field-subtext.field-subtext-success {
+  color: var(--tone-success, #4fd38a) !important;
 }
 
 .field-subtext[hidden] {
@@ -290,7 +298,7 @@ textarea.field {
 }
 
 .req {
-  color: #d85b5b;
+  color: var(--tone-error, #d85b5b);
   font-weight: 700;
   margin-left: 3px;
 }

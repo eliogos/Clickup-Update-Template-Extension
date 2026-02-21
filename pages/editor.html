@@ -51,7 +51,7 @@
     <div class="group">
       <label class="group-label">Accomplishments<span class="req">*</span></label>
       <textarea class="field" id="acc" aria-describedby="acc-error"></textarea>
-      <p class="field-subtext field-subtext-error" id="acc-error" hidden>Accomplishments is required.</p>
+      <p class="field-subtext field-subtext-error" id="acc-error" hidden>Accomplishments are required.</p>
     </div>
 
     <div class="group">
@@ -73,11 +73,13 @@
       <textarea class="field" id="notes"></textarea>
     </div>
 
-    <div class="footer-row footer-fixed" id="modal-footer-row">
-      <div class="footer-left">
-        <div class="note" id="action-feedback" data-tone="muted">You can set Files and Mentions after insert this template.</div>
+    <div class="footer-row footer-fixed footer-panel" id="modal-footer-row">
+      <div class="footer-tip-row">
+        <span class="material-symbols-outlined footer-tip-icon" aria-hidden="true">lightbulb</span>
+        <div class="note" id="action-feedback" data-tone="muted">You can set Files and Mentions after insert.</div>
       </div>
-      <div class="footer-right">
+      <div class="footer-action-row">
+        <div class="note-feedback" id="action-status" data-tone="muted" aria-live="polite" hidden></div>
         <div class="actions">
           <button class="btn" id="save-draft" type="button">
             <span class="material-symbols-outlined" aria-hidden="true">save</span>
@@ -92,13 +94,9 @@
               <span class="material-symbols-outlined" aria-hidden="true">arrow_drop_down</span>
             </button>
             <div class="copy-menu" id="copy-menu" popover="auto" aria-label="Copy formats">
-              <button type="button" class="copy-menu-item is-active" data-copy-format="inner-html">
-                <span class="material-symbols-outlined" aria-hidden="true">code</span>
-                <span>Copy innerHTML</span>
-              </button>
-              <button type="button" class="copy-menu-item" data-copy-format="raw-text">
+              <button type="button" class="copy-menu-item" data-copy-format="plain-text">
                 <span class="material-symbols-outlined" aria-hidden="true">text_snippet</span>
-                <span>Copy Raw Text</span>
+                <span>Plain Text</span>
               </button>
               <button type="button" class="copy-menu-item" data-copy-format="markdown">
                 <span class="material-symbols-outlined" aria-hidden="true">markdown</span>

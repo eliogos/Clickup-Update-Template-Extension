@@ -2,7 +2,7 @@
         <p class="settings-section-title">Accessibility</p>
         <div class="settings-field">
           <div class="settings-label-row">
-            <label class="settings-label" for="color-filter-mode">Color Blind Correction (Experimental)</label>
+            <label class="settings-label" for="color-filter-mode">Color Vision Support <span class="experimental-pill">Experimental</span></label>
             <button class="settings-reset-btn" type="button" data-reset-setting="colorVisionMode" title="Reset color blind correction">
               <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
             </button>
@@ -16,6 +16,48 @@
             </select>
             <span class="select-icon" aria-hidden="true"></span>
           </div>
-          <p class="field-subtext" id="color-filter-description">No correction applied. Modes approximate channel loss: Protanopia (no red), Deuteranopia (no green), Tritanopia (no blue).</p>
+          <p class="field-subtext" id="color-filter-description">No filter is applied. Choose a mode if you want color adjustment support.</p>
+        </div>
+        <div class="settings-field">
+          <div class="settings-label-row">
+            <span class="settings-label">Reduced Motion</span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="animationFollowDevice" title="Reset reduced motion">
+              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+            </button>
+          </div>
+          <label class="settings-switch" for="animation-follow-device">
+            <input type="checkbox" id="animation-follow-device" />
+            <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+            <span class="settings-switch-text">Follow your device reduced motion setting</span>
+          </label>
+          <p class="field-subtext">When enabled, extra motion is reduced or turned off.</p>
+        </div>
+        <div class="settings-two-column">
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="accessibility-contrast-slider">Contrast</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="accessibilityContrast" title="Reset contrast">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="accessibility-contrast-input" type="number" min="50" max="150" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="accessibility-contrast-slider" type="range" min="50" max="150" step="1" />
+            </div>
+            <p class="field-subtext">Adjusts light/dark separation for readability.</p>
+          </div>
+          <div class="settings-field">
+            <div class="settings-label-row">
+              <label class="settings-label" for="accessibility-saturation-slider">Saturation</label>
+              <button class="settings-reset-btn" type="button" data-reset-setting="accessibilitySaturation" title="Reset saturation">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="accessibility-saturation-input" type="number" min="50" max="150" step="1" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="accessibility-saturation-slider" type="range" min="50" max="150" step="1" />
+            </div>
+            <p class="field-subtext">Adjusts color intensity while keeping the same theme.</p>
+          </div>
         </div>
       </section>
