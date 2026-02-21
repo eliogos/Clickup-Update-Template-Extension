@@ -5441,7 +5441,6 @@
         startAccentPartyMode();
       } else {
         stopAccentPartyMode();
-        clearCursorSparkles();
       }
     };
 
@@ -5582,7 +5581,8 @@
     };
 
     const emitCursorSparkle = (clientX, clientY) => {
-      if (!modalCard || settingsState.accentPartyMode !== true) return;
+      const goldenActive = settingsState.accentPreset === "gold" && settingsState.goldenThemeUnlocked === true;
+      if (!modalCard || !goldenActive) return;
       if (!Number.isFinite(clientX) || !Number.isFinite(clientY)) return;
       const now = Date.now();
       if ((now - cursorSparkleLastAt) < 26) return;
@@ -5610,7 +5610,8 @@
         if (sparkle.parentNode === overlay) {
           overlay.removeChild(sparkle);
         }
-        if (overlay.childElementCount === 0 && settingsState.accentPartyMode !== true) {
+        const stillGolden = settingsState.accentPreset === "gold" && settingsState.goldenThemeUnlocked === true;
+        if (overlay.childElementCount === 0 && !stillGolden) {
           overlay.hidden = true;
         }
       }, durationMs + 120);
@@ -8573,6 +8574,7 @@
         modalCard.style.removeProperty("--border-soft");
         modalCard.style.removeProperty("--border-strong");
         stopGoldenSparkles();
+        clearCursorSparkles();
       }
       if (modal && typeof global.getComputedStyle === "function") {
         const computedStyle = global.getComputedStyle(modalCard);
