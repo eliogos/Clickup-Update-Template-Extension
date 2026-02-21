@@ -1,0 +1,30 @@
+.waveform-section {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background-color: var(--color-background-shade);
+  border-top: 1px solid var(--color-border);
+}
+
+.waveform-filters {
+  display: flex;
+  flex-direction: column;
+  margin-right: 16px;
+}
+
+.waveform-filters label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--color-text-shade);
+  cursor: pointer;
+}
+
+.waveform-container {
+  flex-grow: 1;
+  height: 50px;
+}
+
+#waveform-canvas {
+  width: 100%;
+  height: 100%;
+}

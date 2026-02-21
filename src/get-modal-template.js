@@ -5,6 +5,20 @@
   const PAGE_TOKEN_PATTERN = /{{\s*(PAGE_EDITOR|PAGE_SETTINGS|PAGE_VARIABLES|PAGE_DRAFTS|PAGE_USAGE|PAGE_AUDIO|PAGE_RADIO|PAGE_ABOUT)\s*}}/g;
   const SHELL_TOKEN_PATTERN = /{{\s*(SETTINGS_ANCHOR_RAIL|MODAL_TOAST|MODAL_CONFETTI_OVERLAY)\s*}}/g;
   const SETTINGS_PAGE_TOKEN_PATTERN = /{{\s*(SETTINGS_SECTION_TRIGGER|SETTINGS_SECTION_APPEARANCE|SETTINGS_SECTION_TYPOGRAPHY|SETTINGS_SECTION_OVERLAY|SETTINGS_SECTION_AUDIO|SETTINGS_SECTION_ACCESSIBILITY|SETTINGS_SECTION_ANIMATION|SETTINGS_SECTION_AI_SEARCH_PROVIDER|SETTINGS_SECTION_PHYSICS)\s*}}/g;
+  const RADIO_PAGE_TOKEN_PATTERN = /{{\s*(WAVEFORM_FILTERS|WAVEFORM)\s*}}/g;
+
+  function assembleRadioPage(radioTemplate, fragmentTemplates) {
+    if (!radioTemplate) return "";
+
+    const fragmentMap = {
+      WAVEFORM_FILTERS: fragmentTemplates.waveformFilters || "",
+      WAVEFORM: fragmentTemplates.waveform || ""
+    };
+
+    return radioTemplate.replace(RADIO_PAGE_TOKEN_PATTERN, (full, token) => {
+      return fragmentMap[token] || "";
+    });
+  }
 
   function readResource(resourceName) {
     if (typeof GM_getResourceText !== "function") return "";
@@ -74,11 +88,28 @@
   }
 
   app.getModalTemplate = function getModalTemplate() {
-    if (typeof app._hotTemplateOverride === "string" && app._hotTemplateOverride.trim()) {
-      return app._hotTemplateOverride;
+    const override =
+      typeof app._hotTemplateOverride === "string" ? app._hotTemplateOverride : "";
+
+    const replaceRadioTokens = (html) =>
+      String(html || "").replace(/{{{?\s*(WAVEFORM_FILTERS|WAVEFORM)\s*}?}}/g, (m, token) => {
+        if (token === "WAVEFORM") return readResource("modalPageWaveform") || "";
+        if (token === "WAVEFORM_FILTERS") return readResource("modalPageWaveformFilters") || "";
+        return "";
+      });
+
+    if (override.trim()) {
+      return replaceRadioTokens(override);
     }
 
     const shellTemplate = readResource("modalShellTemplate");
+    const radioPage = assembleRadioPage(
+      readResource("modalPageRadio") || readResource("modalPageAudio"),
+      {
+        waveform: readResource("modalPageWaveform"),
+        waveformFilters: readResource("modalPageWaveformFilters")
+      }
+    );
     const settingsPage = assembleSettingsPage(
       readResource("modalPageSettings"),
       {
@@ -100,7 +131,7 @@
       variables: readResource("modalPageVariables"),
       drafts: readResource("modalPageDrafts"),
       usage: readResource("modalPageUsage"),
-      radio: readResource("modalPageRadio") || readResource("modalPageAudio"),
+      radio: radioPage,
       about: readResource("modalPageAbout"),
       settingsAnchor: readResource("modalPageSettingsAnchorRail"),
       modalToast: readResource("modalFragmentToast"),
@@ -108,10 +139,10 @@
     };
 
     const assembled = assembleTemplate(shellTemplate, pageTemplates);
-    if (assembled) return assembled;
+    if (assembled) return replaceRadioTokens(assembled);
 
     const legacyTemplate = readResource("modalTemplate");
-    if (legacyTemplate) return legacyTemplate;
+    if (legacyTemplate) return replaceRadioTokens(legacyTemplate);
 
     return "";
   };

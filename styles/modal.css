@@ -97,6 +97,10 @@
   --modal-live-scale: var(--modal-party-bass-scale, 1);
 }
 
+.modal-card[data-live-pulse="true"] {
+  --modal-live-scale: var(--modal-party-bass-scale, 1);
+}
+
 @supports (corner-shape: squircle) {
   .modal-card {
     corner-shape: squircle;

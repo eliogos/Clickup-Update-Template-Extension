@@ -41,16 +41,6 @@
       url: "https://s11.citrus3.com:2020/stream/activo199fm"
     }),
     Object.freeze({
-      id: "bbc-radio-two-hls",
-      label: "BBC Radio Two (HLS)",
-      url: "https://as-hls-ww-live.akamaized.net/pool_74208725/live/ww/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d96000.norewind.m3u8"
-    }),
-    Object.freeze({
-      id: "bbc-radio-one-hls",
-      label: "BBC Radio One (HLS)",
-      url: "https://as-hls-ww.live.cf.md.bbci.co.uk/pool_01505109/live/ww/bbc_radio_one/bbc_radio_one.isml/bbc_radio_one-audio%3d96000.norewind.m3u8"
-    }),
-    Object.freeze({
       id: "gayfm-silvacast",
       label: "GAYFM",
       url: "https://icepool.silvacast.com/GAYFM.mp3"
@@ -935,7 +925,16 @@
       ratePitchSync: true,
       spatialEnabled: true,
       spatialDepth: 0.94,
-      spatialRate: 1
+      spatialRate: 1,
+      streamUrl: LOFI_STREAM_URL,
+      streamMode: "idle",
+      streamBuffering: false,
+      streamPingMs: null,
+      streamFirstChunkMs: null,
+      streamBufferedSeconds: 0,
+      streamBytesReceived: 0,
+      streamLastError: "",
+      streamUpdatedAt: 0
     };
 
     const audio = new Audio();
@@ -974,6 +973,8 @@
     let beatEnergyEma = 0;
     let beatRmsEma = 0;
     let beatIntervalsMs = [];
+    let streamDiagnosticsLastNotifiedAt = 0;
+    let streamDiagnosticsInterval = 0;
 
     const emitBeat = (payload) => {
       beatListeners.forEach((listener) => {
@@ -1267,6 +1268,7 @@
       cleanupStreamSource();
       sourceReady = false;
       sourceInitPromise = null;
+      stopStreamDiagnosticsLoop();
       try {
         audio.pause();
       } catch {
@@ -1278,6 +1280,14 @@
       } catch {
         // Ignore source reset errors.
       }
+      setStreamDiagnostics(
+        {
+          streamBuffering: false,
+          streamBufferedSeconds: 0,
+          streamBytesReceived: 0
+        },
+        { forceNotify: true, silent: true }
+      );
     };
 
     const toMimeType = (contentType) => {
@@ -1291,12 +1301,35 @@
     const streamViaFetch = async (url) => {
       if (typeof MediaSource === "undefined" || typeof fetch !== "function") return false;
       cleanupStreamSource();
+      const requestStartedAt = global.performance ? global.performance.now() : Date.now();
+      let bytesReceived = 0;
+      let firstChunkCaptured = false;
+      setStreamDiagnostics(
+        {
+          streamUrl: url,
+          streamMode: "connecting-fetch",
+          streamBuffering: true,
+          streamPingMs: null,
+          streamFirstChunkMs: null,
+          streamBufferedSeconds: 0,
+          streamBytesReceived: 0,
+          streamLastError: ""
+        },
+        { forceNotify: true }
+      );
       let aborted = false;
       const mediaSource = new MediaSource();
       streamObjectUrl = URL.createObjectURL(mediaSource);
       audio.src = streamObjectUrl;
       streamAbort = () => {
         aborted = true;
+        setStreamDiagnostics(
+          {
+            streamMode: "aborted",
+            streamBuffering: false
+          },
+          { forceNotify: true, silent: true }
+        );
         try {
           if (mediaSource.readyState === "open") {
             mediaSource.endOfStream();
@@ -1311,9 +1344,26 @@
           try {
             const response = await fetch(url, { mode: "cors", cache: "no-store" });
             if (!response || !response.ok || !response.body) {
+              setStreamDiagnostics(
+                {
+                  streamMode: "error-fetch",
+                  streamBuffering: false,
+                  streamLastError: "Fetch stream unavailable."
+                },
+                { forceNotify: true, silent: true }
+              );
               resolve(false);
               return;
             }
+            const responseAt = global.performance ? global.performance.now() : Date.now();
+            setStreamDiagnostics(
+              {
+                streamMode: "streaming-fetch",
+                streamPingMs: responseAt - requestStartedAt,
+                streamBuffering: true
+              },
+              { forceNotify: true, silent: true }
+            );
             const mimeType = toMimeType(response.headers.get("content-type"));
             const sourceBuffer = mediaSource.addSourceBuffer(mimeType);
             const queue = [];
@@ -1334,11 +1384,37 @@
               const { done, value } = await reader.read();
               if (done || aborted) break;
               if (value && value.byteLength) {
+                bytesReceived += value.byteLength;
+                if (!firstChunkCaptured) {
+                  firstChunkCaptured = true;
+                  const firstChunkAt = global.performance ? global.performance.now() : Date.now();
+                  setStreamDiagnostics(
+                    {
+                      streamFirstChunkMs: firstChunkAt - requestStartedAt
+                    },
+                    { forceNotify: true, silent: true }
+                  );
+                }
                 const chunk = value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength);
                 queue.push(chunk);
                 appendNext();
+                setStreamDiagnostics(
+                  {
+                    streamBytesReceived: bytesReceived,
+                    streamBuffering: false
+                  },
+                  { forceNotify: false, silent: true }
+                );
+                updateBufferedDiagnostics({ forceNotify: false, buffering: false });
                 if (!resolved) {
                   resolved = true;
+                  setStreamDiagnostics(
+                    {
+                      streamMode: "ready-fetch",
+                      streamBuffering: false
+                    },
+                    { forceNotify: true, silent: true }
+                  );
                   resolve(true);
                 }
               }
@@ -1350,8 +1426,25 @@
                 // Ignore.
               }
             }
-            if (!resolved) resolve(false);
+            if (!resolved) {
+              setStreamDiagnostics(
+                {
+                  streamMode: "ended-fetch",
+                  streamBuffering: false
+                },
+                { forceNotify: true, silent: true }
+              );
+              resolve(false);
+            }
           } catch {
+            setStreamDiagnostics(
+              {
+                streamMode: "error-fetch",
+                streamBuffering: false,
+                streamLastError: "Fetch stream failed."
+              },
+              { forceNotify: true, silent: true }
+            );
             resolve(false);
           }
         };
@@ -1363,12 +1456,34 @@
     const streamViaGm = async (url) => {
       if (typeof MediaSource === "undefined" || typeof global.GM_xmlhttpRequest !== "function") return false;
       cleanupStreamSource();
+      const requestStartedAt = global.performance ? global.performance.now() : Date.now();
+      let firstChunkCaptured = false;
+      setStreamDiagnostics(
+        {
+          streamUrl: url,
+          streamMode: "connecting-gm",
+          streamBuffering: true,
+          streamPingMs: null,
+          streamFirstChunkMs: null,
+          streamBufferedSeconds: 0,
+          streamBytesReceived: 0,
+          streamLastError: ""
+        },
+        { forceNotify: true }
+      );
       let aborted = false;
       const mediaSource = new MediaSource();
       streamObjectUrl = URL.createObjectURL(mediaSource);
       audio.src = streamObjectUrl;
       streamAbort = () => {
         aborted = true;
+        setStreamDiagnostics(
+          {
+            streamMode: "aborted",
+            streamBuffering: false
+          },
+          { forceNotify: true, silent: true }
+        );
         try {
           if (mediaSource.readyState === "open") {
             mediaSource.endOfStream();
@@ -1412,15 +1527,51 @@
               if (!buffer || buffer.byteLength <= lastSize) return;
               const chunk = buffer.slice(lastSize);
               lastSize = buffer.byteLength;
+              if (!firstChunkCaptured) {
+                firstChunkCaptured = true;
+                const firstChunkAt = global.performance ? global.performance.now() : Date.now();
+                setStreamDiagnostics(
+                  {
+                    streamMode: "streaming-gm",
+                    streamPingMs: firstChunkAt - requestStartedAt,
+                    streamFirstChunkMs: firstChunkAt - requestStartedAt
+                  },
+                  { forceNotify: true, silent: true }
+                );
+              }
               queue.push(chunk);
               appendNext();
+              setStreamDiagnostics(
+                {
+                  streamBytesReceived: lastSize,
+                  streamBuffering: false
+                },
+                { forceNotify: false, silent: true }
+              );
+              updateBufferedDiagnostics({ forceNotify: false, buffering: false });
               if (!resolved) {
                 resolved = true;
+                setStreamDiagnostics(
+                  {
+                    streamMode: "ready-gm",
+                    streamBuffering: false
+                  },
+                  { forceNotify: true, silent: true }
+                );
                 resolve(true);
               }
             },
             onload: () => {
-              if (!resolved) resolve(true);
+              if (!resolved) {
+                setStreamDiagnostics(
+                  {
+                    streamMode: "ready-gm",
+                    streamBuffering: false
+                  },
+                  { forceNotify: true, silent: true }
+                );
+                resolve(true);
+              }
               if (mediaSource.readyState === "open") {
                 try {
                   mediaSource.endOfStream();
@@ -1430,6 +1581,35 @@
               }
             },
             onerror: () => {
+              setStreamDiagnostics(
+                {
+                  streamMode: "error-gm",
+                  streamBuffering: false,
+                  streamLastError: "GM stream request failed."
+                },
+                { forceNotify: true, silent: true }
+              );
+              resolve(false);
+            },
+            ontimeout: () => {
+              setStreamDiagnostics(
+                {
+                  streamMode: "timeout-gm",
+                  streamBuffering: false,
+                  streamLastError: "GM stream request timed out."
+                },
+                { forceNotify: true, silent: true }
+              );
+              resolve(false);
+            },
+            onabort: () => {
+              setStreamDiagnostics(
+                {
+                  streamMode: "aborted",
+                  streamBuffering: false
+                },
+                { forceNotify: true, silent: true }
+              );
               resolve(false);
             }
           });
@@ -1442,6 +1622,7 @@
       if (sourceInitPromise) return await sourceInitPromise;
       sourceInitPromise = (async () => {
         const targetUrl = currentStreamUrl;
+        resetStreamDiagnostics(targetUrl, "initializing");
         const tryInitStream = async (url) => {
           const isHttpTarget = /^http:\/\//i.test(url);
           if (isHttpTarget) return await streamViaGm(url);
@@ -1457,10 +1638,20 @@
           if (targetUrl !== LOFI_STREAM_URL) {
             // Safety fallback so radio failures do not leave the player silent.
             currentStreamUrl = LOFI_STREAM_URL;
+            resetStreamDiagnostics(LOFI_STREAM_URL, "fallback-initializing");
             ok = await tryInitStream(LOFI_STREAM_URL);
           }
         }
         sourceReady = ok === true;
+        if (!sourceReady) {
+          setStreamDiagnostics(
+            {
+              streamMode: "failed",
+              streamBuffering: false
+            },
+            { forceNotify: true, silent: true }
+          );
+        }
         return ok;
       })();
       return await sourceInitPromise;
@@ -1488,6 +1679,122 @@
       }
     };
 
+    const toRoundedMsOrNull = (value) => {
+      const n = Number(value);
+      if (!Number.isFinite(n) || n < 0) return null;
+      return Math.max(0, Math.round(n));
+    };
+
+    const getBufferedSeconds = () => {
+      try {
+        if (!audio || !audio.buffered || audio.buffered.length <= 0) return 0;
+        const currentTime = Number(audio.currentTime);
+        const safeCurrentTime = Number.isFinite(currentTime) ? currentTime : 0;
+        for (let index = 0; index < audio.buffered.length; index += 1) {
+          const start = Number(audio.buffered.start(index));
+          const end = Number(audio.buffered.end(index));
+          if (!Number.isFinite(start) || !Number.isFinite(end)) continue;
+          if (safeCurrentTime >= start && safeCurrentTime <= end) {
+            return clampNumber(end - safeCurrentTime, 0, 1200, 0);
+          }
+          if (safeCurrentTime < start) {
+            return clampNumber(end - start, 0, 1200, 0);
+          }
+        }
+      } catch {
+        return 0;
+      }
+      return 0;
+    };
+
+    const maybeNotifyStreamDiagnostics = (force = false) => {
+      const now = Date.now();
+      if (!force && (now - streamDiagnosticsLastNotifiedAt) < 650) return false;
+      streamDiagnosticsLastNotifiedAt = now;
+      return true;
+    };
+
+    const setStreamDiagnostics = (updates = {}, { forceNotify = false, silent = false } = {}) => {
+      if (!updates || typeof updates !== "object") return;
+      if (Object.prototype.hasOwnProperty.call(updates, "streamUrl")) {
+        const nextUrl = String(updates.streamUrl || "").trim();
+        state.streamUrl = nextUrl || state.streamUrl;
+      }
+      if (Object.prototype.hasOwnProperty.call(updates, "streamMode")) {
+        state.streamMode = String(updates.streamMode || "").trim() || "idle";
+      }
+      if (Object.prototype.hasOwnProperty.call(updates, "streamBuffering")) {
+        state.streamBuffering = updates.streamBuffering === true;
+      }
+      if (Object.prototype.hasOwnProperty.call(updates, "streamPingMs")) {
+        state.streamPingMs = toRoundedMsOrNull(updates.streamPingMs);
+      }
+      if (Object.prototype.hasOwnProperty.call(updates, "streamFirstChunkMs")) {
+        state.streamFirstChunkMs = toRoundedMsOrNull(updates.streamFirstChunkMs);
+      }
+      if (Object.prototype.hasOwnProperty.call(updates, "streamBufferedSeconds")) {
+        const buffered = Number(updates.streamBufferedSeconds);
+        state.streamBufferedSeconds = Number.isFinite(buffered)
+          ? clampNumber(buffered, 0, 1200, 0)
+          : 0;
+      }
+      if (Object.prototype.hasOwnProperty.call(updates, "streamBytesReceived")) {
+        const bytes = Number(updates.streamBytesReceived);
+        state.streamBytesReceived = Number.isFinite(bytes)
+          ? Math.max(0, Math.round(bytes))
+          : 0;
+      }
+      if (Object.prototype.hasOwnProperty.call(updates, "streamLastError")) {
+        state.streamLastError = String(updates.streamLastError || "").trim();
+      }
+      state.streamUpdatedAt = Date.now();
+      if (silent) return;
+      if (maybeNotifyStreamDiagnostics(forceNotify)) {
+        notify();
+      }
+    };
+
+    const updateBufferedDiagnostics = ({ forceNotify = false, buffering = null } = {}) => {
+      const nextBuffering = buffering == null ? state.streamBuffering : (buffering === true);
+      setStreamDiagnostics(
+        {
+          streamBufferedSeconds: getBufferedSeconds(),
+          streamBuffering: nextBuffering
+        },
+        { forceNotify, silent: false }
+      );
+    };
+
+    const resetStreamDiagnostics = (streamUrl = currentStreamUrl, mode = "idle") => {
+      setStreamDiagnostics(
+        {
+          streamUrl,
+          streamMode: mode,
+          streamBuffering: false,
+          streamPingMs: null,
+          streamFirstChunkMs: null,
+          streamBufferedSeconds: 0,
+          streamBytesReceived: 0,
+          streamLastError: ""
+        },
+        { forceNotify: true }
+      );
+    };
+
+    const stopStreamDiagnosticsLoop = () => {
+      if (!streamDiagnosticsInterval) return;
+      global.clearInterval(streamDiagnosticsInterval);
+      streamDiagnosticsInterval = 0;
+    };
+
+    const startStreamDiagnosticsLoop = () => {
+      if (streamDiagnosticsInterval) return;
+      streamDiagnosticsInterval = global.setInterval(() => {
+        if (!state.playing) return;
+        updateBufferedDiagnostics({ forceNotify: false });
+      }, 1000);
+    };
+
     const notify = () => {
       const snapshot = {
         playing: state.playing,
@@ -1496,7 +1803,16 @@
         volume: state.volume,
         speedRate: state.speedRate,
         pitchRate: state.pitchRate,
-        ratePitchSync: state.ratePitchSync
+        ratePitchSync: state.ratePitchSync,
+        streamUrl: state.streamUrl,
+        streamMode: state.streamMode,
+        streamBuffering: state.streamBuffering,
+        streamPingMs: state.streamPingMs,
+        streamFirstChunkMs: state.streamFirstChunkMs,
+        streamBufferedSeconds: state.streamBufferedSeconds,
+        streamBytesReceived: state.streamBytesReceived,
+        streamLastError: state.streamLastError,
+        streamUpdatedAt: state.streamUpdatedAt
       };
       listeners.forEach((listener) => {
         try {
@@ -1509,6 +1825,7 @@
 
     const setFailure = (reason) => {
       stopSpatialPanSweep();
+      stopStreamDiagnosticsLoop();
       if (fadeFrame) {
         global.cancelAnimationFrame(fadeFrame);
         fadeFrame = 0;
@@ -1516,6 +1833,14 @@
       state.failed = false;
       state.disabledReason = String(reason || "Stream unavailable.");
       state.playing = false;
+      setStreamDiagnostics(
+        {
+          streamBuffering: false,
+          streamMode: "failed",
+          streamLastError: state.disabledReason
+        },
+        { forceNotify: true, silent: true }
+      );
       notify();
     };
 
@@ -1569,12 +1894,20 @@
     const finishPause = () => {
       stopSpatialPanSweep();
       stopBeatDebugLoop();
+      stopStreamDiagnosticsLoop();
       try {
         audio.pause();
       } catch {
         // Ignore.
       }
       state.playing = false;
+      setStreamDiagnostics(
+        {
+          streamBuffering: false,
+          streamMode: "paused"
+        },
+        { forceNotify: true, silent: true }
+      );
       notify();
     };
 
@@ -1643,6 +1976,7 @@
       state.playing = false;
       state.failed = false;
       state.disabledReason = "";
+      resetStreamDiagnostics(nextUrl, "idle");
       notify();
       if (wasPlaying && restartPlayback !== false) {
         play({ autoplay: false }).catch(() => {});
@@ -1661,6 +1995,15 @@
       state.failed = false;
       try {
         stopVolumeFade();
+        setStreamDiagnostics(
+          {
+            streamUrl: currentStreamUrl,
+            streamBuffering: true,
+            streamMode: "starting",
+            streamLastError: ""
+          },
+          { forceNotify: true, silent: true }
+        );
         const sourceOk = await ensureLofiSource();
         if (!sourceOk) {
           setFailure("Failed to load stream.");
@@ -1687,6 +2030,15 @@
           stopSpatialPanSweep();
         }
         startBeatDebugLoop();
+        startStreamDiagnosticsLoop();
+        setStreamDiagnostics(
+          {
+            streamMode: "playing",
+            streamBuffering: false
+          },
+          { forceNotify: true, silent: true }
+        );
+        updateBufferedDiagnostics({ forceNotify: true, buffering: false });
         notify();
         return true;
       } catch (error) {
@@ -1694,6 +2046,14 @@
         if (name === "NotAllowedError") {
           // Browser autoplay policy - keep controllable for user click retry.
           state.playing = false;
+          stopStreamDiagnosticsLoop();
+          setStreamDiagnostics(
+            {
+              streamMode: "blocked",
+              streamBuffering: false
+            },
+            { forceNotify: true, silent: true }
+          );
           notify();
           return false;
         }
@@ -1735,7 +2095,16 @@
         volume: state.volume,
         speedRate: state.speedRate,
         pitchRate: state.pitchRate,
-        ratePitchSync: state.ratePitchSync
+        ratePitchSync: state.ratePitchSync,
+        streamUrl: state.streamUrl,
+        streamMode: state.streamMode,
+        streamBuffering: state.streamBuffering,
+        streamPingMs: state.streamPingMs,
+        streamFirstChunkMs: state.streamFirstChunkMs,
+        streamBufferedSeconds: state.streamBufferedSeconds,
+        streamBytesReceived: state.streamBytesReceived,
+        streamLastError: state.streamLastError,
+        streamUpdatedAt: state.streamUpdatedAt
       });
       return () => {
         listeners.delete(listener);
@@ -1762,6 +2131,15 @@
         stopSpatialPanSweep();
       }
       startBeatDebugLoop();
+      startStreamDiagnosticsLoop();
+      setStreamDiagnostics(
+        {
+          streamMode: "playing",
+          streamBuffering: false
+        },
+        { forceNotify: true, silent: true }
+      );
+      updateBufferedDiagnostics({ forceNotify: true, buffering: false });
       notify();
     });
 
@@ -1769,7 +2147,44 @@
       state.playing = false;
       stopSpatialPanSweep();
       stopBeatDebugLoop();
+      stopStreamDiagnosticsLoop();
+      if (state.failed !== true) {
+        setStreamDiagnostics(
+          {
+            streamMode: "paused",
+            streamBuffering: false
+          },
+          { forceNotify: true, silent: true }
+        );
+      }
       notify();
+    });
+
+    audio.addEventListener("waiting", () => {
+      updateBufferedDiagnostics({ forceNotify: true, buffering: true });
+    });
+
+    audio.addEventListener("stalled", () => {
+      setStreamDiagnostics(
+        {
+          streamMode: "stalled",
+          streamBuffering: true
+        },
+        { forceNotify: true, silent: true }
+      );
+      updateBufferedDiagnostics({ forceNotify: true, buffering: true });
+    });
+
+    audio.addEventListener("canplay", () => {
+      updateBufferedDiagnostics({ forceNotify: true, buffering: false });
+    });
+
+    audio.addEventListener("progress", () => {
+      updateBufferedDiagnostics({ forceNotify: false });
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      updateBufferedDiagnostics({ forceNotify: false });
     });
 
     const controller = {
@@ -2144,8 +2559,6 @@
                       <option value="https://mbc.radyonatinfm.com:8010/dipolog">Radyo Natin - Dipolog</option>
                       <option value="https://edmdnb.com:8000/radio.mp3">EDM DnB</option>
                       <option value="https://s11.citrus3.com:2020/stream/activo199fm">Activo 199 FM (Latin)</option>
-                      <option value="https://as-hls-ww-live.akamaized.net/pool_74208725/live/ww/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d96000.norewind.m3u8">BBC Radio Two (HLS)</option>
-                      <option value="https://as-hls-ww.live.cf.md.bbci.co.uk/pool_01505109/live/ww/bbc_radio_one/bbc_radio_one.isml/bbc_radio_one-audio%3d96000.norewind.m3u8">BBC Radio One (HLS)</option>
                       <option value="https://icepool.silvacast.com/GAYFM.mp3">GAYFM</option>
                       <option value="https://audiotainment-sw.streamabc.net/atsw-edm-mp3-128-9914164">bigFM EDM & Progressive</option>
                       <option value="https://stream-179.zeno.fm/7t45x7pnwakvv">PowerHit Christian Radio</option>
@@ -2178,7 +2591,7 @@
                   </div>
                   <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-next" type="button">Next</button>
                 </div>
-                <p class="field-subtext" id="radio-channel-status">Switches only when the selected channel is valid.</p>
+                <p class="field-subtext" id="radio-channel-status">Shows live channel health, including ping and buffer.</p>
               </div>
 
               <div class="settings-field audio-settings-column audio-ambient-section">
@@ -2553,7 +2966,19 @@
     let onSettingsPageScroll = null;
     let unbindLofiButton = null;
     let unbindLofiBeatSnap = null;
-    let lofiPlaybackSnapshot = { playing: false, volume: 0.35, failed: false };
+    let lofiPlaybackSnapshot = {
+      playing: false,
+      volume: 0.35,
+      failed: false,
+      streamUrl: LOFI_STREAM_URL,
+      streamMode: "idle",
+      streamBuffering: false,
+      streamPingMs: null,
+      streamFirstChunkMs: null,
+      streamBufferedSeconds: 0,
+      streamBytesReceived: 0,
+      streamUpdatedAt: 0
+    };
     let lastPartyBeatAt = 0;
     let partyBeatIntervalEma = 0;
     let partyBeatEnergyEma = 0;
@@ -2581,7 +3006,13 @@
     let uiSfxLastSliderAt = 0;
     let radioStationValidationToken = 0;
     let radioStationApplyPending = false;
+    let radioLastValidatedUrl = "";
+    let radioLastValidationPingMs = null;
+    let radioLastValidationMethod = "";
+    let radioLastValidationAt = 0;
     const ambientTrackState = new Map();
+    let ambientUnlockPending = false;
+    let ambientUnlockHandler = null;
     let pendingSpaceShortcutTimer = 0;
     let pendingSpaceShortcutAt = 0;
     const uiSfxSliderLastValue = new WeakMap();
@@ -3090,7 +3521,12 @@
       hideKonamiOverlay();
       radioStationValidationToken += 1;
       radioStationApplyPending = false;
+      radioLastValidatedUrl = "";
+      radioLastValidationPingMs = null;
+      radioLastValidationMethod = "";
+      radioLastValidationAt = 0;
       clearPendingSpaceShortcut();
+      detachAmbientUnlockListeners();
       if (uiSfxAudioContext && uiSfxAudioContext.state !== "closed") {
         uiSfxAudioContext.close().catch(() => {});
       }
@@ -4606,7 +5042,25 @@
         lofiPlaybackSnapshot = {
           playing: isPlaying && !isFailed,
           failed: isFailed,
-          volume: clampNumber(volume, 0, 1, 0.35)
+          volume: clampNumber(volume, 0, 1, 0.35),
+          streamUrl: snapshot && snapshot.streamUrl ? String(snapshot.streamUrl) : LOFI_STREAM_URL,
+          streamMode: snapshot && snapshot.streamMode ? String(snapshot.streamMode) : "idle",
+          streamBuffering: snapshot ? snapshot.streamBuffering === true : false,
+          streamPingMs: snapshot && Number.isFinite(snapshot.streamPingMs)
+            ? Number(snapshot.streamPingMs)
+            : null,
+          streamFirstChunkMs: snapshot && Number.isFinite(snapshot.streamFirstChunkMs)
+            ? Number(snapshot.streamFirstChunkMs)
+            : null,
+          streamBufferedSeconds: snapshot && Number.isFinite(snapshot.streamBufferedSeconds)
+            ? Number(snapshot.streamBufferedSeconds)
+            : 0,
+          streamBytesReceived: snapshot && Number.isFinite(snapshot.streamBytesReceived)
+            ? Number(snapshot.streamBytesReceived)
+            : 0,
+          streamUpdatedAt: snapshot && Number.isFinite(snapshot.streamUpdatedAt)
+            ? Number(snapshot.streamUpdatedAt)
+            : 0
         };
         lofiToggleBtn.disabled = isFailed;
         lofiToggleBtn.classList.toggle("is-playing", isPlaying && !isFailed);
@@ -4626,6 +5080,14 @@
           : `Be in the zone whenever you send a task update... or not\n---\n${playPauseTooltip}`;
         setElementTooltip(lofiToggleBtn, title);
         lofiToggleBtn.setAttribute("aria-label", isFailed ? title : playPauseTooltip);
+        if (radioChannelStatus && settingsState.audioStreamSource === "radio" && radioStationApplyPending !== true) {
+          const normalizedRadioStationUrl = normalizeRadioStationUrl(
+            settingsState.radioStationUrl,
+            DEFAULT_MODAL_SETTINGS.radioStationUrl
+          );
+          const selectedRadioStation = getRadioStationByUrl(normalizedRadioStationUrl);
+          radioChannelStatus.textContent = buildRadioStatusText(selectedRadioStation, normalizedRadioStationUrl);
+        }
       };
       const unsubscribe = controller.subscribe(updateUi);
       if (typeof controller.subscribeBeats === "function") {
@@ -4750,6 +5212,30 @@
       return normalizeAmbientVolume(settingsState[volumeKey], 35);
     };
 
+    const detachAmbientUnlockListeners = () => {
+      if (!ambientUnlockHandler) {
+        ambientUnlockPending = false;
+        return;
+      }
+      document.removeEventListener("pointerdown", ambientUnlockHandler, true);
+      document.removeEventListener("keydown", ambientUnlockHandler, true);
+      ambientUnlockHandler = null;
+      ambientUnlockPending = false;
+    };
+
+    const requestAmbientUnlockOnGesture = () => {
+      if (ambientUnlockPending) return;
+      ambientUnlockPending = true;
+      ambientUnlockHandler = () => {
+        detachAmbientUnlockListeners();
+        AMBIENT_NOISE_TRACKS.forEach((track) => {
+          syncAmbientTrackPlayback(track.id);
+        });
+      };
+      document.addEventListener("pointerdown", ambientUnlockHandler, true);
+      document.addEventListener("keydown", ambientUnlockHandler, true);
+    };
+
     const stopAmbientTrack = (trackId) => {
       const entry = ambientTrackState.get(trackId);
       if (!entry) return;
@@ -4757,8 +5243,13 @@
         global.clearTimeout(entry.restartTimer);
         entry.restartTimer = 0;
       }
+      if (entry.gmRetryTimer) {
+        global.clearTimeout(entry.gmRetryTimer);
+        entry.gmRetryTimer = 0;
+      }
       if (entry.audio) {
         try { entry.audio.pause(); } catch {}
+        try { entry.audio.currentTime = 0; } catch {}
       }
     };
 
@@ -4770,110 +5261,138 @@
       const audio = new Audio();
       audio.preload = "none";
       audio.autoplay = false;
-      audio.loop = false;
+      audio.loop = true;
       audio.volume = 0;
+      audio.crossOrigin = "anonymous";
+      audio.src = config.url;
       const entry = {
         audio,
         restartTimer: 0,
+        gmRetryTimer: 0,
         objectUrl: "",
-        gmFallbackAttempted: false,
         gmFallbackPromise: null,
+        gmRetryCount: 0,
+        lastGmAttemptAt: 0,
+        playWithFallback: null,
         unavailableNotified: false
       };
-      const playWithFallback = () => {
-        const loadViaGmFallback = () => {
-          if (entry.gmFallbackAttempted) return;
-          entry.gmFallbackAttempted = true;
-          if (typeof global.GM_xmlhttpRequest !== "function") {
-            if (!entry.unavailableNotified) {
-              entry.unavailableNotified = true;
-              showToast(`SFX unavailable: ${config.label}.`, "error");
-            }
-            return;
-          }
-          if (!entry.gmFallbackPromise) {
-            entry.gmFallbackPromise = new Promise((resolve) => {
-              try {
-                global.GM_xmlhttpRequest({
-                  method: "GET",
-                  url: config.url,
-                  responseType: "blob",
-                  timeout: 6000,
-                  onload: (response) => {
-                    const status = Number(response && response.status);
-                    const blob = response && response.response;
-                    if (!Number.isFinite(status) || status < 200 || status >= 400 || !(blob instanceof Blob)) {
-                      resolve(false);
-                      return;
-                    }
-                    try {
-                      const nextObjectUrl = URL.createObjectURL(blob);
-                      if (entry.objectUrl) {
-                        try { URL.revokeObjectURL(entry.objectUrl); } catch {}
-                      }
-                      entry.objectUrl = nextObjectUrl;
-                      audio.src = nextObjectUrl;
-                      resolve(true);
-                    } catch {
-                      resolve(false);
-                    }
-                  },
-                  ontimeout: () => resolve(false),
-                  onerror: () => resolve(false),
-                  onabort: () => resolve(false)
-                });
-              } catch {
-                resolve(false);
+
+      const scheduleGmRetry = () => {
+        if (entry.gmRetryTimer) return;
+        if (closed || !isAmbientTrackEnabled(trackId)) return;
+        const delayMs = Math.min(12000, 1200 * Math.max(1, entry.gmRetryCount));
+        entry.gmRetryTimer = global.setTimeout(() => {
+          entry.gmRetryTimer = 0;
+          if (closed || !isAmbientTrackEnabled(trackId)) return;
+          loadViaGmFallback({ force: true });
+        }, delayMs);
+      };
+
+      const playAmbientAudio = () => {
+        if (closed || !isAmbientTrackEnabled(trackId)) return;
+        audio.volume = clampNumber(getAmbientTrackVolumePercent(trackId) / 100, 0, 1, 0);
+        try {
+          const playPromise = audio.play();
+          if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch((error) => {
+              const errorName = error && error.name ? String(error.name) : "";
+              if (errorName === "NotAllowedError") {
+                requestAmbientUnlockOnGesture();
+                return;
               }
+              loadViaGmFallback({ force: true });
             });
           }
-          entry.gmFallbackPromise.then((ok) => {
-            if (!ok) {
-              if (!entry.unavailableNotified) {
-                entry.unavailableNotified = true;
-                showToast(`SFX unavailable: ${config.label}.`, "error");
-              }
-              return;
+        } catch {
+          loadViaGmFallback({ force: true });
+        }
+      };
+
+      const loadViaGmFallback = ({ force = false } = {}) => {
+        if (typeof global.GM_xmlhttpRequest !== "function") {
+          if (!entry.unavailableNotified) {
+            entry.unavailableNotified = true;
+            showToast(`SFX unavailable: ${config.label}.`, "error");
+          }
+          return;
+        }
+        if (entry.gmFallbackPromise) return;
+        const now = Date.now();
+        if (!force && entry.lastGmAttemptAt > 0 && (now - entry.lastGmAttemptAt) < 800) {
+          return;
+        }
+        entry.lastGmAttemptAt = now;
+        entry.gmFallbackPromise = new Promise((resolve) => {
+          try {
+            global.GM_xmlhttpRequest({
+              method: "GET",
+              url: config.url,
+              responseType: "blob",
+              timeout: 7000,
+              onload: (response) => {
+                const status = Number(response && response.status);
+                const blob = response && response.response;
+                if (!Number.isFinite(status) || status < 200 || status >= 400 || !(blob instanceof Blob)) {
+                  resolve(false);
+                  return;
+                }
+                try {
+                  const nextObjectUrl = URL.createObjectURL(blob);
+                  if (entry.objectUrl) {
+                    try { URL.revokeObjectURL(entry.objectUrl); } catch {}
+                  }
+                  entry.objectUrl = nextObjectUrl;
+                  audio.src = nextObjectUrl;
+                  resolve(true);
+                } catch {
+                  resolve(false);
+                }
+              },
+              ontimeout: () => resolve(false),
+              onerror: () => resolve(false),
+              onabort: () => resolve(false)
+            });
+          } catch {
+            resolve(false);
+          }
+        });
+
+        entry.gmFallbackPromise.then((ok) => {
+          entry.gmFallbackPromise = null;
+          if (!ok) {
+            entry.gmRetryCount += 1;
+            if (!entry.unavailableNotified && entry.gmRetryCount >= 2) {
+              entry.unavailableNotified = true;
+              showToast(`SFX unavailable: ${config.label}. Retrying...`, "error");
             }
-            if (closed || !isAmbientTrackEnabled(trackId)) return;
-            audio.currentTime = 0;
-            audio.volume = clampNumber(getAmbientTrackVolumePercent(trackId) / 100, 0, 1, 0);
-            audio.play().catch(() => {});
-          });
-        };
-        const attemptPlay = () => {
-          if (!audio.src) {
-            loadViaGmFallback();
+            scheduleGmRetry();
             return;
           }
-          try {
-            const playPromise = audio.play();
-            if (playPromise && typeof playPromise.catch === "function") {
-              playPromise.catch(() => {
-                loadViaGmFallback();
-              });
-            }
-          } catch {
-            // Ignore play start errors; async fallback handles loading failures.
+          entry.gmRetryCount = 0;
+          entry.unavailableNotified = false;
+          if (entry.gmRetryTimer) {
+            global.clearTimeout(entry.gmRetryTimer);
+            entry.gmRetryTimer = 0;
           }
-        };
-        attemptPlay();
+          if (!audio.src) return;
+          playAmbientAudio();
+        });
       };
-      audio.addEventListener("ended", () => {
-        if (closed) return;
-        if (!isAmbientTrackEnabled(trackId)) return;
-        const delayMs = Math.max(0, Math.round(config.delayMs || 0));
-        entry.restartTimer = global.setTimeout(() => {
-          entry.restartTimer = 0;
-          if (closed || !isAmbientTrackEnabled(trackId)) return;
-          const liveVolume = getAmbientTrackVolumePercent(trackId) / 100;
-          audio.volume = clampNumber(liveVolume, 0, 1, 0);
-          audio.currentTime = 0;
-          playWithFallback();
-        }, delayMs);
-      });
+
+      const playWithFallback = () => {
+        if (!audio.src) {
+          loadViaGmFallback();
+          return;
+        }
+        playAmbientAudio();
+      };
+      entry.playWithFallback = playWithFallback;
+
       audio.addEventListener("error", () => {
-        playWithFallback();
+        loadViaGmFallback({ force: true });
+      });
+      audio.addEventListener("stalled", () => {
+        loadViaGmFallback({ force: true });
       });
       ambientTrackState.set(trackId, entry);
       return entry;
@@ -4896,37 +5415,48 @@
         return;
       }
       if (entry.audio.paused || entry.audio.ended) {
-        try {
-          const playPromise = entry.audio.play();
-          if (playPromise && typeof playPromise.catch === "function") {
-            playPromise.catch(() => {
-              if (typeof entry.audio.dispatchEvent === "function") {
-                try {
-                  entry.audio.dispatchEvent(new Event("error"));
-                } catch {}
-              }
-            });
-          }
-        } catch {}
+        if (typeof entry.playWithFallback === "function") {
+          entry.playWithFallback();
+        } else {
+          try {
+            const playPromise = entry.audio.play();
+            if (playPromise && typeof playPromise.catch === "function") {
+              playPromise.catch(() => {});
+            }
+          } catch {}
+        }
       }
     };
 
     const stopAllAmbientNoise = () => {
+      detachAmbientUnlockListeners();
       AMBIENT_NOISE_TRACKS.forEach((track) => stopAmbientTrack(track.id));
     };
 
+    const createStreamValidationResult = (ok, pingMs = null, method = "") => ({
+      ok: ok === true,
+      pingMs: Number.isFinite(Number(pingMs)) && Number(pingMs) >= 0
+        ? Math.max(0, Math.round(Number(pingMs)))
+        : null,
+      method: String(method || "").trim().toLowerCase()
+    });
+
     const validateAudioStreamUrl = async (url, { timeoutMs = 2600 } = {}) => {
       const targetUrl = String(url || "").trim();
-      if (!isAllowedAudioStreamUrl(targetUrl)) return false;
+      if (!isAllowedAudioStreamUrl(targetUrl)) {
+        return createStreamValidationResult(false, null, "blocked");
+      }
       const safeTimeoutMs = Math.max(900, Math.round(timeoutMs) || 2600);
+      const startedAt = global.performance ? global.performance.now() : Date.now();
 
       if (typeof global.GM_xmlhttpRequest === "function") {
         return await new Promise((resolve) => {
           let settled = false;
-          const finish = (value) => {
+          const finish = (value, method = "gm") => {
             if (settled) return;
             settled = true;
-            resolve(Boolean(value));
+            const endedAt = global.performance ? global.performance.now() : Date.now();
+            resolve(createStreamValidationResult(Boolean(value), endedAt - startedAt, method));
           };
           const hardTimeout = global.setTimeout(() => finish(false), safeTimeoutMs + 320);
           try {
@@ -4939,30 +5469,30 @@
                 const status = Number(event && event.status);
                 if (!Number.isFinite(status) || (status >= 200 && status < 400)) {
                   global.clearTimeout(hardTimeout);
-                  finish(true);
+                  finish(true, "gm-progress");
                 }
               },
               onload: (response) => {
                 global.clearTimeout(hardTimeout);
                 const status = Number(response && response.status);
-                finish(Number.isFinite(status) && status >= 200 && status < 400);
+                finish(Number.isFinite(status) && status >= 200 && status < 400, "gm-load");
               },
               ontimeout: () => {
                 global.clearTimeout(hardTimeout);
-                finish(false);
+                finish(false, "gm-timeout");
               },
               onerror: () => {
                 global.clearTimeout(hardTimeout);
-                finish(false);
+                finish(false, "gm-error");
               },
               onabort: () => {
                 global.clearTimeout(hardTimeout);
-                finish(false);
+                finish(false, "gm-abort");
               }
             });
           } catch {
             global.clearTimeout(hardTimeout);
-            finish(false);
+            finish(false, "gm-exception");
           }
         });
       }
@@ -4981,10 +5511,15 @@
           signal: controller ? controller.signal : undefined
         });
         if (timer) global.clearTimeout(timer);
-        if (response && response.type === "opaque") return true;
-        return Boolean(response && response.ok);
+        if (response && response.type === "opaque") {
+          const endedAt = global.performance ? global.performance.now() : Date.now();
+          return createStreamValidationResult(true, endedAt - startedAt, "fetch-opaque");
+        }
+        const endedAt = global.performance ? global.performance.now() : Date.now();
+        return createStreamValidationResult(Boolean(response && response.ok), endedAt - startedAt, "fetch");
       } catch {
-        return false;
+        const endedAt = global.performance ? global.performance.now() : Date.now();
+        return createStreamValidationResult(false, endedAt - startedAt, "fetch-error");
       }
     };
 
@@ -5009,9 +5544,18 @@
         const token = ++radioStationValidationToken;
         radioStationApplyPending = true;
         applyModalSettings();
-        const valid = await validateAudioStreamUrl(targetUrl);
+        const validation = await validateAudioStreamUrl(targetUrl);
+        const valid = validation && validation.ok === true;
         if (token !== radioStationValidationToken) return false;
         radioStationApplyPending = false;
+        radioLastValidatedUrl = normalizedStationUrl;
+        radioLastValidationPingMs = validation && Number.isFinite(validation.pingMs)
+          ? Math.round(validation.pingMs)
+          : null;
+        radioLastValidationMethod = validation && validation.method
+          ? String(validation.method)
+          : "";
+        radioLastValidationAt = Date.now();
         if (!valid) {
           // Pre-check can fail for some providers even when playback still works.
           const station = getRadioStationByUrl(normalizedStationUrl);
@@ -6766,6 +7310,64 @@
       previewRafId = global.requestAnimationFrame(tickAnimationPreview);
     };
 
+    const buildRadioStatusText = (selectedRadioStation, normalizedRadioStationUrl) => {
+      const stationLabel = selectedRadioStation && selectedRadioStation.label
+        ? selectedRadioStation.label
+        : "Unknown station";
+      const baseText = settingsState.audioStreamSource === "radio"
+        ? `Live source: ${stationLabel}`
+        : `Live source: Default stream. Ready radio: ${stationLabel}`;
+      const details = [];
+
+      const normalizedLiveUrl = String(lofiPlaybackSnapshot.streamUrl || "").trim().toLowerCase();
+      const isRadioLive = settingsState.audioStreamSource === "radio";
+      if (isRadioLive) {
+        if (lofiPlaybackSnapshot.failed === true || String(lofiPlaybackSnapshot.streamMode || "") === "failed") {
+          details.push("Stream error");
+        } else if (lofiPlaybackSnapshot.streamBuffering === true) {
+          details.push("Buffering");
+        }
+        const liveBufferSeconds = Number(lofiPlaybackSnapshot.streamBufferedSeconds);
+        if (Number.isFinite(liveBufferSeconds) && liveBufferSeconds > 0) {
+          const roundedBuffer = liveBufferSeconds >= 10
+            ? Math.round(liveBufferSeconds)
+            : Math.round(liveBufferSeconds * 10) / 10;
+          details.push(`Buffer ${roundedBuffer}s`);
+        }
+        const livePingMs = Number(lofiPlaybackSnapshot.streamPingMs);
+        if (Number.isFinite(livePingMs) && livePingMs >= 0) {
+          details.push(`Ping ${Math.round(livePingMs)}ms`);
+        }
+        const liveBytes = Number(lofiPlaybackSnapshot.streamBytesReceived);
+        if (Number.isFinite(liveBytes) && liveBytes > 0) {
+          details.push(`${formatBytes(liveBytes)} RX`);
+        }
+        const selectedNormalized = String(normalizedRadioStationUrl || "").trim().toLowerCase();
+        if (normalizedLiveUrl && normalizedLiveUrl !== selectedNormalized && normalizedLiveUrl !== String(LOFI_STREAM_URL).toLowerCase()) {
+          details.push("Live URL differs from selected station");
+        }
+        if (normalizedLiveUrl === String(LOFI_STREAM_URL).toLowerCase() && selectedNormalized !== String(LOFI_STREAM_URL).toLowerCase()) {
+          details.push("Fallback to default stream");
+        }
+      }
+
+      const selectedNormalizedForProbe = String(normalizedRadioStationUrl || "").trim().toLowerCase();
+      const probeAgeMs = radioLastValidationAt > 0 ? Math.max(0, Date.now() - radioLastValidationAt) : Number.POSITIVE_INFINITY;
+      if (radioLastValidatedUrl
+        && selectedNormalizedForProbe
+        && radioLastValidatedUrl.toLowerCase() === selectedNormalizedForProbe
+        && probeAgeMs <= 5 * 60 * 1000
+        && Number.isFinite(radioLastValidationPingMs)
+      ) {
+        const probeLabel = radioLastValidationMethod
+          ? `Probe ${Math.round(radioLastValidationPingMs)}ms (${radioLastValidationMethod})`
+          : `Probe ${Math.round(radioLastValidationPingMs)}ms`;
+        details.push(probeLabel);
+      }
+
+      return details.length ? `${baseText}. ${details.join(" | ")}.` : `${baseText}.`;
+    };
+
     const applyModalSettings = () => {
       const activePage = PAGE_OPTIONS.has(settingsState.activePage)
         ? settingsState.activePage
@@ -7031,10 +7633,8 @@
       if (radioChannelStatus) {
         if (radioStationApplyPending === true) {
           radioChannelStatus.textContent = "Checking radio channel availability...";
-        } else if (settingsState.audioStreamSource === "radio") {
-          radioChannelStatus.textContent = `Live source: ${selectedRadioStation.label}.`;
         } else {
-          radioChannelStatus.textContent = `Live source: Default stream. Ready radio: ${selectedRadioStation.label}.`;
+          radioChannelStatus.textContent = buildRadioStatusText(selectedRadioStation, normalizedRadioStationUrl);
         }
       }
       if (sfxVolumeSlider) {

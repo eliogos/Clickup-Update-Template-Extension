@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         ClickUp --update Modal
 // @namespace    clickup-update-modal
-// @version      15.0.11
+// @version      15.0.14
 // @description  Insert update template in ClickUp
 // @match        https://app.clickup.com/*
+// @grant        GM_info
 // @grant        GM_getResourceText
 // @grant        GM_xmlhttpRequest
 // @connect      ec3.yesstreaming.net
@@ -42,10 +43,6 @@
 // @connect      *.icecast.live
 // @connect      citrus3.com
 // @connect      *.citrus3.com
-// @connect      akamaized.net
-// @connect      *.akamaized.net
-// @connect      bbci.co.uk
-// @connect      *.bbci.co.uk
 // @connect      silvacast.com
 // @connect      *.silvacast.com
 // @connect      streamabc.net
@@ -64,7 +61,10 @@
 // @resource     modalButtonsCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/buttons.css
 // @resource     modalSelectsCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/selects.css
 // @resource     modalBannerCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/banner.css
+// @resource     waveformCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/waveform.css
 // @resource     modalShellTemplate https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/modal-shell.html
+// @resource     modalPageWaveform https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/waveform.html
+// @resource     modalPageWaveformFilters https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/waveform-filters.html
 // @resource     modalFragmentToast https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/modal-toast.html
 // @resource     modalFragmentConfettiOverlay https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/modal-confetti-overlay.html
 // @resource     modalPageEditor https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/editor.html
@@ -94,6 +94,7 @@
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/is-popover-open.js
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/create-modal-markup.js
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/modal-physics.js
+// @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/waveform.js
 // @require      https://cdn.jsdelivr.net/npm/mathjs@12.4.2/lib/browser/math.js
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/open-modal.js
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/bootstrap.js
