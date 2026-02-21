@@ -4616,7 +4616,6 @@
       audio.preload = "none";
       audio.autoplay = false;
       audio.loop = false;
-      audio.src = config.url;
       audio.volume = 0;
       const entry = {
         audio,
@@ -4627,69 +4626,76 @@
         unavailableNotified: false
       };
       const playWithFallback = () => {
+        const loadViaGmFallback = () => {
+          if (entry.gmFallbackAttempted) return;
+          entry.gmFallbackAttempted = true;
+          if (typeof global.GM_xmlhttpRequest !== "function") {
+            if (!entry.unavailableNotified) {
+              entry.unavailableNotified = true;
+              showToast(`SFX unavailable: ${config.label}.`, "error");
+            }
+            return;
+          }
+          if (!entry.gmFallbackPromise) {
+            entry.gmFallbackPromise = new Promise((resolve) => {
+              try {
+                global.GM_xmlhttpRequest({
+                  method: "GET",
+                  url: config.url,
+                  responseType: "blob",
+                  timeout: 6000,
+                  onload: (response) => {
+                    const status = Number(response && response.status);
+                    const blob = response && response.response;
+                    if (!Number.isFinite(status) || status < 200 || status >= 400 || !(blob instanceof Blob)) {
+                      resolve(false);
+                      return;
+                    }
+                    try {
+                      const nextObjectUrl = URL.createObjectURL(blob);
+                      if (entry.objectUrl) {
+                        try { URL.revokeObjectURL(entry.objectUrl); } catch {}
+                      }
+                      entry.objectUrl = nextObjectUrl;
+                      audio.src = nextObjectUrl;
+                      resolve(true);
+                    } catch {
+                      resolve(false);
+                    }
+                  },
+                  ontimeout: () => resolve(false),
+                  onerror: () => resolve(false),
+                  onabort: () => resolve(false)
+                });
+              } catch {
+                resolve(false);
+              }
+            });
+          }
+          entry.gmFallbackPromise.then((ok) => {
+            if (!ok) {
+              if (!entry.unavailableNotified) {
+                entry.unavailableNotified = true;
+                showToast(`SFX unavailable: ${config.label}.`, "error");
+              }
+              return;
+            }
+            if (closed || !isAmbientTrackEnabled(trackId)) return;
+            audio.currentTime = 0;
+            audio.volume = clampNumber(getAmbientTrackVolumePercent(trackId) / 100, 0, 1, 0);
+            audio.play().catch(() => {});
+          });
+        };
         const attemptPlay = () => {
+          if (!audio.src) {
+            loadViaGmFallback();
+            return;
+          }
           try {
             const playPromise = audio.play();
             if (playPromise && typeof playPromise.catch === "function") {
               playPromise.catch(() => {
-                if (entry.gmFallbackAttempted) return;
-                entry.gmFallbackAttempted = true;
-                if (typeof global.GM_xmlhttpRequest !== "function") {
-                  if (!entry.unavailableNotified) {
-                    entry.unavailableNotified = true;
-                    showToast(`SFX unavailable: ${config.label}.`, "error");
-                  }
-                  return;
-                }
-                if (!entry.gmFallbackPromise) {
-                  entry.gmFallbackPromise = new Promise((resolve) => {
-                    try {
-                      global.GM_xmlhttpRequest({
-                        method: "GET",
-                        url: config.url,
-                        responseType: "blob",
-                        timeout: 6000,
-                        onload: (response) => {
-                          const status = Number(response && response.status);
-                          const blob = response && response.response;
-                          if (!Number.isFinite(status) || status < 200 || status >= 400 || !(blob instanceof Blob)) {
-                            resolve(false);
-                            return;
-                          }
-                          try {
-                            const nextObjectUrl = URL.createObjectURL(blob);
-                            if (entry.objectUrl) {
-                              try { URL.revokeObjectURL(entry.objectUrl); } catch {}
-                            }
-                            entry.objectUrl = nextObjectUrl;
-                            audio.src = nextObjectUrl;
-                            resolve(true);
-                          } catch {
-                            resolve(false);
-                          }
-                        },
-                        ontimeout: () => resolve(false),
-                        onerror: () => resolve(false),
-                        onabort: () => resolve(false)
-                      });
-                    } catch {
-                      resolve(false);
-                    }
-                  });
-                }
-                entry.gmFallbackPromise.then((ok) => {
-                  if (!ok) {
-                    if (!entry.unavailableNotified) {
-                      entry.unavailableNotified = true;
-                      showToast(`SFX unavailable: ${config.label}.`, "error");
-                    }
-                    return;
-                  }
-                  if (closed || !isAmbientTrackEnabled(trackId)) return;
-                  audio.currentTime = 0;
-                  audio.volume = clampNumber(getAmbientTrackVolumePercent(trackId) / 100, 0, 1, 0);
-                  audio.play().catch(() => {});
-                });
+                loadViaGmFallback();
               });
             }
           } catch {
@@ -4852,10 +4858,9 @@
         if (token !== radioStationValidationToken) return false;
         radioStationApplyPending = false;
         if (!valid) {
-          applyModalSettings();
+          // Pre-check can fail for some providers even when playback still works.
           const station = getRadioStationByUrl(normalizedStationUrl);
-          showToast(`Radio channel is unavailable: ${station.label}.`, "error");
-          return false;
+          showToast(`Radio validation timed out, trying anyway: ${station.label}.`, "muted");
         }
       }
 
