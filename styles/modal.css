@@ -503,12 +503,8 @@
   min-height: calc(var(--control-height) - 6px);
   margin: -8px auto -8px 0;
   border-radius: 10px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--surface-button) 72%, var(--surface-button-primary-soft) 28%) 0%,
-    color-mix(in oklab, var(--surface-button-soft) 58%, var(--surface-button-primary) 42%) 100%
-  );
-  border-color: color-mix(in oklab, var(--surface-button-primary-soft) 62%, var(--border-soft) 38%);
+  background: linear-gradient(180deg, var(--surface-button) 0%, var(--surface-button-soft) 100%);
+  border-color: color-mix(in oklab, var(--surface-button-primary-soft) 72%, var(--border-soft) 28%);
   color: transparent;
   z-index: 2;
 }
