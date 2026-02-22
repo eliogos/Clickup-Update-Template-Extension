@@ -532,9 +532,7 @@
     const telemetry = app && app._waveformTelemetry ? app._waveformTelemetry : {};
     const factor = getSelectedFactor();
     const palette = getWaveformPalette();
-    const now = (globalThis.performance && typeof globalThis.performance.now === "function")
-      ? globalThis.performance.now()
-      : Date.now();
+    const now = Date.now();
     const lastSfxAt = Number(telemetry.lastSfxAt || 0);
     const sfxStrength = Math.max(0, Math.min(1, Number(telemetry.sfxStrength || 0)));
     const elapsed = Math.max(0, now - lastSfxAt);

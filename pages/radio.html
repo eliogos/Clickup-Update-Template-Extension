@@ -3,85 +3,7 @@
     <div class="settings-page-content">
       <section class="settings-section">
         <p class="settings-section-title">Radio</p>
-        <p class="field-subtext">Music and SFX controls live here.</p>
-
-        <div class="settings-two-column audio-settings-split">
-          <div class="settings-field audio-settings-column">
-            <p class="audio-settings-subtitle">Music</p>
-
-            <div class="settings-field">
-              <div class="settings-label-row">
-                <span class="settings-label">Music Autoplay</span>
-                <button class="settings-reset-btn" type="button" data-reset-setting="musicAutoplay" title="Reset music autoplay">
-                  <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
-                </button>
-              </div>
-              <label class="settings-switch" for="lofi-autoplay">
-                <input type="checkbox" id="lofi-autoplay" checked />
-                <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
-                <span class="settings-switch-text">Autoplay music when opening the modal [Double Space]</span>
-              </label>
-            </div>
-            <div class="settings-field">
-              <label class="settings-switch" for="keep-radio-on">
-                <input type="checkbox" id="keep-radio-on" />
-                <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
-                <span class="settings-switch-text">Keep Radio on (play in background after closing modal)</span>
-              </label>
-            </div>
-
-            <div class="settings-field">
-              <div class="settings-label-row">
-                <span class="settings-label">8D Audio</span>
-                <button class="settings-reset-btn" type="button" data-reset-setting="lofi8d" title="Reset 8D audio">
-                  <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
-                </button>
-              </div>
-              <label class="settings-switch" for="lofi-8d-enabled">
-                <input type="checkbox" id="lofi-8d-enabled" checked />
-                <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
-                <span class="settings-switch-text">Sweep audio around you with surround/proximity movement</span>
-              </label>
-              <p class="field-subtext field-subtext-warning settings-tip-row">
-                <span class="material-symbols-outlined settings-tip-icon" aria-hidden="true">headphones</span>
-                <span>Best when wearing headphones</span>
-              </p>
-              <div class="settings-conditional-body" id="lofi-8d-controls-body">
-                <div class="settings-field">
-                  <label class="settings-label" for="lofi-8d-rate-slider">8D Sweep Speed</label>
-                  <div class="editor-font-size-row">
-                    <input class="field editor-font-size-input" id="lofi-8d-rate-input" type="number" min="0.1" max="4" step="0.1" inputmode="decimal" />
-                    <input class="editor-font-size-slider" id="lofi-8d-rate-slider" type="range" min="0.1" max="4" step="0.1" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="settings-field audio-settings-column">
-            <div class="settings-label-row">
-              <p class="audio-settings-subtitle">SFX</p>
-              <button class="settings-reset-btn" type="button" data-reset-setting="sfxMix" title="Reset SFX settings">
-                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
-              </button>
-            </div>
-
-            <label class="settings-label" for="sfx-volume-slider">SFX Volume</label>
-            <div class="sfx-volume-row">
-              <button class="btn audio-inline-mute-btn" id="sfx-mute-btn" type="button" aria-pressed="false">Mute</button>
-              <input class="editor-font-size-slider sfx-volume-slider" id="sfx-volume-slider" type="range" min="0" max="200" step="1" />
-              <span class="sfx-volume-value" id="sfx-volume-value">100</span>
-              <span class="sfx-volume-max">200</span>
-            </div>
-
-            <label class="append-number-wrap settings-checkbox" for="sfx-adaptive-blend">
-              <input type="checkbox" id="sfx-adaptive-blend" />
-              <span>Adaptive blend <span class="experimental-pill">Experimental</span></span>
-            </label>
-            <p class="field-subtext">Tries to reduce SFX and music overlap during busy moments.</p>
-          </div>
-        </div>
+        <p class="field-subtext">Audio workspace with waveform, channel stack, quality, filters, and layers.</p>
 
         <div class="settings-field">
           <div class="settings-label-row">
@@ -108,80 +30,154 @@
           </div>
         </div>
 
-
-        <div class="settings-field audio-settings-column audio-channel-column">
-          <div class="settings-label-row">
-            <p class="audio-settings-subtitle">Channel</p>
-            <button class="settings-reset-btn" type="button" data-reset-setting="audioStreamSource" title="Reset music source and station">
-              <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
-            </button>
-          </div>
-          <div class="settings-segmented" id="audio-stream-source-group" role="tablist" aria-label="Music source">
-            <button class="settings-segment-btn" type="button" data-audio-stream-source="lofi">Default</button>
-            <button class="settings-segment-btn" type="button" data-audio-stream-source="radio">Radio</button>
-          </div>
-          <div class="audio-channel-nav">
-            <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-prev" type="button">Prev</button>
-            <div class="select-wrap settings-select-wrap">
-              <select class="field settings-select" id="radio-channel-select">
-                <option value="https://ec6.yesstreaming.net:1455/stream">Yesstreaming - ec6:1455</option>
-                <option value="https://azura.yesfm.com.ph/listen/yes_fm_manila/radio.mp3">YES FM Manila</option>
-                <option value="https://mbc.radyonatinfm.com:8010/dipolog">Radyo Natin - Dipolog</option>
-                <option value="https://edmdnb.com:8000/radio.mp3">EDM DnB</option>
-                <option value="https://s11.citrus3.com:2020/stream/activo199fm">Activo 199 FM (Latin)</option>
-                <option value="https://icepool.silvacast.com/GAYFM.mp3">GAYFM</option>
-                <option value="https://audiotainment-sw.streamabc.net/atsw-edm-mp3-128-9914164">bigFM EDM & Progressive</option>
-                <option value="https://stream-179.zeno.fm/7t45x7pnwakvv">PowerHit Christian Radio</option>
-                <option value="https://stream-143.zeno.fm/g1pmt17nz9duv">StarFM Philippines</option>
-                <option value="https://22283.live.streamtheworld.com/MYXPPOPAAC.aac">MYX P-Pop</option>
-                <option value="https://opentune.net/stream?url=http%3A%2F%2F28093.live.streamtheworld.com%3A3690%2FMYXFM_SC">MYX Philippines</option>
-                <option value="https://stream-178.zeno.fm/2uhuu5hvzqzuv">Budots FM 98.9</option>
-                <option value="https://uk1.internet-radio.com/proxy/classicsradio?mp=/stream">Classics Radio - UK1</option>
-                <option value="https://kathy.torontocast.com:2820/stream/1/">Metal Rock FM</option>
-                <option value="https://uk7.internet-radio.com/proxy/radiomerge?mp=/stream;">Merge 104.8 - UK7</option>
-                <option value="https://uk1.internet-radio.com/proxy/hospital?mp=/stream;">Hospital Radio - UK1</option>
-                <option value="https://uk2.internet-radio.com/proxy/urbanchic?mp=/stream;">Urban Chic - UK2</option>
-                <option value="https://ic.radiomonster.fm/rock.ultra">RadioMonster - Rock Ultra</option>
-                <option value="https://webmusik.stream.laut.fm/webmusik">Webmusik</option>
-                <option value="https://savagemusic.stream.laut.fm/savagemusic?t302=2026-02-21_17-38-32&uuid=2aacaff9-c52e-477b-b2a3-dddd4041752b">Savage Music</option>
-                <option value="https://hardstylefm.stream.laut.fm/hardstylefm?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">HardstyleFM</option>
-                <option value="https://clubradio.stream.laut.fm/clubradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Clubradio</option>
-                <option value="https://1000-electronic-dance-music.stream.laut.fm/1000-electronic-dance-music?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">1000 Electronic Dance Music</option>
-                <option value="https://edmradio.stream.laut.fm/edmradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Edmradio</option>
-                <option value="https://game-fm.stream.laut.fm/game-fm?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Game FM</option>
-                <option value="https://soundtrack.stream.laut.fm/soundtrack?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Soundtrack</option>
-                <option value="https://blockbuster.stream.laut.fm/blockbuster?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Blockbuster</option>
-                <option value="https://twentytenradio.stream.laut.fm/twentytenradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Twentytenradio</option>
-                <option value="https://draingang.stream.laut.fm/draingang?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Drain Gang (Hyperpop)</option>
-                <option value="https://kpophits.stream.laut.fm/kpophits?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Kpop Hits</option>
-                <option value="https://simulator1.stream.laut.fm/simulator1?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Simulator1 (Mainstream)</option>
-                <option value="https://nightcoreradio.stream.laut.fm/nightcoreradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Nightcore Radio</option>
-                <option value="https://musicalradiode.stream.laut.fm/musicalradiode?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Musical Radio DE</option>
-                <option value="https://phonkwave.stream.laut.fm/phonkwave?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Phonkwave</option>
-                <option value="https://latenightradio.stream.laut.fm/latenightradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Late Night Radio</option>
-                <option value="https://punk.stream.laut.fm/punk?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Punk</option>
-                <option value="https://englishrap.stream.laut.fm/englishrap?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">English Rap</option>
-                <option value="https://maxretro.stream.laut.fm/maxretro?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Maxretro</option>
-                <option value="https://uk1.internet-radio.com/proxy/pinknoise?mp=/stream;">Pink Noise - UK1</option>
-                <option value="https://das-edge15-live365-dal02.cdnstream.com/a20450">Live365 - a20450</option>
-                <option value="https://kathy.torontocast.com:3560/;">J-Pop Powerplay</option>
-                <option value="https://kathy.torontocast.com:3340/;">J-Rock Powerplay</option>
-                <option value="https://radio35.virtualtronics.com:20040/;">BAMM Radio</option>
-                <option value="https://boxradio-edge-00.streamafrica.net/jpopchill">BOX - Japan City Pop</option>
-                <option value="https://kathy.torontocast.com:2880/1.mp3">Otaku Music Radio</option>
-                <option value="https://magic.radioca.st/stream">iFM Philippines</option>
-                <option value="https://icecast.live/up2dance">Up2Dance</option>
-                <option value="https://stream.zeno.fm/tabzverz0fctv">Zeno - tabzverz0fctv</option>
-                <option value="https://stream-148.zeno.fm/60cb36c29heuv">Zeno - 60cb36c29heuv</option>
-                <option value="https://stream-142.zeno.fm/sh37pvfd938uv">Zeno - sh37pvfd938uv</option>
-                <option value="https://stream-142.zeno.fm/sfaqs2c29heuv">Star FM - Zamboanga</option>
-              </select>
-              <span class="select-icon" aria-hidden="true"></span>
+        <div class="settings-three-column audio-summary-grid">
+          <div class="settings-field audio-settings-column">
+            <div class="settings-label-row">
+              <span class="settings-label">Autoplay</span>
+              <button class="settings-reset-btn" type="button" data-reset-setting="musicAutoplay" title="Reset music autoplay">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
             </div>
-            <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-next" type="button">Next</button>
-            <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-shuffle" type="button">Shuffle</button>
+            <label class="settings-switch" for="lofi-autoplay">
+              <input type="checkbox" id="lofi-autoplay" checked />
+              <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+              <span class="settings-switch-text">Autoplay music when opening the modal [Space x2]</span>
+            </label>
           </div>
-          <p class="field-subtext" id="radio-channel-status">Shows live channel health, including ping and buffer.</p>
+
+          <div class="settings-field audio-settings-column">
+            <div class="settings-label-row">
+              <span class="settings-label">Persistent Mode</span>
+            </div>
+            <label class="settings-switch" for="keep-radio-on">
+              <input type="checkbox" id="keep-radio-on" />
+              <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+              <span class="settings-switch-text">Keep Radio on (play in background after closing modal)</span>
+            </label>
+          </div>
+
+          <div class="settings-field audio-settings-column">
+            <div class="settings-label-row">
+              <span class="settings-label">SFX</span>
+              <button class="settings-reset-btn" type="button" data-reset-setting="sfxMix" title="Reset SFX settings">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <label class="settings-label" for="sfx-volume-slider">SFX Volume</label>
+            <div class="sfx-volume-row">
+              <button class="btn audio-inline-mute-btn" id="sfx-mute-btn" type="button" aria-pressed="false">Mute</button>
+              <input class="editor-font-size-slider sfx-volume-slider" id="sfx-volume-slider" type="range" min="0" max="200" step="1" />
+              <span class="sfx-volume-value" id="sfx-volume-value">100</span>
+              <span class="sfx-volume-max">200</span>
+            </div>
+            <label class="append-number-wrap settings-checkbox" for="sfx-adaptive-blend">
+              <input type="checkbox" id="sfx-adaptive-blend" />
+              <span>Adaptive blend <span class="experimental-pill">Experimental</span></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-two-column audio-settings-split">
+          <div class="settings-field audio-settings-column audio-channel-column">
+            <div class="settings-label-row">
+              <p class="audio-settings-subtitle">Channel</p>
+              <button class="settings-reset-btn" type="button" data-reset-setting="audioStreamSource" title="Reset music source and station">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="settings-segmented" id="audio-stream-source-group" role="tablist" aria-label="Music source">
+              <button class="settings-segment-btn" type="button" data-audio-stream-source="lofi">Lo-fi</button>
+              <button class="settings-segment-btn" type="button" data-audio-stream-source="radio">Radio</button>
+            </div>
+            <div class="audio-channel-nav">
+              <button class="btn btn-secondary audio-channel-nav-btn audio-channel-nav-btn-icon" id="radio-channel-prev" type="button" aria-label="Previous station" title="Previous station">
+                <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+              </button>
+              <div class="select-wrap settings-select-wrap">
+                <select class="field settings-select" id="radio-channel-select"></select>
+                <span class="select-icon" aria-hidden="true"></span>
+              </div>
+              <button class="btn btn-secondary audio-channel-nav-btn audio-channel-nav-btn-icon" id="radio-channel-next" type="button" aria-label="Next station" title="Next station">
+                <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+              </button>
+              <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-shuffle" type="button">
+                <span class="material-symbols-outlined" aria-hidden="true">shuffle</span>
+                <span>Shuffle</span>
+              </button>
+            </div>
+            <div class="settings-inline-actions">
+              <button class="btn btn-secondary ai-special-btn" id="radio-learn-ai" type="button">
+                <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+                <span>Learn about radio</span>
+              </button>
+            </div>
+            <p class="field-subtext" id="radio-channel-status">Shows live channel health, including ping and buffer.</p>
+          </div>
+
+          <div class="settings-field audio-settings-column audio-ambient-section">
+            <div class="settings-label-row">
+              <p class="audio-settings-subtitle">Ambient Noise</p>
+              <button class="settings-reset-btn" type="button" data-reset-setting="ambientNoise" title="Reset ambient noise">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <p class="field-subtext">Additive layers that can run together with music/radio.</p>
+            <div class="ambient-noise-selector" aria-label="Ambient noise layers">
+              <button class="ambient-noise-chip" type="button" data-ambient-track-button="rain" title="Rain">🌧️</button>
+              <button class="ambient-noise-chip" type="button" data-ambient-track-button="beach" title="Beach Waves">🌊</button>
+              <button class="ambient-noise-chip" type="button" data-ambient-track-button="crickets" title="Crickets">🦗</button>
+              <button class="ambient-noise-chip" type="button" data-ambient-track-button="thunder" title="Thunder">⛈️</button>
+              <button class="ambient-noise-chip" type="button" data-ambient-track-button="city" title="City">🏙️</button>
+              <button class="ambient-noise-chip" type="button" data-ambient-track-button="white" title="White Noise">📻</button>
+            </div>
+            <div class="settings-inline-actions">
+              <button class="btn btn-secondary" id="ambient-randomize-btn" type="button" hidden>Randomize Volumes</button>
+            </div>
+            <div class="ambient-noise-panels">
+              <div class="ambient-noise-panel" data-ambient-panel="rain" hidden>
+                <div class="ambient-noise-panel-head"><span class="ambient-noise-name">Rain</span></div>
+                <div class="ambient-noise-volume-row">
+                  <input class="editor-font-size-slider" id="ambient-rain-volume" type="range" min="0" max="100" step="1" />
+                  <span class="sfx-volume-value" id="ambient-rain-volume-value">35</span>
+                </div>
+              </div>
+              <div class="ambient-noise-panel" data-ambient-panel="beach" hidden>
+                <div class="ambient-noise-panel-head"><span class="ambient-noise-name">Beach Waves</span></div>
+                <div class="ambient-noise-volume-row">
+                  <input class="editor-font-size-slider" id="ambient-beach-volume" type="range" min="0" max="100" step="1" />
+                  <span class="sfx-volume-value" id="ambient-beach-volume-value">35</span>
+                </div>
+              </div>
+              <div class="ambient-noise-panel" data-ambient-panel="crickets" hidden>
+                <div class="ambient-noise-panel-head"><span class="ambient-noise-name">Crickets</span></div>
+                <div class="ambient-noise-volume-row">
+                  <input class="editor-font-size-slider" id="ambient-crickets-volume" type="range" min="0" max="100" step="1" />
+                  <span class="sfx-volume-value" id="ambient-crickets-volume-value">35</span>
+                </div>
+              </div>
+              <div class="ambient-noise-panel" data-ambient-panel="thunder" hidden>
+                <div class="ambient-noise-panel-head"><span class="ambient-noise-name">Thunder</span></div>
+                <div class="ambient-noise-volume-row">
+                  <input class="editor-font-size-slider" id="ambient-thunder-volume" type="range" min="0" max="100" step="1" />
+                  <span class="sfx-volume-value" id="ambient-thunder-volume-value">35</span>
+                </div>
+              </div>
+              <div class="ambient-noise-panel" data-ambient-panel="city" hidden>
+                <div class="ambient-noise-panel-head"><span class="ambient-noise-name">City</span></div>
+                <div class="ambient-noise-volume-row">
+                  <input class="editor-font-size-slider" id="ambient-city-volume" type="range" min="0" max="100" step="1" />
+                  <span class="sfx-volume-value" id="ambient-city-volume-value">35</span>
+                </div>
+              </div>
+              <div class="ambient-noise-panel" data-ambient-panel="white" hidden>
+                <div class="ambient-noise-panel-head"><span class="ambient-noise-name">White Noise</span></div>
+                <div class="ambient-noise-volume-row">
+                  <input class="editor-font-size-slider" id="ambient-white-volume" type="range" min="0" max="100" step="1" />
+                  <span class="sfx-volume-value" id="ambient-white-volume-value">35</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="settings-field audio-settings-column audio-radio-pulse-section" id="radio-pulse-section" hidden>
@@ -198,79 +194,121 @@
           </div>
         </div>
 
-        <div class="settings-field audio-settings-column audio-ambient-section">
+        <div class="settings-two-column audio-settings-split">
+          <div class="settings-field audio-settings-column">
+            <div class="settings-label-row">
+              <span class="settings-label">Music Quality</span>
+              <button class="settings-reset-btn" type="button" data-reset-setting="audioBitrate" title="Reset audio bitrate">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <div class="editor-font-size-row">
+              <input class="field editor-font-size-input" id="quality-bitrate-input" type="number" min="32" max="320" step="8" inputmode="numeric" />
+              <input class="editor-font-size-slider" id="quality-bitrate-slider" type="range" min="32" max="320" step="8" />
+            </div>
+            <p class="field-subtext" id="quality-bitrate-hz">Approx bandwidth and cutoff are shown in Hz.</p>
+          </div>
+
+          <div class="settings-field audio-settings-column">
+            <div class="settings-label-row">
+              <span class="settings-label">Equalizer</span>
+              <button class="settings-reset-btn" type="button" data-reset-setting="equalizer" title="Reset equalizer">
+                <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+              </button>
+            </div>
+            <label class="settings-label" for="equalizer-preset-select">Preset</label>
+            <div class="select-wrap settings-select-wrap">
+              <select class="field settings-select" id="equalizer-preset-select">
+                <option value="flat">Flat</option>
+                <option value="bass-boost">Bass Boost</option>
+                <option value="vocal-boost">Vocal Boost</option>
+                <option value="treble-boost">Treble Boost</option>
+                <option value="smile">Smile</option>
+                <option value="custom">Custom</option>
+              </select>
+              <span class="select-icon" aria-hidden="true"></span>
+            </div>
+            <div class="settings-conditional-body" id="equalizer-custom-body">
+              <div class="equalizer-vertical-grid">
+                <div class="equalizer-band">
+                  <label class="equalizer-band-label" for="eq-low-slider">Low</label>
+                  <input class="equalizer-vertical-slider" id="eq-low-slider" type="range" min="-12" max="12" step="0.5" />
+                  <input class="field equalizer-band-input" id="eq-low-input" type="number" min="-12" max="12" step="0.5" inputmode="decimal" />
+                </div>
+                <div class="equalizer-band">
+                  <label class="equalizer-band-label" for="eq-low-mid-slider">Low Mid</label>
+                  <input class="equalizer-vertical-slider" id="eq-low-mid-slider" type="range" min="-12" max="12" step="0.5" />
+                  <input class="field equalizer-band-input" id="eq-low-mid-input" type="number" min="-12" max="12" step="0.5" inputmode="decimal" />
+                </div>
+                <div class="equalizer-band">
+                  <label class="equalizer-band-label" for="eq-mid-slider">Mid</label>
+                  <input class="equalizer-vertical-slider" id="eq-mid-slider" type="range" min="-12" max="12" step="0.5" />
+                  <input class="field equalizer-band-input" id="eq-mid-input" type="number" min="-12" max="12" step="0.5" inputmode="decimal" />
+                </div>
+                <div class="equalizer-band">
+                  <label class="equalizer-band-label" for="eq-high-mid-slider">High Mid</label>
+                  <input class="equalizer-vertical-slider" id="eq-high-mid-slider" type="range" min="-12" max="12" step="0.5" />
+                  <input class="field equalizer-band-input" id="eq-high-mid-input" type="number" min="-12" max="12" step="0.5" inputmode="decimal" />
+                </div>
+                <div class="equalizer-band">
+                  <label class="equalizer-band-label" for="eq-high-slider">High</label>
+                  <input class="equalizer-vertical-slider" id="eq-high-slider" type="range" min="-12" max="12" step="0.5" />
+                  <input class="field equalizer-band-input" id="eq-high-input" type="number" min="-12" max="12" step="0.5" inputmode="decimal" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-field audio-settings-column">
           <div class="settings-label-row">
-            <p class="audio-settings-subtitle">Ambient Noise</p>
-            <button class="settings-reset-btn" type="button" data-reset-setting="ambientNoise" title="Reset ambient noise">
+            <span class="settings-label">Audio Filters</span>
+            <button class="settings-reset-btn" type="button" data-reset-setting="lofi8d" title="Reset audio filters">
               <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
             </button>
           </div>
-          <p class="field-subtext">Additive layers that can run together with music/radio.</p>
-          <div class="ambient-noise-selector" aria-label="Ambient noise layers">
-            <button class="ambient-noise-chip" type="button" data-ambient-track-button="rain" title="Rain">🌧️</button>
-            <button class="ambient-noise-chip" type="button" data-ambient-track-button="beach" title="Beach Waves">🌊</button>
-            <button class="ambient-noise-chip" type="button" data-ambient-track-button="crickets" title="Crickets">🦗</button>
-            <button class="ambient-noise-chip" type="button" data-ambient-track-button="thunder" title="Thunder">⛈️</button>
-            <button class="ambient-noise-chip" type="button" data-ambient-track-button="city" title="City">🏙️</button>
-            <button class="ambient-noise-chip" type="button" data-ambient-track-button="white" title="White Noise">📻</button>
+          <label class="settings-switch" for="lofi-8d-enabled">
+            <input type="checkbox" id="lofi-8d-enabled" checked />
+            <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+            <span class="settings-switch-text">8D spatial sweep (current filter)</span>
+          </label>
+          <div class="settings-conditional-body" id="lofi-8d-controls-body">
+            <div class="settings-field">
+              <label class="settings-label" for="lofi-8d-rate-slider">8D Sweep Speed</label>
+              <div class="editor-font-size-row">
+                <input class="field editor-font-size-input" id="lofi-8d-rate-input" type="number" min="0.1" max="4" step="0.1" inputmode="decimal" />
+                <input class="editor-font-size-slider" id="lofi-8d-rate-slider" type="range" min="0.1" max="4" step="0.1" />
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div class="settings-field audio-settings-column">
+          <div class="settings-label-row">
+            <span class="settings-label">Layers <span class="experimental-pill">Experimental</span></span>
+          </div>
+          <p class="field-subtext">Open the layer editor to prioritize sounds by drag order and left/right distribution.</p>
           <div class="settings-inline-actions">
-            <button class="btn btn-secondary" id="ambient-randomize-btn" type="button" hidden>Randomize Volumes</button>
+            <button class="btn btn-secondary" id="audio-layers-open-btn" type="button">Open Layers Modal</button>
           </div>
-          <div class="ambient-noise-panels">
-            <div class="ambient-noise-panel" data-ambient-panel="rain" hidden>
-              <div class="ambient-noise-panel-head">
-                <span class="ambient-noise-name">Rain</span>
+          <div class="audio-layers-modal-backdrop" id="audio-layers-modal" hidden>
+            <div class="audio-layers-modal-card" role="dialog" aria-modal="true" aria-label="Audio layers">
+              <div class="settings-label-row">
+                <p class="audio-settings-subtitle">Audio Layers</p>
+                <button class="settings-reset-btn" id="audio-layers-close-btn" type="button" aria-label="Close audio layers modal">
+                  <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                </button>
               </div>
-              <div class="ambient-noise-volume-row">
-                <input class="editor-font-size-slider" id="ambient-rain-volume" type="range" min="0" max="100" step="1" />
-                <span class="sfx-volume-value" id="ambient-rain-volume-value">35</span>
-              </div>
-            </div>
-            <div class="ambient-noise-panel" data-ambient-panel="beach" hidden>
-              <div class="ambient-noise-panel-head">
-                <span class="ambient-noise-name">Beach Waves</span>
-              </div>
-              <div class="ambient-noise-volume-row">
-                <input class="editor-font-size-slider" id="ambient-beach-volume" type="range" min="0" max="100" step="1" />
-                <span class="sfx-volume-value" id="ambient-beach-volume-value">35</span>
-              </div>
-            </div>
-            <div class="ambient-noise-panel" data-ambient-panel="crickets" hidden>
-              <div class="ambient-noise-panel-head">
-                <span class="ambient-noise-name">Crickets</span>
-              </div>
-              <div class="ambient-noise-volume-row">
-                <input class="editor-font-size-slider" id="ambient-crickets-volume" type="range" min="0" max="100" step="1" />
-                <span class="sfx-volume-value" id="ambient-crickets-volume-value">35</span>
-              </div>
-            </div>
-            <div class="ambient-noise-panel" data-ambient-panel="thunder" hidden>
-              <div class="ambient-noise-panel-head">
-                <span class="ambient-noise-name">Thunder</span>
-              </div>
-              <div class="ambient-noise-volume-row">
-                <input class="editor-font-size-slider" id="ambient-thunder-volume" type="range" min="0" max="100" step="1" />
-                <span class="sfx-volume-value" id="ambient-thunder-volume-value">35</span>
-              </div>
-            </div>
-            <div class="ambient-noise-panel" data-ambient-panel="city" hidden>
-              <div class="ambient-noise-panel-head">
-                <span class="ambient-noise-name">City</span>
-              </div>
-              <div class="ambient-noise-volume-row">
-                <input class="editor-font-size-slider" id="ambient-city-volume" type="range" min="0" max="100" step="1" />
-                <span class="sfx-volume-value" id="ambient-city-volume-value">35</span>
-              </div>
-            </div>
-            <div class="ambient-noise-panel" data-ambient-panel="white" hidden>
-              <div class="ambient-noise-panel-head">
-                <span class="ambient-noise-name">White Noise</span>
-              </div>
-              <div class="ambient-noise-volume-row">
-                <input class="editor-font-size-slider" id="ambient-white-volume" type="range" min="0" max="100" step="1" />
-                <span class="sfx-volume-value" id="ambient-white-volume-value">35</span>
-              </div>
+              <p class="field-subtext">Drag to reorder priority (top = strongest). Move blocks to distribute left/right.</p>
+              <label class="append-number-wrap settings-checkbox audio-layers-use-toggle" for="audio-layers-use-toggle">
+                <input type="checkbox" id="audio-layers-use-toggle" />
+                <span>Use layers</span>
+              </label>
+              <label class="append-number-wrap settings-checkbox audio-layers-snap-toggle" for="audio-layers-snap-grid">
+                <input type="checkbox" id="audio-layers-snap-grid" checked />
+                <span>Snap to grid</span>
+              </label>
+              <div class="audio-layer-list" id="audio-layers-list"></div>
             </div>
           </div>
         </div>

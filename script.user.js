@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ClickUp --update Modal
 // @namespace    clickup-update-modal
-// @version      15.0.85
+// @version      15.0.88
 // @description  Insert update template in ClickUp
 // @match        https://app.clickup.com/*
 // @grant        GM_info
@@ -54,6 +54,7 @@
 // @connect      pixabay.com
 // @connect      *.pixabay.com
 // @connect      cdn.pixabay.com
+// @connect      raw.githubusercontent.com
 // @resource     rootCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/root.css
 // @resource     modalMotionCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/animations/motion.css
 // @resource     modalCss https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/styles/modal.css
@@ -83,6 +84,8 @@
 // @resource     modalPageDrafts https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/drafts.html
 // @resource     modalPageUsage https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/usage.html
 // @resource     modalPageRadio https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/radio.html
+// @resource     modalPageTodo https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/todo.html
+// @resource     modalTodoMarkdown https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/todo.md
 // @resource     modalPageAbout https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/pages/about.html
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/constants.js
 // @require      https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/src/suggestion-chips.js

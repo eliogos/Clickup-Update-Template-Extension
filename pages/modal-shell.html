@@ -53,7 +53,25 @@
               <span class="material-symbols-outlined" aria-hidden="true">info</span>
               <span>About</span>
             </button>
+            <button class="sidebar-page-btn" type="button" data-page-target="todo" data-party-note="do-high">
+              <span class="material-symbols-outlined" aria-hidden="true">checklist</span>
+              <span>Todo</span>
+            </button>
           </nav>
+          <div class="sidebar-drum-pad-grid" id="sidebar-drum-pad-grid" role="group" aria-label="Drum pads" hidden aria-hidden="true">
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="kick" data-pad-variant="1" aria-label="Kick" title="Kick"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="snare" data-pad-variant="2" aria-label="Snare" title="Snare"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="hihat" data-pad-variant="3" aria-label="Hi-hat" title="Hi-hat"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="clap" data-pad-variant="4" aria-label="Clap" title="Clap"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="tom-low" data-pad-variant="5" aria-label="Tom low" title="Tom low"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="tom-mid" data-pad-variant="6" aria-label="Tom mid" title="Tom mid"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="tom-high" data-pad-variant="1" aria-label="Tom high" title="Tom high"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="rim" data-pad-variant="2" aria-label="Rim" title="Rim"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="shaker" data-pad-variant="3" aria-label="Shaker" title="Shaker"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="perc" data-pad-variant="4" aria-label="Perc" title="Perc"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="noise" data-pad-variant="5" aria-label="Noise" title="Noise"></button>
+            <button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="ride" data-pad-variant="6" aria-label="Ride" title="Ride"></button>
+          </div>
         </div>
       </aside>
 
@@ -66,6 +84,7 @@
           {{PAGE_USAGE}}
           {{PAGE_RADIO}}
           {{PAGE_ABOUT}}
+          {{PAGE_TODO}}
         </div>
       </div>
       {{MODAL_CONFETTI_OVERLAY}}

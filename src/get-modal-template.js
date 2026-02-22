@@ -2,7 +2,7 @@
   "use strict";
 
   const app = (global.ClickUpUpdateApp = global.ClickUpUpdateApp || {});
-  const PAGE_TOKEN_PATTERN = /{{\s*(PAGE_EDITOR|PAGE_SETTINGS|PAGE_VARIABLES|PAGE_DRAFTS|PAGE_USAGE|PAGE_AUDIO|PAGE_RADIO|PAGE_ABOUT)\s*}}/g;
+  const PAGE_TOKEN_PATTERN = /{{\s*(PAGE_EDITOR|PAGE_SETTINGS|PAGE_VARIABLES|PAGE_DRAFTS|PAGE_USAGE|PAGE_AUDIO|PAGE_RADIO|PAGE_TODO|PAGE_ABOUT)\s*}}/g;
   const SHELL_TOKEN_PATTERN = /{{\s*(SETTINGS_ANCHOR_RAIL|MODAL_TOAST|MODAL_CONFETTI_OVERLAY)\s*}}/g;
   const SETTINGS_PAGE_TOKEN_PATTERN = /{{\s*(SETTINGS_SECTION_TRIGGER|SETTINGS_SECTION_APPEARANCE|SETTINGS_SECTION_TYPOGRAPHY|SETTINGS_SECTION_OVERLAY|SETTINGS_SECTION_AUDIO|SETTINGS_SECTION_ACCESSIBILITY|SETTINGS_SECTION_ANIMATION|SETTINGS_SECTION_AI_SEARCH_PROVIDER|SETTINGS_SECTION_PHYSICS)\s*}}/g;
   const RADIO_PAGE_TOKEN_PATTERN = /{{\s*(WAVEFORM_FILTERS|WAVEFORM)\s*}}/g;
@@ -40,6 +40,7 @@
       PAGE_USAGE: pageTemplates.usage || "",
       PAGE_AUDIO: pageTemplates.radio || pageTemplates.audio || "",
       PAGE_RADIO: pageTemplates.radio || pageTemplates.audio || "",
+      PAGE_TODO: pageTemplates.todo || "",
       PAGE_ABOUT: pageTemplates.about || ""
     };
 
@@ -132,6 +133,7 @@
       drafts: readResource("modalPageDrafts"),
       usage: readResource("modalPageUsage"),
       radio: radioPage || readResource("modalPageRadio"),
+      todo: readResource("modalPageTodo"),
       about: readResource("modalPageAbout"),
       settingsAnchor: readResource("modalPageSettingsAnchorRail"),
       modalToast: readResource("modalFragmentToast"),

@@ -14,10 +14,11 @@
     : "space";
   const DRAFTS_STORAGE_KEY = "clickup-update-modal.drafts.v1";
   const LOFI_STREAM_URL = "https://ec3.yesstreaming.net:3755/stream";
+  const LOFI_STREAM_LABEL = "Lo-fi";
   const RADIO_STATION_OPTIONS = Object.freeze([
     Object.freeze({
       id: "yesstreaming-ec6-1455",
-      label: "Yesstreaming - ec6:1455",
+      label: "Yesstream Radio - ec6:1455",
       url: "https://ec6.yesstreaming.net:1455/stream"
     }),
     Object.freeze({
@@ -345,17 +346,76 @@
   const ANIMATION_SPEED_SCALES = Object.freeze([0.1, 0.5, 1, 1.5, 3, 0]);
   const REDUCED_MOTION_SCALE_CAP = 0.4;
   const INTERPOLATOR_MODE_OPTIONS = new Set(["preset", "expression", "curve"]);
-  const AI_QUERY_PROVIDER_OPTIONS = new Set(["chatgpt", "claude", "perplexity", "grok", "gemini", "copilot"]);
+  const AI_QUERY_PROVIDER_OPTIONS = new Set(["chatgpt", "claude", "perplexity", "grok", "gemini", "qwen", "ernie", "huggingchat", "copilot", "githubcopilot", "duckai", "mistral", "meta", "brave", "you", "zai"]);
+  const AI_PROVIDER_SORT_OPTIONS = new Set(["alphabetical", "popularity"]);
   const AI_QUERY_PROVIDER_LABELS = Object.freeze({
     chatgpt: "ChatGPT",
     claude: "Claude",
     perplexity: "Perplexity",
     grok: "Grok",
     gemini: "Gemini",
-    copilot: "Bing Copilot"
+    qwen: "Qwen",
+    ernie: "Ernie",
+    huggingchat: "HuggingChat",
+    copilot: "Microsoft Copilot",
+    githubcopilot: "GitHub Copilot",
+    duckai: "Duck AI",
+    mistral: "Mistral",
+    meta: "Meta",
+    brave: "Brave Leo",
+    you: "You",
+    zai: "Z.Ai"
+  });
+  const AI_QUERY_PROVIDER_OFFICIAL_LINKS = Object.freeze({
+    chatgpt: "https://chatgpt.com/",
+    claude: "https://claude.ai/",
+    perplexity: "https://www.perplexity.ai/",
+    grok: "https://grok.com/",
+    gemini: "https://gemini.google.com/",
+    qwen: "https://chat.qwen.ai/",
+    ernie: "https://ernie.baidu.com/",
+    huggingchat: "https://huggingface.co/chat/",
+    copilot: "https://copilot.microsoft.com/",
+    githubcopilot: "https://github.com/features/copilot",
+    duckai: "https://duck.ai/",
+    mistral: "https://chat.mistral.ai/",
+    meta: "https://www.meta.ai/",
+    brave: "https://brave.com/leo/",
+    you: "https://you.com/",
+    zai: "https://chat.z.ai/"
+  });
+  const AI_PROVIDER_POPULARITY_RANKS = Object.freeze({
+    chatgpt: 1,
+    copilot: 2,
+    gemini: 3,
+    claude: 4,
+    perplexity: 5,
+    grok: 6,
+    meta: 7,
+    qwen: 8,
+    ernie: 9,
+    huggingchat: 10,
+    you: 11,
+    githubcopilot: 12,
+    brave: 13,
+    duckai: 14,
+    mistral: 15,
+    zai: 16
   });
   const AUDIO_BPM_INFLUENCE_MODE_OPTIONS = new Set(["animation", "both", "physics"]);
   const AUDIO_STREAM_SOURCE_OPTIONS = new Set(["lofi", "radio"]);
+  const AUDIO_BITRATE_MIN = 32;
+  const AUDIO_BITRATE_MAX = 320;
+  const EQUALIZER_GAIN_MIN = -12;
+  const EQUALIZER_GAIN_MAX = 12;
+  const EQUALIZER_PRESET_OPTIONS = new Set(["flat", "bass-boost", "vocal-boost", "treble-boost", "smile", "custom"]);
+  const EQUALIZER_PRESET_GAINS = Object.freeze({
+    "flat": Object.freeze({ low: 0, lowMid: 0, mid: 0, highMid: 0, high: 0 }),
+    "bass-boost": Object.freeze({ low: 5, lowMid: 2.5, mid: -1.5, highMid: -2, high: -1 }),
+    "vocal-boost": Object.freeze({ low: -2, lowMid: 1, mid: 3.5, highMid: 3, high: 1 }),
+    "treble-boost": Object.freeze({ low: -1.5, lowMid: -1, mid: 1.5, highMid: 3, high: 4.5 }),
+    "smile": Object.freeze({ low: 4, lowMid: 1.5, mid: -2.5, highMid: 2.5, high: 4 })
+  });
   const INTERPOLATOR_NERD_RATINGS = Object.freeze({
     preset: 1,
     curve: 2,
@@ -398,9 +458,11 @@
   const MODAL_OPACITY_MIN = 10;
   const MODAL_OPACITY_MAX = 100;
   const BASE_LOFI_BPM = 84;
+  const TODO_MARKDOWN_REMOTE_URL = "https://raw.githubusercontent.com/eliogos/clickup-task-update-template/main/todo.md";
+  const TODO_MARKDOWN_REFRESH_TIMEOUT_MS = 3200;
   const LOCAL_STORAGE_ESTIMATED_LIMIT_BYTES = 5 * 1024 * 1024;
   const TRIGGER_ACTIVATION_OPTIONS = new Set(["space", "immediate"]);
-  const PAGE_OPTIONS = new Set(["editor", "settings", "variables", "drafts", "usage", "radio", "about"]);
+  const PAGE_OPTIONS = new Set(["editor", "settings", "variables", "drafts", "usage", "radio", "todo", "about"]);
   const THEME_OPTIONS = new Set(["light", "auto", "dark"]);
   const DENSITY_OPTIONS = new Set(["compact", "comfortable", "spacious"]);
   const COLOR_VISION_OPTIONS = new Set(["none", "protanopia", "deuteranopia", "tritanopia"]);
@@ -453,12 +515,20 @@
     interpolatorExpression: "1 - pow(1 - t, 2)",
     interpolatorWordWrap: true,
     aiQueryProvider: "chatgpt",
+    aiQueryProviderSort: "alphabetical",
     interpolatorCurve: { ...DEFAULT_INTERPOLATOR_CURVE },
     interpolatorCurvePoints: [],
     musicAutoplay: true,
     lofiSpeedRate: 1,
     lofiPitchRate: 1,
     lofiRatePitchSync: true,
+    audioBitrateKbps: 192,
+    equalizerPreset: "flat",
+    eqLowGain: 0,
+    eqLowMidGain: 0,
+    eqMidGain: 0,
+    eqHighMidGain: 0,
+    eqHighGain: 0,
     lofi8dEnabled: true,
     lofi8dDepth: 94,
     lofi8dRate: 1,
@@ -478,6 +548,7 @@
     ambientCityVolume: 35,
     ambientWhiteEnabled: false,
     ambientWhiteVolume: 35,
+    useAudioLayers: false,
     sfxVolume: 100,
     sfxMuted: false,
     sfxAdaptiveBlend: false,
@@ -533,6 +604,59 @@
 
   function normalizeAmbientVolume(value, fallback = 35) {
     return Math.round(clampNumber(value, AMBIENT_VOLUME_MIN, AMBIENT_VOLUME_MAX, fallback));
+  }
+
+  function normalizeAudioBitrate(value, fallback = 192) {
+    const clamped = clampNumber(value, AUDIO_BITRATE_MIN, AUDIO_BITRATE_MAX, fallback);
+    return snapToNearestPoint(clamped, [
+      32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, 192, 224, 256, 320
+    ], fallback);
+  }
+
+  function normalizeEqualizerGain(value, fallback = 0) {
+    const clamped = clampNumber(value, EQUALIZER_GAIN_MIN, EQUALIZER_GAIN_MAX, fallback);
+    return Math.round(clamped * 2) / 2;
+  }
+
+  function resolveEqualizerGains(settingsLike) {
+    const source = settingsLike && typeof settingsLike === "object" ? settingsLike : DEFAULT_MODAL_SETTINGS;
+    const preset = EQUALIZER_PRESET_OPTIONS.has(String(source.equalizerPreset || "").trim().toLowerCase())
+      ? String(source.equalizerPreset).trim().toLowerCase()
+      : DEFAULT_MODAL_SETTINGS.equalizerPreset;
+    if (preset !== "custom") {
+      return EQUALIZER_PRESET_GAINS[preset] || EQUALIZER_PRESET_GAINS.flat;
+    }
+    return {
+      low: normalizeEqualizerGain(source.eqLowGain, DEFAULT_MODAL_SETTINGS.eqLowGain),
+      lowMid: normalizeEqualizerGain(source.eqLowMidGain, DEFAULT_MODAL_SETTINGS.eqLowMidGain),
+      mid: normalizeEqualizerGain(source.eqMidGain, DEFAULT_MODAL_SETTINGS.eqMidGain),
+      highMid: normalizeEqualizerGain(source.eqHighMidGain, DEFAULT_MODAL_SETTINGS.eqHighMidGain),
+      high: normalizeEqualizerGain(source.eqHighGain, DEFAULT_MODAL_SETTINGS.eqHighGain)
+    };
+  }
+
+  function getApproxCutoffHzFromBitrate(bitrateKbps) {
+    const bitrate = normalizeAudioBitrate(bitrateKbps, DEFAULT_MODAL_SETTINGS.audioBitrateKbps);
+    const points = [
+      { bitrate: 32, cutoff: 4500 },
+      { bitrate: 64, cutoff: 9000 },
+      { bitrate: 96, cutoff: 12000 },
+      { bitrate: 128, cutoff: 15500 },
+      { bitrate: 160, cutoff: 17000 },
+      { bitrate: 192, cutoff: 18500 },
+      { bitrate: 256, cutoff: 20500 },
+      { bitrate: 320, cutoff: 22000 }
+    ];
+    if (bitrate <= points[0].bitrate) return points[0].cutoff;
+    for (let index = 1; index < points.length; index += 1) {
+      const prev = points[index - 1];
+      const next = points[index];
+      if (bitrate <= next.bitrate) {
+        const t = (bitrate - prev.bitrate) / Math.max(1, next.bitrate - prev.bitrate);
+        return prev.cutoff + ((next.cutoff - prev.cutoff) * t);
+      }
+    }
+    return points[points.length - 1].cutoff;
   }
 
   function normalizeRadioStationUrl(value, fallback = DEFAULT_RADIO_STATION_URL) {
@@ -684,6 +808,24 @@
       LOFI_RATE_MAX,
       DEFAULT_MODAL_SETTINGS.lofiPitchRate
     );
+    const legacyAudioQualityMode = String(source.audioQualityMode || "").trim().toLowerCase();
+    const legacyBitrateFallback = legacyAudioQualityMode === "low"
+      ? 96
+      : legacyAudioQualityMode === "enhanced"
+        ? 256
+        : DEFAULT_MODAL_SETTINGS.audioBitrateKbps;
+    const audioBitrateKbps = normalizeAudioBitrate(
+      source.audioBitrateKbps,
+      legacyBitrateFallback
+    );
+    const equalizerPreset = EQUALIZER_PRESET_OPTIONS.has(String(source.equalizerPreset || "").trim().toLowerCase())
+      ? String(source.equalizerPreset).trim().toLowerCase()
+      : DEFAULT_MODAL_SETTINGS.equalizerPreset;
+    const eqLowGain = normalizeEqualizerGain(source.eqLowGain, DEFAULT_MODAL_SETTINGS.eqLowGain);
+    const eqLowMidGain = normalizeEqualizerGain(source.eqLowMidGain, DEFAULT_MODAL_SETTINGS.eqLowMidGain);
+    const eqMidGain = normalizeEqualizerGain(source.eqMidGain, DEFAULT_MODAL_SETTINGS.eqMidGain);
+    const eqHighMidGain = normalizeEqualizerGain(source.eqHighMidGain, DEFAULT_MODAL_SETTINGS.eqHighMidGain);
+    const eqHighGain = normalizeEqualizerGain(source.eqHighGain, DEFAULT_MODAL_SETTINGS.eqHighGain);
     const lofi8dDepth = clampNumber(
       source.lofi8dDepth,
       LOFI_8D_DEPTH_MIN,
@@ -760,6 +902,9 @@
     const aiQueryProvider = AI_QUERY_PROVIDER_OPTIONS.has(String(source.aiQueryProvider || "").trim().toLowerCase())
       ? String(source.aiQueryProvider).trim().toLowerCase()
       : DEFAULT_MODAL_SETTINGS.aiQueryProvider;
+    const aiQueryProviderSort = AI_PROVIDER_SORT_OPTIONS.has(String(source.aiQueryProviderSort || "").trim().toLowerCase())
+      ? String(source.aiQueryProviderSort).trim().toLowerCase()
+      : DEFAULT_MODAL_SETTINGS.aiQueryProviderSort;
     const sourceCurve = source.interpolatorCurve && typeof source.interpolatorCurve === "object"
       ? source.interpolatorCurve
       : {};
@@ -838,12 +983,20 @@
       interpolatorExpression,
       interpolatorWordWrap: source.interpolatorWordWrap !== false,
       aiQueryProvider,
+      aiQueryProviderSort,
       interpolatorCurve,
       interpolatorCurvePoints,
       musicAutoplay: source.musicAutoplay !== false,
       lofiSpeedRate,
       lofiPitchRate,
       lofiRatePitchSync: source.lofiRatePitchSync !== false,
+      audioBitrateKbps,
+      equalizerPreset,
+      eqLowGain,
+      eqLowMidGain,
+      eqMidGain,
+      eqHighMidGain,
+      eqHighGain,
       lofi8dEnabled: source.lofi8dEnabled !== false,
       lofi8dDepth,
       lofi8dRate,
@@ -863,6 +1016,7 @@
       ambientCityVolume,
       ambientWhiteEnabled: source.ambientWhiteEnabled === true,
       ambientWhiteVolume,
+      useAudioLayers: source.useAudioLayers === true,
       sfxVolume: Math.round(sfxVolume),
       sfxMuted: source.sfxMuted === true,
       sfxAdaptiveBlend: source.sfxAdaptiveBlend === true,
@@ -1038,7 +1192,7 @@
   }
 
   function getLofiController() {
-    if (app._lofiController && app._lofiController.__controllerVersion === "lofi-spatial-v2") {
+    if (app._lofiController && app._lofiController.__controllerVersion === "lofi-spatial-v5") {
       return app._lofiController;
     }
     if (app._lofiController && typeof app._lofiController.pause === "function") {
@@ -1060,9 +1214,18 @@
       speedRate: 1,
       pitchRate: 1,
       ratePitchSync: true,
+      audioBitrateKbps: 192,
+      equalizerPreset: "flat",
+      eqLowGain: 0,
+      eqLowMidGain: 0,
+      eqMidGain: 0,
+      eqHighMidGain: 0,
+      eqHighGain: 0,
       spatialEnabled: true,
       spatialDepth: 0.94,
       spatialRate: 1,
+      manualPanActive: false,
+      manualPan: 0,
       streamUrl: LOFI_STREAM_URL,
       streamMode: "idle",
       streamBuffering: false,
@@ -1100,9 +1263,21 @@
     let spatialPannerNode = null;
     let spatialFilterNode = null;
     let spatialGainNode = null;
+    let spatialBitrateFilterNode = null;
+    let spatialEqLowNode = null;
+    let spatialEqLowMidNode = null;
+    let spatialEqMidNode = null;
+    let spatialEqHighMidNode = null;
+    let spatialEqHighNode = null;
     let spatialAnalyserNode = null;
-    let spatialPanFrame = 0;
-    let spatialPanStartedAt = 0;
+    let spatialPanOscillatorNode = null;
+    let spatialPanDepthNode = null;
+    let spatialProximityOscillatorNode = null;
+    let spatialProximityGainDepthNode = null;
+    let spatialProximityGainOffsetNode = null;
+    let spatialProximityFilterDepthNode = null;
+    let spatialProximityFilterOffsetNode = null;
+    let spatialLifecycleListenersBound = false;
     let beatDetectFrame = 0;
     let beatLastDetectedAt = 0;
     let beatLastEmitAt = 0;
@@ -1264,16 +1439,136 @@
       beatDetectFrame = global.requestAnimationFrame(step);
     };
 
-    const stopSpatialPanSweep = () => {
-      if (spatialPanFrame) {
-        global.cancelAnimationFrame(spatialPanFrame);
-        spatialPanFrame = 0;
-      }
-      if (spatialPannerNode && spatialAudioContext) {
+    const applySpatialLfoTuning = () => {
+      if (!spatialAudioContext) return;
+      const now = spatialAudioContext.currentTime;
+      const rate = LOFI_8D_PAN_RATE_HZ * clampNumber(state.spatialRate, LOFI_8D_RATE_MIN, LOFI_8D_RATE_MAX, 1);
+      const depth = clampNumber(state.spatialDepth, 0, 1, 0.94);
+      if (spatialPanOscillatorNode) {
         try {
-          spatialPannerNode.pan.setValueAtTime(0, spatialAudioContext.currentTime);
+          spatialPanOscillatorNode.frequency.setValueAtTime(rate, now);
         } catch {
-          spatialPannerNode.pan.value = 0;
+          spatialPanOscillatorNode.frequency.value = rate;
+        }
+      }
+      if (spatialPanDepthNode) {
+        try {
+          spatialPanDepthNode.gain.setValueAtTime(depth, now);
+        } catch {
+          spatialPanDepthNode.gain.value = depth;
+        }
+      }
+      if (spatialProximityOscillatorNode) {
+        try {
+          spatialProximityOscillatorNode.frequency.setValueAtTime(rate, now);
+        } catch {
+          spatialProximityOscillatorNode.frequency.value = rate;
+        }
+      }
+    };
+
+    const applyManualStereoPan = () => {
+      if (!spatialPannerNode || !spatialAudioContext) return;
+      const now = spatialAudioContext.currentTime;
+      const pan = clampNumber(state.manualPan, -1, 1, 0);
+      try {
+        spatialPannerNode.pan.setValueAtTime(pan, now);
+      } catch {
+        spatialPannerNode.pan.value = pan;
+      }
+    };
+
+    const stopSpatialPanSweep = () => {
+      if (spatialPanOscillatorNode) {
+        try {
+          spatialPanOscillatorNode.stop();
+        } catch {
+          // Ignore oscillator stop races.
+        }
+        try {
+          spatialPanOscillatorNode.disconnect();
+        } catch {
+          // Ignore disconnect races.
+        }
+      }
+      spatialPanOscillatorNode = null;
+      if (spatialPanDepthNode) {
+        try {
+          spatialPanDepthNode.disconnect();
+        } catch {
+          // Ignore disconnect races.
+        }
+      }
+      spatialPanDepthNode = null;
+
+      if (spatialProximityOscillatorNode) {
+        try {
+          spatialProximityOscillatorNode.stop();
+        } catch {
+          // Ignore oscillator stop races.
+        }
+        try {
+          spatialProximityOscillatorNode.disconnect();
+        } catch {
+          // Ignore disconnect races.
+        }
+      }
+      spatialProximityOscillatorNode = null;
+
+      if (spatialProximityGainDepthNode) {
+        try {
+          spatialProximityGainDepthNode.disconnect();
+        } catch {
+          // Ignore disconnect races.
+        }
+      }
+      spatialProximityGainDepthNode = null;
+
+      if (spatialProximityGainOffsetNode) {
+        try {
+          spatialProximityGainOffsetNode.stop();
+        } catch {
+          // Ignore constant-source stop races.
+        }
+        try {
+          spatialProximityGainOffsetNode.disconnect();
+        } catch {
+          // Ignore disconnect races.
+        }
+      }
+      spatialProximityGainOffsetNode = null;
+
+      if (spatialProximityFilterDepthNode) {
+        try {
+          spatialProximityFilterDepthNode.disconnect();
+        } catch {
+          // Ignore disconnect races.
+        }
+      }
+      spatialProximityFilterDepthNode = null;
+
+      if (spatialProximityFilterOffsetNode) {
+        try {
+          spatialProximityFilterOffsetNode.stop();
+        } catch {
+          // Ignore constant-source stop races.
+        }
+        try {
+          spatialProximityFilterOffsetNode.disconnect();
+        } catch {
+          // Ignore disconnect races.
+        }
+      }
+      spatialProximityFilterOffsetNode = null;
+
+      if (spatialPannerNode && spatialAudioContext) {
+        const panTarget = state.manualPanActive === true
+          ? clampNumber(state.manualPan, -1, 1, 0)
+          : 0;
+        try {
+          spatialPannerNode.pan.setValueAtTime(panTarget, spatialAudioContext.currentTime);
+        } catch {
+          spatialPannerNode.pan.value = panTarget;
         }
       }
       if (spatialGainNode && spatialAudioContext) {
@@ -1293,55 +1588,143 @@
     };
 
     const startSpatialPanSweep = () => {
-      if (!spatialPannerNode) return;
-      if (spatialPanFrame) return;
-      spatialPanStartedAt = global.performance ? global.performance.now() : Date.now();
+      if (!state.playing || !spatialPannerNode || !spatialAudioContext) return;
+      if (spatialPanOscillatorNode && spatialPanDepthNode) {
+        applySpatialLfoTuning();
+        return;
+      }
+      const ctx = spatialAudioContext;
 
-      const step = () => {
-        spatialPanFrame = 0;
-        if (!state.playing || !spatialPannerNode) return;
-        const now = global.performance ? global.performance.now() : Date.now();
-        const elapsedSeconds = Math.max(0, (now - spatialPanStartedAt) / 1000);
-        const rate = LOFI_8D_PAN_RATE_HZ * clampNumber(state.spatialRate, LOFI_8D_RATE_MIN, LOFI_8D_RATE_MAX, 1);
-        const angle = elapsedSeconds * Math.PI * 2 * rate;
-        const panValue = Math.sin(angle) * clampNumber(state.spatialDepth, 0, 1, 0.94);
-        const proximityPhase = Math.sin(angle - (Math.PI / 2));
-        const proximity = (proximityPhase + 1) / 2;
-        const proximityGain = LOFI_8D_PROXIMITY_GAIN_MIN + ((LOFI_8D_PROXIMITY_GAIN_MAX - LOFI_8D_PROXIMITY_GAIN_MIN) * proximity);
-        const proximityCutoff = LOFI_8D_PROXIMITY_CUTOFF_MIN + ((LOFI_8D_PROXIMITY_CUTOFF_MAX - LOFI_8D_PROXIMITY_CUTOFF_MIN) * proximity);
-        if (spatialAudioContext) {
-          try {
-            spatialPannerNode.pan.setValueAtTime(panValue, spatialAudioContext.currentTime);
-          } catch {
-            spatialPannerNode.pan.value = panValue;
+      spatialPanDepthNode = ctx.createGain();
+      spatialPanOscillatorNode = ctx.createOscillator();
+      spatialPanOscillatorNode.type = "sine";
+      spatialPanOscillatorNode.connect(spatialPanDepthNode);
+      spatialPanDepthNode.connect(spatialPannerNode.pan);
+
+      spatialProximityOscillatorNode = ctx.createOscillator();
+      spatialProximityOscillatorNode.setPeriodicWave(
+        ctx.createPeriodicWave(new Float32Array([0, 1]), new Float32Array([0, 0]))
+      );
+
+      if (spatialGainNode) {
+        const gainMid = (LOFI_8D_PROXIMITY_GAIN_MIN + LOFI_8D_PROXIMITY_GAIN_MAX) / 2;
+        const gainAmp = (LOFI_8D_PROXIMITY_GAIN_MAX - LOFI_8D_PROXIMITY_GAIN_MIN) / 2;
+        spatialProximityGainDepthNode = ctx.createGain();
+        spatialProximityGainDepthNode.gain.value = gainAmp;
+        spatialProximityGainOffsetNode = ctx.createConstantSource();
+        spatialProximityGainOffsetNode.offset.value = gainMid;
+        spatialProximityOscillatorNode.connect(spatialProximityGainDepthNode);
+        spatialProximityGainDepthNode.connect(spatialGainNode.gain);
+        spatialProximityGainOffsetNode.connect(spatialGainNode.gain);
+      }
+
+      if (spatialFilterNode) {
+        const cutoffMid = (LOFI_8D_PROXIMITY_CUTOFF_MIN + LOFI_8D_PROXIMITY_CUTOFF_MAX) / 2;
+        const cutoffAmp = (LOFI_8D_PROXIMITY_CUTOFF_MAX - LOFI_8D_PROXIMITY_CUTOFF_MIN) / 2;
+        spatialProximityFilterDepthNode = ctx.createGain();
+        spatialProximityFilterDepthNode.gain.value = cutoffAmp;
+        spatialProximityFilterOffsetNode = ctx.createConstantSource();
+        spatialProximityFilterOffsetNode.offset.value = cutoffMid;
+        spatialProximityOscillatorNode.connect(spatialProximityFilterDepthNode);
+        spatialProximityFilterDepthNode.connect(spatialFilterNode.frequency);
+        spatialProximityFilterOffsetNode.connect(spatialFilterNode.frequency);
+      }
+
+      applySpatialLfoTuning();
+
+      if (spatialProximityGainOffsetNode) {
+        spatialProximityGainOffsetNode.start();
+      }
+      if (spatialProximityFilterOffsetNode) {
+        spatialProximityFilterOffsetNode.start();
+      }
+      spatialPanOscillatorNode.start();
+      spatialProximityOscillatorNode.start();
+    };
+
+    const resumeSpatialAudioContext = () => {
+      if (!spatialAudioContext || spatialAudioContext.state !== "suspended") return;
+      if (!state.playing) return;
+      spatialAudioContext.resume()
+        .then(() => {
+          if (state.manualPanActive) {
+            stopSpatialPanSweep();
+            applyManualStereoPan();
+          } else if (state.spatialEnabled) {
+            startSpatialPanSweep();
           }
-          if (spatialGainNode) {
-            try {
-              spatialGainNode.gain.setValueAtTime(proximityGain, spatialAudioContext.currentTime);
-            } catch {
-              spatialGainNode.gain.value = proximityGain;
-            }
-          }
-          if (spatialFilterNode) {
-            try {
-              spatialFilterNode.frequency.setValueAtTime(proximityCutoff, spatialAudioContext.currentTime);
-            } catch {
-              spatialFilterNode.frequency.value = proximityCutoff;
-            }
-          }
-        } else {
-          spatialPannerNode.pan.value = panValue;
-          if (spatialGainNode) {
-            spatialGainNode.gain.value = proximityGain;
-          }
-          if (spatialFilterNode) {
-            spatialFilterNode.frequency.value = proximityCutoff;
-          }
+        })
+        .catch(() => {
+          // Ignore resume failures until the next user interaction.
+        });
+    };
+
+    const ensureSpatialLifecycleListeners = () => {
+      if (spatialLifecycleListenersBound) return;
+      spatialLifecycleListenersBound = true;
+      if (global.document && typeof global.document.addEventListener === "function") {
+        global.document.addEventListener("visibilitychange", resumeSpatialAudioContext);
+      }
+      if (typeof global.addEventListener === "function") {
+        global.addEventListener("focus", resumeSpatialAudioContext);
+        global.addEventListener("pageshow", resumeSpatialAudioContext);
+      }
+    };
+
+    const getCutoffFromBitrate = (bitrateKbps) => {
+      return getApproxCutoffHzFromBitrate(
+        normalizeAudioBitrate(bitrateKbps, state.audioBitrateKbps || DEFAULT_MODAL_SETTINGS.audioBitrateKbps)
+      );
+    };
+
+    const applyBitrateAndEqualizer = () => {
+      if (!spatialAudioContext) return;
+      const now = spatialAudioContext.currentTime;
+      const cutoff = getCutoffFromBitrate(state.audioBitrateKbps);
+      if (spatialBitrateFilterNode) {
+        try {
+          spatialBitrateFilterNode.frequency.setValueAtTime(cutoff, now);
+        } catch {
+          spatialBitrateFilterNode.frequency.value = cutoff;
         }
-        spatialPanFrame = global.requestAnimationFrame(step);
-      };
+      }
 
-      spatialPanFrame = global.requestAnimationFrame(step);
+      const gains = resolveEqualizerGains(state);
+      if (spatialEqLowNode) {
+        try {
+          spatialEqLowNode.gain.setValueAtTime(gains.low, now);
+        } catch {
+          spatialEqLowNode.gain.value = gains.low;
+        }
+      }
+      if (spatialEqLowMidNode) {
+        try {
+          spatialEqLowMidNode.gain.setValueAtTime(gains.lowMid, now);
+        } catch {
+          spatialEqLowMidNode.gain.value = gains.lowMid;
+        }
+      }
+      if (spatialEqMidNode) {
+        try {
+          spatialEqMidNode.gain.setValueAtTime(gains.mid, now);
+        } catch {
+          spatialEqMidNode.gain.value = gains.mid;
+        }
+      }
+      if (spatialEqHighMidNode) {
+        try {
+          spatialEqHighMidNode.gain.setValueAtTime(gains.highMid, now);
+        } catch {
+          spatialEqHighMidNode.gain.value = gains.highMid;
+        }
+      }
+      if (spatialEqHighNode) {
+        try {
+          spatialEqHighNode.gain.setValueAtTime(gains.high, now);
+        } catch {
+          spatialEqHighNode.gain.value = gains.high;
+        }
+      }
     };
 
     const ensureSpatialPipeline = async () => {
@@ -1366,6 +1749,45 @@
         if (!spatialGainNode) {
           spatialGainNode = ctx.createGain();
           spatialGainNode.gain.value = 1;
+        }
+        if (!spatialBitrateFilterNode) {
+          spatialBitrateFilterNode = ctx.createBiquadFilter();
+          spatialBitrateFilterNode.type = "lowpass";
+          spatialBitrateFilterNode.Q.value = 0.0001;
+          spatialBitrateFilterNode.frequency.value = 18500;
+        }
+        if (!spatialEqLowNode) {
+          spatialEqLowNode = ctx.createBiquadFilter();
+          spatialEqLowNode.type = "lowshelf";
+          spatialEqLowNode.frequency.value = 110;
+          spatialEqLowNode.gain.value = 0;
+        }
+        if (!spatialEqLowMidNode) {
+          spatialEqLowMidNode = ctx.createBiquadFilter();
+          spatialEqLowMidNode.type = "peaking";
+          spatialEqLowMidNode.frequency.value = 320;
+          spatialEqLowMidNode.Q.value = 1;
+          spatialEqLowMidNode.gain.value = 0;
+        }
+        if (!spatialEqMidNode) {
+          spatialEqMidNode = ctx.createBiquadFilter();
+          spatialEqMidNode.type = "peaking";
+          spatialEqMidNode.frequency.value = 1000;
+          spatialEqMidNode.Q.value = 1;
+          spatialEqMidNode.gain.value = 0;
+        }
+        if (!spatialEqHighMidNode) {
+          spatialEqHighMidNode = ctx.createBiquadFilter();
+          spatialEqHighMidNode.type = "peaking";
+          spatialEqHighMidNode.frequency.value = 3200;
+          spatialEqHighMidNode.Q.value = 1;
+          spatialEqHighMidNode.gain.value = 0;
+        }
+        if (!spatialEqHighNode) {
+          spatialEqHighNode = ctx.createBiquadFilter();
+          spatialEqHighNode.type = "highshelf";
+          spatialEqHighNode.frequency.value = 9500;
+          spatialEqHighNode.gain.value = 0;
         }
         if (!spatialAnalyserNode) {
           spatialAnalyserNode = ctx.createAnalyser();
@@ -1393,6 +1815,36 @@
           // Ignore reconnect cleanup failures.
         }
         try {
+          spatialBitrateFilterNode.disconnect();
+        } catch {
+          // Ignore reconnect cleanup failures.
+        }
+        try {
+          spatialEqLowNode.disconnect();
+        } catch {
+          // Ignore reconnect cleanup failures.
+        }
+        try {
+          spatialEqLowMidNode.disconnect();
+        } catch {
+          // Ignore reconnect cleanup failures.
+        }
+        try {
+          spatialEqMidNode.disconnect();
+        } catch {
+          // Ignore reconnect cleanup failures.
+        }
+        try {
+          spatialEqHighMidNode.disconnect();
+        } catch {
+          // Ignore reconnect cleanup failures.
+        }
+        try {
+          spatialEqHighNode.disconnect();
+        } catch {
+          // Ignore reconnect cleanup failures.
+        }
+        try {
           spatialAnalyserNode.disconnect();
         } catch {
           // Ignore reconnect cleanup failures.
@@ -1400,11 +1852,19 @@
         spatialSourceNode.connect(spatialPannerNode);
         spatialPannerNode.connect(spatialFilterNode);
         spatialFilterNode.connect(spatialGainNode);
-        spatialGainNode.connect(spatialAnalyserNode);
+        spatialGainNode.connect(spatialBitrateFilterNode);
+        spatialBitrateFilterNode.connect(spatialEqLowNode);
+        spatialEqLowNode.connect(spatialEqLowMidNode);
+        spatialEqLowMidNode.connect(spatialEqMidNode);
+        spatialEqMidNode.connect(spatialEqHighMidNode);
+        spatialEqHighMidNode.connect(spatialEqHighNode);
+        spatialEqHighNode.connect(spatialAnalyserNode);
         spatialAnalyserNode.connect(ctx.destination);
+        applyBitrateAndEqualizer();
         if (ctx.state === "suspended") {
           await ctx.resume();
         }
+        ensureSpatialLifecycleListeners();
         if (state.playing) {
           startBeatDebugLoop();
         }
@@ -2128,17 +2588,48 @@
       setVolume(Number.isFinite(restore) && restore > 0.001 ? restore : 0.35);
     };
 
-    const setPlaybackTuning = ({ speedRate, pitchRate, ratePitchSync, spatialEnabled, spatialDepth, spatialRate } = {}) => {
+    const setPlaybackTuning = ({
+      speedRate,
+      pitchRate,
+      ratePitchSync,
+      spatialEnabled,
+      spatialDepth,
+      spatialRate,
+      manualPanActive,
+      manualPan,
+      audioBitrateKbps,
+      equalizerPreset,
+      eqLowGain,
+      eqLowMidGain,
+      eqMidGain,
+      eqHighMidGain,
+      eqHighGain
+    } = {}) => {
       const nextSpeed = clampNumber(speedRate, LOFI_RATE_MIN, LOFI_RATE_MAX, state.speedRate || 1);
       const nextPitch = clampNumber(pitchRate, LOFI_RATE_MIN, LOFI_RATE_MAX, state.pitchRate || 1);
       const synced = ratePitchSync !== false;
       state.ratePitchSync = synced;
       state.speedRate = nextSpeed;
       state.pitchRate = synced ? nextSpeed : nextPitch;
+      state.audioBitrateKbps = normalizeAudioBitrate(audioBitrateKbps, state.audioBitrateKbps || DEFAULT_MODAL_SETTINGS.audioBitrateKbps);
+      state.equalizerPreset = EQUALIZER_PRESET_OPTIONS.has(String(equalizerPreset || "").trim().toLowerCase())
+        ? String(equalizerPreset).trim().toLowerCase()
+        : (state.equalizerPreset || DEFAULT_MODAL_SETTINGS.equalizerPreset);
+      state.eqLowGain = normalizeEqualizerGain(eqLowGain, state.eqLowGain || DEFAULT_MODAL_SETTINGS.eqLowGain);
+      state.eqLowMidGain = normalizeEqualizerGain(eqLowMidGain, state.eqLowMidGain || DEFAULT_MODAL_SETTINGS.eqLowMidGain);
+      state.eqMidGain = normalizeEqualizerGain(eqMidGain, state.eqMidGain || DEFAULT_MODAL_SETTINGS.eqMidGain);
+      state.eqHighMidGain = normalizeEqualizerGain(eqHighMidGain, state.eqHighMidGain || DEFAULT_MODAL_SETTINGS.eqHighMidGain);
+      state.eqHighGain = normalizeEqualizerGain(eqHighGain, state.eqHighGain || DEFAULT_MODAL_SETTINGS.eqHighGain);
       state.spatialEnabled = spatialEnabled !== false;
       state.spatialDepth = clampNumber(spatialDepth, 0, 1, state.spatialDepth || 0.94);
       state.spatialRate = clampNumber(spatialRate, LOFI_8D_RATE_MIN, LOFI_8D_RATE_MAX, state.spatialRate || 1);
-      if (!state.spatialEnabled) {
+      state.manualPanActive = manualPanActive === true;
+      state.manualPan = clampNumber(manualPan, -1, 1, state.manualPan || 0);
+      applyBitrateAndEqualizer();
+      if (state.manualPanActive) {
+        stopSpatialPanSweep();
+        applyManualStereoPan();
+      } else if (!state.spatialEnabled) {
         stopSpatialPanSweep();
       } else if (state.playing) {
         startSpatialPanSweep();
@@ -2210,7 +2701,10 @@
         if (fadeInMs > 0) {
           fadeVolumeTo(targetVolume, fadeInMs);
         }
-        if (state.spatialEnabled) {
+        if (state.manualPanActive) {
+          stopSpatialPanSweep();
+          applyManualStereoPan();
+        } else if (state.spatialEnabled) {
           startSpatialPanSweep();
         } else {
           stopSpatialPanSweep();
@@ -2311,7 +2805,10 @@
 
     audio.addEventListener("playing", () => {
       state.playing = true;
-      if (state.spatialEnabled) {
+      if (state.manualPanActive) {
+        stopSpatialPanSweep();
+        applyManualStereoPan();
+      } else if (state.spatialEnabled) {
         startSpatialPanSweep();
       } else {
         stopSpatialPanSweep();
@@ -2374,7 +2871,7 @@
     });
 
     const controller = {
-      __controllerVersion: "lofi-spatial-v2",
+      __controllerVersion: "lofi-spatial-v5",
       subscribe,
       toggle,
       toggleMute,
@@ -2478,39 +2975,96 @@
               <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
             </button>
           </div>
+          <div class="ai-provider-sort-row">
+            <span class="field-subtext ai-provider-sort-label">Sort:</span>
+            <div class="ai-provider-sort-chip-group" aria-label="Sort AI providers">
+              <button class="ai-provider-sort-chip" type="button" data-ai-provider-sort-option="alphabetical">A-Z</button>
+              <button class="ai-provider-sort-chip" type="button" data-ai-provider-sort-option="popularity">Popularity</button>
+            </div>
+          </div>
+          <p class="field-subtext ai-provider-sort-reference">Popularity reference: <a class="settings-inline-link" href="https://www.demandsage.com/chatbot-statistics/" target="_blank" rel="noopener noreferrer">DemandSage</a> · <a class="settings-inline-link" href="https://gs.statcounter.com/ai-chatbot-market-share" target="_blank" rel="noopener noreferrer">StatCounter</a></p>
           <div class="ai-provider-grid" role="radiogroup" aria-label="AI Search Engine">
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="chatgpt" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=64" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/chatgpt-icon.png" alt="" aria-hidden="true" />
               <span>ChatGPT</span>
             </label>
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="claude" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo" src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Claude_AI_symbol.svg" alt="" aria-hidden="true" />
               <span>Claude</span>
             </label>
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="perplexity" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/perplexity/ffffff" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo" src="https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/perplexity-color.png" alt="" aria-hidden="true" />
               <span>Perplexity</span>
             </label>
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="grok" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/x/ffffff" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo ai-provider-logo--grok ai-provider-logo--grok-light" src="https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/light/grok.png" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo ai-provider-logo--grok ai-provider-logo--grok-dark" src="https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/grok.png" alt="" aria-hidden="true" />
               <span>Grok</span>
             </label>
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="gemini" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/googlegemini/ffffff" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo" src="https://brandlogos.net/wp-content/uploads/2025/03/gemini_icon-logo_brandlogos.net_aacx5.png" alt="" aria-hidden="true" />
               <span>Gemini</span>
             </label>
             <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="qwen" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://img.alicdn.com/imgextra/i1/O1CN013ltlI61OTOnTStXfj_!!6000000001706-55-tps-330-327.svg" alt="" aria-hidden="true" />
+              <span>Qwen</span>
+            </label>
+            <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="copilot" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://www.google.com/s2/favicons?domain=bing.com&sz=64" alt="" aria-hidden="true" />
-              <span>Bing Copilot</span>
+              <img class="ai-provider-logo" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/copilot-icon.png" alt="" aria-hidden="true" />
+              <span>Microsoft Copilot</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="githubcopilot" data-ai-query-provider />
+              <img class="ai-provider-logo ai-provider-logo--githubcopilot ai-provider-logo--githubcopilot-light" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/github-copilot-white-icon.png" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo ai-provider-logo--githubcopilot ai-provider-logo--githubcopilot-dark" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/github-copilot-icon.png" alt="" aria-hidden="true" />
+              <span>GitHub Copilot</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="duckai" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://upload.wikimedia.org/wikipedia/en/9/90/The_DuckDuckGo_Duck.png" alt="" aria-hidden="true" />
+              <span>Duck AI</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="mistral" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Mistral_AI_logo_%282025%E2%80%93%29.svg/3840px-Mistral_AI_logo_%282025%E2%80%93%29.svg.png" alt="" aria-hidden="true" />
+              <span>Mistral</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="meta" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://static.wikia.nocookie.net/logopedia/images/7/7e/Meta_AI.png/revision/latest/scale-to-width-down/250?cb=20250528183159" alt="" aria-hidden="true" />
+              <span>Meta</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="brave" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/brave-browser-icon.png" alt="" aria-hidden="true" />
+              <span>Brave Leo</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="you" data-ai-query-provider />
+              <img class="ai-provider-logo ai-provider-logo--you" src="https://upload.wikimedia.org/wikipedia/en/archive/8/8f/20250331135537%21Youcom_new_logo.jpg" alt="" aria-hidden="true" />
+              <span>You</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="zai" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Z.ai_%28company_logo%29.svg/250px-Z.ai_%28company_logo%29.svg.png" alt="" aria-hidden="true" />
+              <span>Z.Ai</span>
             </label>
           </div>
-          <p class="field-subtext">Currently used for interpolation Ask/Explain actions.</p>
+          <div class="ai-provider-test-row">
+            <input class="field ai-provider-test-input" id="ai-provider-test-input" type="text" placeholder="Type a prompt to test this AI engine" />
+            <button class="btn btn-secondary ai-provider-test-btn" id="ai-provider-test-btn" type="button">
+              <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+              <span>Test</span>
+            </button>
+          </div>
+          <p class="field-subtext" id="ai-provider-description">Currently used for interpolation Ask/Explain actions. Official: <a id="ai-provider-official-link" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">chatgpt.com</a><span id="ai-provider-note"></span></p>
         </div>`;
       const physicsSectionEl = shadow.getElementById("settings-section-physics");
       if (physicsSectionEl && physicsSectionEl.parentNode === settingsPageContent) {
@@ -2655,70 +3209,66 @@
           <div class="settings-page-content">
             <section class="settings-section">
               <p class="settings-section-title">Radio</p>
-              <p class="field-subtext">Music and SFX controls live here.</p>
+              <p class="field-subtext">Audio workspace with waveform, channel stack, quality, filters, and layers.</p>
 
-              <div class="settings-two-column audio-settings-split">
+              <div class="settings-field">
+                <div class="settings-label-row">
+                  <span class="settings-label">Waveform Preview</span>
+                </div>
+                <div class="waveform-preview-wrap">
+                  <div class="waveform-section">
+                    <div class="waveform-filters" role="group" aria-label="Waveform channels">
+                      <label><input type="checkbox" name="waveform-filter" value="music" checked /> Music</label>
+                      <label><input type="checkbox" name="waveform-filter" value="sfx" checked /> SFX</label>
+                      <label><input type="checkbox" name="waveform-filter" value="ambient" checked /> Ambient</label>
+                    </div>
+                    <div class="waveform-container">
+                      <div id="waveform" role="img" aria-label="Audio waveform"></div>
+                      <canvas id="waveform-canvas"></canvas>
+                    </div>
+                  </div>
+                  <div class="waveform-factor-filters" role="radiogroup" aria-label="Waveform factor">
+                    <label><input type="radio" name="waveform-factor" value="all" checked /> All</label>
+                    <label><input type="radio" name="waveform-factor" value="beat" /> Beat only</label>
+                    <label><input type="radio" name="waveform-factor" value="melody" /> Melody</label>
+                    <label><input type="radio" name="waveform-factor" value="amplitude" /> Amplitude</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-three-column audio-summary-grid">
                 <div class="settings-field audio-settings-column">
-                  <p class="audio-settings-subtitle">Music</p>
-
-                  <div class="settings-field">
-                    <div class="settings-label-row">
-                      <span class="settings-label">Music Autoplay</span>
-                      <button class="settings-reset-btn" type="button" data-reset-setting="musicAutoplay" title="Reset music autoplay">
-                        <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
-                      </button>
-                    </div>
-                    <label class="settings-switch" for="lofi-autoplay">
-                      <input type="checkbox" id="lofi-autoplay" checked />
-                      <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
-                      <span class="settings-switch-text">Autoplay music when opening the modal [Double Space]</span>
-                    </label>
+                  <div class="settings-label-row">
+                    <span class="settings-label">Autoplay</span>
+                    <button class="settings-reset-btn" type="button" data-reset-setting="musicAutoplay" title="Reset music autoplay">
+                      <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+                    </button>
                   </div>
-                  <div class="settings-field">
-                    <label class="settings-switch" for="keep-radio-on">
-                      <input type="checkbox" id="keep-radio-on" />
-                      <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
-                      <span class="settings-switch-text">Keep Radio on (play in background after closing modal)</span>
-                    </label>
-                  </div>
-
-                  <div class="settings-field">
-                    <div class="settings-label-row">
-                      <span class="settings-label">8D Audio</span>
-                      <button class="settings-reset-btn" type="button" data-reset-setting="lofi8d" title="Reset 8D audio">
-                        <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
-                      </button>
-                    </div>
-                    <label class="settings-switch" for="lofi-8d-enabled">
-                      <input type="checkbox" id="lofi-8d-enabled" checked />
-                      <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
-                      <span class="settings-switch-text">Sweep audio around you with surround/proximity movement</span>
-                    </label>
-                    <p class="field-subtext field-subtext-warning settings-tip-row">
-                      <span class="material-symbols-outlined settings-tip-icon" aria-hidden="true">headphones</span>
-                      <span>Best when wearing headphones</span>
-                    </p>
-                    <div class="settings-conditional-body" id="lofi-8d-controls-body">
-                      <div class="settings-field">
-                        <label class="settings-label" for="lofi-8d-rate-slider">8D Sweep Speed</label>
-                        <div class="editor-font-size-row">
-                          <input class="field editor-font-size-input" id="lofi-8d-rate-input" type="number" min="0.1" max="4" step="0.1" inputmode="decimal" />
-                          <input class="editor-font-size-slider" id="lofi-8d-rate-slider" type="range" min="0.1" max="4" step="0.1" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
+                  <label class="settings-switch" for="lofi-autoplay">
+                    <input type="checkbox" id="lofi-autoplay" checked />
+                    <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+                    <span class="settings-switch-text">Autoplay music when opening the modal [Space x2]</span>
+                  </label>
                 </div>
 
                 <div class="settings-field audio-settings-column">
                   <div class="settings-label-row">
-                    <p class="audio-settings-subtitle">SFX</p>
+                    <span class="settings-label">Persistent Mode</span>
+                  </div>
+                  <label class="settings-switch" for="keep-radio-on">
+                    <input type="checkbox" id="keep-radio-on" />
+                    <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+                    <span class="settings-switch-text">Keep Radio on (play in background after closing modal)</span>
+                  </label>
+                </div>
+
+                <div class="settings-field audio-settings-column">
+                  <div class="settings-label-row">
+                    <span class="settings-label">SFX</span>
                     <button class="settings-reset-btn" type="button" data-reset-setting="sfxMix" title="Reset SFX settings">
                       <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
                     </button>
                   </div>
-
                   <label class="settings-label" for="sfx-volume-slider">SFX Volume</label>
                   <div class="sfx-volume-row">
                     <button class="btn audio-inline-mute-btn" id="sfx-mute-btn" type="button" aria-pressed="false">Mute</button>
@@ -2726,15 +3276,15 @@
                     <span class="sfx-volume-value" id="sfx-volume-value">100</span>
                     <span class="sfx-volume-max">200</span>
                   </div>
-
                   <label class="append-number-wrap settings-checkbox" for="sfx-adaptive-blend">
                     <input type="checkbox" id="sfx-adaptive-blend" />
                     <span>Adaptive blend <span class="experimental-pill">Experimental</span></span>
                   </label>
-                  <p class="field-subtext">Tries to reduce SFX and music overlap during busy moments.</p>
                 </div>
               </div>
-              <div class="settings-field audio-settings-column audio-channel-column">
+
+              <div class="settings-two-column audio-settings-split">
+                <div class="settings-field audio-settings-column audio-channel-column">
                 <div class="settings-label-row">
                   <p class="audio-settings-subtitle">Channel</p>
                   <button class="settings-reset-btn" type="button" data-reset-setting="audioStreamSource" title="Reset music source and station">
@@ -2742,71 +3292,98 @@
                   </button>
                 </div>
                 <div class="settings-segmented" id="audio-stream-source-group" role="tablist" aria-label="Music source">
-                  <button class="settings-segment-btn" type="button" data-audio-stream-source="lofi">Default</button>
+                  <button class="settings-segment-btn" type="button" data-audio-stream-source="lofi">Lo-fi</button>
                   <button class="settings-segment-btn" type="button" data-audio-stream-source="radio">Radio</button>
                 </div>
                 <div class="audio-channel-nav">
-                  <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-prev" type="button">Prev</button>
+                  <button class="btn btn-secondary audio-channel-nav-btn audio-channel-nav-btn-icon" id="radio-channel-prev" type="button" aria-label="Previous station" title="Previous station">
+                    <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+                  </button>
                   <div class="select-wrap settings-select-wrap">
-                    <select class="field settings-select" id="radio-channel-select">
-                      <option value="https://ec6.yesstreaming.net:1455/stream">Yesstreaming - ec6:1455</option>
-                      <option value="https://azura.yesfm.com.ph/listen/yes_fm_manila/radio.mp3">YES FM Manila</option>
-                      <option value="https://mbc.radyonatinfm.com:8010/dipolog">Radyo Natin - Dipolog</option>
-                      <option value="https://edmdnb.com:8000/radio.mp3">EDM DnB</option>
-                      <option value="https://s11.citrus3.com:2020/stream/activo199fm">Activo 199 FM (Latin)</option>
-                      <option value="https://icepool.silvacast.com/GAYFM.mp3">GAYFM</option>
-                      <option value="https://audiotainment-sw.streamabc.net/atsw-edm-mp3-128-9914164">bigFM EDM & Progressive</option>
-                      <option value="https://stream-179.zeno.fm/7t45x7pnwakvv">PowerHit Christian Radio</option>
-                      <option value="https://stream-143.zeno.fm/g1pmt17nz9duv">StarFM Philippines</option>
-                      <option value="https://22283.live.streamtheworld.com/MYXPPOPAAC.aac">MYX P-Pop</option>
-                      <option value="https://opentune.net/stream?url=http%3A%2F%2F28093.live.streamtheworld.com%3A3690%2FMYXFM_SC">MYX Philippines</option>
-                      <option value="https://stream-178.zeno.fm/2uhuu5hvzqzuv">Budots FM 98.9</option>
-                      <option value="https://uk1.internet-radio.com/proxy/classicsradio?mp=/stream">Classics Radio - UK1</option>
-                      <option value="https://kathy.torontocast.com:2820/stream/1/">Metal Rock FM</option>
-                      <option value="https://uk7.internet-radio.com/proxy/radiomerge?mp=/stream;">Merge 104.8 - UK7</option>
-                      <option value="https://uk1.internet-radio.com/proxy/hospital?mp=/stream;">Hospital Radio - UK1</option>
-                      <option value="https://uk2.internet-radio.com/proxy/urbanchic?mp=/stream;">Urban Chic - UK2</option>
-                      <option value="https://ic.radiomonster.fm/rock.ultra">RadioMonster - Rock Ultra</option>
-                      <option value="https://webmusik.stream.laut.fm/webmusik">Webmusik</option>
-                      <option value="https://savagemusic.stream.laut.fm/savagemusic?t302=2026-02-21_17-38-32&uuid=2aacaff9-c52e-477b-b2a3-dddd4041752b">Savage Music</option>
-                      <option value="https://hardstylefm.stream.laut.fm/hardstylefm?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">HardstyleFM</option>
-                      <option value="https://clubradio.stream.laut.fm/clubradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Clubradio</option>
-                      <option value="https://1000-electronic-dance-music.stream.laut.fm/1000-electronic-dance-music?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">1000 Electronic Dance Music</option>
-                      <option value="https://edmradio.stream.laut.fm/edmradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Edmradio</option>
-                      <option value="https://game-fm.stream.laut.fm/game-fm?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Game FM</option>
-                      <option value="https://soundtrack.stream.laut.fm/soundtrack?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Soundtrack</option>
-                      <option value="https://blockbuster.stream.laut.fm/blockbuster?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Blockbuster</option>
-                      <option value="https://twentytenradio.stream.laut.fm/twentytenradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Twentytenradio</option>
-                      <option value="https://draingang.stream.laut.fm/draingang?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Drain Gang (Hyperpop)</option>
-                      <option value="https://kpophits.stream.laut.fm/kpophits?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Kpop Hits</option>
-                      <option value="https://simulator1.stream.laut.fm/simulator1?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Simulator1 (Mainstream)</option>
-                      <option value="https://nightcoreradio.stream.laut.fm/nightcoreradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Nightcore Radio</option>
-                      <option value="https://musicalradiode.stream.laut.fm/musicalradiode?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Musical Radio DE</option>
-                      <option value="https://phonkwave.stream.laut.fm/phonkwave?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Phonkwave</option>
-                      <option value="https://latenightradio.stream.laut.fm/latenightradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Late Night Radio</option>
-                      <option value="https://punk.stream.laut.fm/punk?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Punk</option>
-                      <option value="https://englishrap.stream.laut.fm/englishrap?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">English Rap</option>
-                      <option value="https://maxretro.stream.laut.fm/maxretro?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D">Maxretro</option>
-                      <option value="https://uk1.internet-radio.com/proxy/pinknoise?mp=/stream;">Pink Noise - UK1</option>
-                      <option value="https://das-edge15-live365-dal02.cdnstream.com/a20450">Live365 - a20450</option>
-                      <option value="https://kathy.torontocast.com:3560/;">J-Pop Powerplay</option>
-                      <option value="https://kathy.torontocast.com:3340/;">J-Rock Powerplay</option>
-                      <option value="https://radio35.virtualtronics.com:20040/;">BAMM Radio</option>
-                      <option value="https://boxradio-edge-00.streamafrica.net/jpopchill">BOX - Japan City Pop</option>
-                      <option value="https://kathy.torontocast.com:2880/1.mp3">Otaku Music Radio</option>
-                      <option value="https://magic.radioca.st/stream">iFM Philippines</option>
-                      <option value="https://icecast.live/up2dance">Up2Dance</option>
-                      <option value="https://stream.zeno.fm/tabzverz0fctv">Zeno - tabzverz0fctv</option>
-                      <option value="https://stream-148.zeno.fm/60cb36c29heuv">Zeno - 60cb36c29heuv</option>
-                      <option value="https://stream-142.zeno.fm/sh37pvfd938uv">Zeno - sh37pvfd938uv</option>
-                      <option value="https://stream-142.zeno.fm/sfaqs2c29heuv">Star FM - Zamboanga</option>
-                    </select>
+                    <select class="field settings-select" id="radio-channel-select"></select>
                     <span class="select-icon" aria-hidden="true"></span>
                   </div>
-                  <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-next" type="button">Next</button>
-                  <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-shuffle" type="button">Shuffle</button>
+                  <button class="btn btn-secondary audio-channel-nav-btn audio-channel-nav-btn-icon" id="radio-channel-next" type="button" aria-label="Next station" title="Next station">
+                    <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+                  </button>
+                  <button class="btn btn-secondary audio-channel-nav-btn" id="radio-channel-shuffle" type="button">
+                    <span class="material-symbols-outlined" aria-hidden="true">shuffle</span>
+                    <span>Shuffle</span>
+                  </button>
+                </div>
+                <div class="settings-inline-actions">
+                  <button class="btn btn-secondary ai-special-btn" id="radio-learn-ai" type="button">
+                    <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+                    <span>Learn about radio</span>
+                  </button>
                 </div>
                 <p class="field-subtext" id="radio-channel-status">Shows live channel health, including ping and buffer.</p>
+                </div>
+
+                <div class="settings-field audio-settings-column audio-ambient-section">
+                  <div class="settings-label-row">
+                    <p class="audio-settings-subtitle">Ambient Noise</p>
+                    <button class="settings-reset-btn" type="button" data-reset-setting="ambientNoise" title="Reset ambient noise">
+                      <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+                    </button>
+                  </div>
+                  <p class="field-subtext">Additive layers that can run together with music/radio.</p>
+                  <div class="ambient-noise-selector" aria-label="Ambient noise layers">
+                    <button class="ambient-noise-chip" type="button" data-ambient-track-button="rain" title="Rain">🌧️</button>
+                    <button class="ambient-noise-chip" type="button" data-ambient-track-button="beach" title="Beach Waves">🌊</button>
+                    <button class="ambient-noise-chip" type="button" data-ambient-track-button="crickets" title="Crickets">🦗</button>
+                    <button class="ambient-noise-chip" type="button" data-ambient-track-button="thunder" title="Thunder">⛈️</button>
+                    <button class="ambient-noise-chip" type="button" data-ambient-track-button="city" title="City">🏙️</button>
+                    <button class="ambient-noise-chip" type="button" data-ambient-track-button="white" title="White Noise">📻</button>
+                  </div>
+                  <div class="settings-inline-actions">
+                    <button class="btn btn-secondary" id="ambient-randomize-btn" type="button" hidden>Randomize Volumes</button>
+                  </div>
+                  <div class="ambient-noise-panels">
+                    <div class="ambient-noise-panel" data-ambient-panel="rain" hidden>
+                      <div class="ambient-noise-panel-head"><span class="ambient-noise-name">Rain</span></div>
+                      <div class="ambient-noise-volume-row">
+                        <input class="editor-font-size-slider" id="ambient-rain-volume" type="range" min="0" max="100" step="1" />
+                        <span class="sfx-volume-value" id="ambient-rain-volume-value">35</span>
+                      </div>
+                    </div>
+                    <div class="ambient-noise-panel" data-ambient-panel="beach" hidden>
+                      <div class="ambient-noise-panel-head"><span class="ambient-noise-name">Beach Waves</span></div>
+                      <div class="ambient-noise-volume-row">
+                        <input class="editor-font-size-slider" id="ambient-beach-volume" type="range" min="0" max="100" step="1" />
+                        <span class="sfx-volume-value" id="ambient-beach-volume-value">35</span>
+                      </div>
+                    </div>
+                    <div class="ambient-noise-panel" data-ambient-panel="crickets" hidden>
+                      <div class="ambient-noise-panel-head"><span class="ambient-noise-name">Crickets</span></div>
+                      <div class="ambient-noise-volume-row">
+                        <input class="editor-font-size-slider" id="ambient-crickets-volume" type="range" min="0" max="100" step="1" />
+                        <span class="sfx-volume-value" id="ambient-crickets-volume-value">35</span>
+                      </div>
+                    </div>
+                    <div class="ambient-noise-panel" data-ambient-panel="thunder" hidden>
+                      <div class="ambient-noise-panel-head"><span class="ambient-noise-name">Thunder</span></div>
+                      <div class="ambient-noise-volume-row">
+                        <input class="editor-font-size-slider" id="ambient-thunder-volume" type="range" min="0" max="100" step="1" />
+                        <span class="sfx-volume-value" id="ambient-thunder-volume-value">35</span>
+                      </div>
+                    </div>
+                    <div class="ambient-noise-panel" data-ambient-panel="city" hidden>
+                      <div class="ambient-noise-panel-head"><span class="ambient-noise-name">City</span></div>
+                      <div class="ambient-noise-volume-row">
+                        <input class="editor-font-size-slider" id="ambient-city-volume" type="range" min="0" max="100" step="1" />
+                        <span class="sfx-volume-value" id="ambient-city-volume-value">35</span>
+                      </div>
+                    </div>
+                    <div class="ambient-noise-panel" data-ambient-panel="white" hidden>
+                      <div class="ambient-noise-panel-head"><span class="ambient-noise-name">White Noise</span></div>
+                      <div class="ambient-noise-volume-row">
+                        <input class="editor-font-size-slider" id="ambient-white-volume" type="range" min="0" max="100" step="1" />
+                        <span class="sfx-volume-value" id="ambient-white-volume-value">35</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="settings-field audio-settings-column audio-radio-pulse-section" id="radio-pulse-section" hidden>
@@ -2823,79 +3400,121 @@
                 </div>
               </div>
 
-              <div class="settings-field audio-settings-column audio-ambient-section">
+              <div class="settings-two-column audio-settings-split">
+                <div class="settings-field audio-settings-column">
+                  <div class="settings-label-row">
+                    <span class="settings-label">Music Quality</span>
+                    <button class="settings-reset-btn" type="button" data-reset-setting="audioBitrate" title="Reset audio bitrate">
+                      <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+                    </button>
+                  </div>
+                  <div class="editor-font-size-row">
+                    <input class="field editor-font-size-input" id="quality-bitrate-input" type="number" min="32" max="320" step="8" inputmode="numeric" />
+                    <input class="editor-font-size-slider" id="quality-bitrate-slider" type="range" min="32" max="320" step="8" />
+                  </div>
+                  <p class="field-subtext" id="quality-bitrate-hz">Approx bandwidth and cutoff are shown in Hz.</p>
+                </div>
+
+                <div class="settings-field audio-settings-column">
+                  <div class="settings-label-row">
+                    <span class="settings-label">Equalizer</span>
+                    <button class="settings-reset-btn" type="button" data-reset-setting="equalizer" title="Reset equalizer">
+                      <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+                    </button>
+                  </div>
+                  <label class="settings-label" for="equalizer-preset-select">Preset</label>
+                  <div class="select-wrap settings-select-wrap">
+                    <select class="field settings-select" id="equalizer-preset-select">
+                      <option value="flat">Flat</option>
+                      <option value="bass-boost">Bass Boost</option>
+                      <option value="vocal-boost">Vocal Boost</option>
+                      <option value="treble-boost">Treble Boost</option>
+                      <option value="smile">Smile</option>
+                      <option value="custom">Custom</option>
+                    </select>
+                    <span class="select-icon" aria-hidden="true"></span>
+                  </div>
+                  <div class="settings-conditional-body" id="equalizer-custom-body">
+                    <div class="equalizer-vertical-grid">
+                      <div class="equalizer-band">
+                        <label class="equalizer-band-label" for="eq-low-slider">Low</label>
+                        <input class="equalizer-vertical-slider" id="eq-low-slider" type="range" min="-12" max="12" step="0.5" />
+                        <input class="field equalizer-band-input" id="eq-low-input" type="number" min="-12" max="12" step="0.5" inputmode="decimal" />
+                      </div>
+                      <div class="equalizer-band">
+                        <label class="equalizer-band-label" for="eq-low-mid-slider">Low Mid</label>
+                        <input class="equalizer-vertical-slider" id="eq-low-mid-slider" type="range" min="-12" max="12" step="0.5" />
+                        <input class="field equalizer-band-input" id="eq-low-mid-input" type="number" min="-12" max="12" step="0.5" inputmode="decimal" />
+                      </div>
+                      <div class="equalizer-band">
+                        <label class="equalizer-band-label" for="eq-mid-slider">Mid</label>
+                        <input class="equalizer-vertical-slider" id="eq-mid-slider" type="range" min="-12" max="12" step="0.5" />
+                        <input class="field equalizer-band-input" id="eq-mid-input" type="number" min="-12" max="12" step="0.5" inputmode="decimal" />
+                      </div>
+                      <div class="equalizer-band">
+                        <label class="equalizer-band-label" for="eq-high-mid-slider">High Mid</label>
+                        <input class="equalizer-vertical-slider" id="eq-high-mid-slider" type="range" min="-12" max="12" step="0.5" />
+                        <input class="field equalizer-band-input" id="eq-high-mid-input" type="number" min="-12" max="12" step="0.5" inputmode="decimal" />
+                      </div>
+                      <div class="equalizer-band">
+                        <label class="equalizer-band-label" for="eq-high-slider">High</label>
+                        <input class="equalizer-vertical-slider" id="eq-high-slider" type="range" min="-12" max="12" step="0.5" />
+                        <input class="field equalizer-band-input" id="eq-high-input" type="number" min="-12" max="12" step="0.5" inputmode="decimal" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-field audio-settings-column">
                 <div class="settings-label-row">
-                  <p class="audio-settings-subtitle">Ambient Noise</p>
-                  <button class="settings-reset-btn" type="button" data-reset-setting="ambientNoise" title="Reset ambient noise">
+                  <span class="settings-label">Audio Filters</span>
+                  <button class="settings-reset-btn" type="button" data-reset-setting="lofi8d" title="Reset audio filters">
                     <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
                   </button>
                 </div>
-                <p class="field-subtext">Additive layers that can run together with music/radio.</p>
-                <div class="ambient-noise-selector" aria-label="Ambient noise layers">
-                  <button class="ambient-noise-chip" type="button" data-ambient-track-button="rain" title="Rain">🌧️</button>
-                  <button class="ambient-noise-chip" type="button" data-ambient-track-button="beach" title="Beach Waves">🌊</button>
-                  <button class="ambient-noise-chip" type="button" data-ambient-track-button="crickets" title="Crickets">🦗</button>
-                  <button class="ambient-noise-chip" type="button" data-ambient-track-button="thunder" title="Thunder">⛈️</button>
-                  <button class="ambient-noise-chip" type="button" data-ambient-track-button="city" title="City">🏙️</button>
-                  <button class="ambient-noise-chip" type="button" data-ambient-track-button="white" title="White Noise">📻</button>
+                <label class="settings-switch" for="lofi-8d-enabled">
+                  <input type="checkbox" id="lofi-8d-enabled" checked />
+                  <span class="settings-switch-track" aria-hidden="true"><span class="settings-switch-thumb"></span></span>
+                  <span class="settings-switch-text">8D spatial sweep (current filter)</span>
+                </label>
+                <div class="settings-conditional-body" id="lofi-8d-controls-body">
+                  <div class="settings-field">
+                    <label class="settings-label" for="lofi-8d-rate-slider">8D Sweep Speed</label>
+                    <div class="editor-font-size-row">
+                      <input class="field editor-font-size-input" id="lofi-8d-rate-input" type="number" min="0.1" max="4" step="0.1" inputmode="decimal" />
+                      <input class="editor-font-size-slider" id="lofi-8d-rate-slider" type="range" min="0.1" max="4" step="0.1" />
+                    </div>
+                  </div>
                 </div>
+              </div>
+
+              <div class="settings-field audio-settings-column">
+                <div class="settings-label-row">
+                  <span class="settings-label">Layers <span class="experimental-pill">Experimental</span></span>
+                </div>
+                <p class="field-subtext">Open the layer editor to prioritize sounds by drag order and left/right distribution.</p>
                 <div class="settings-inline-actions">
-                  <button class="btn btn-secondary" id="ambient-randomize-btn" type="button" hidden>Randomize Volumes</button>
+                  <button class="btn btn-secondary" id="audio-layers-open-btn" type="button">Open Layers Modal</button>
                 </div>
-                <div class="ambient-noise-panels">
-                  <div class="ambient-noise-panel" data-ambient-panel="rain" hidden>
-                    <div class="ambient-noise-panel-head">
-                      <span class="ambient-noise-name">Rain</span>
+                <div class="audio-layers-modal-backdrop" id="audio-layers-modal" hidden>
+                  <div class="audio-layers-modal-card" role="dialog" aria-modal="true" aria-label="Audio layers">
+                    <div class="settings-label-row">
+                      <p class="audio-settings-subtitle">Audio Layers</p>
+                      <button class="settings-reset-btn" id="audio-layers-close-btn" type="button" aria-label="Close audio layers modal">
+                        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                      </button>
                     </div>
-                    <div class="ambient-noise-volume-row">
-                      <input class="editor-font-size-slider" id="ambient-rain-volume" type="range" min="0" max="100" step="1" />
-                      <span class="sfx-volume-value" id="ambient-rain-volume-value">35</span>
-                    </div>
-                  </div>
-                  <div class="ambient-noise-panel" data-ambient-panel="beach" hidden>
-                    <div class="ambient-noise-panel-head">
-                      <span class="ambient-noise-name">Beach Waves</span>
-                    </div>
-                    <div class="ambient-noise-volume-row">
-                      <input class="editor-font-size-slider" id="ambient-beach-volume" type="range" min="0" max="100" step="1" />
-                      <span class="sfx-volume-value" id="ambient-beach-volume-value">35</span>
-                    </div>
-                  </div>
-                  <div class="ambient-noise-panel" data-ambient-panel="crickets" hidden>
-                    <div class="ambient-noise-panel-head">
-                      <span class="ambient-noise-name">Crickets</span>
-                    </div>
-                    <div class="ambient-noise-volume-row">
-                      <input class="editor-font-size-slider" id="ambient-crickets-volume" type="range" min="0" max="100" step="1" />
-                      <span class="sfx-volume-value" id="ambient-crickets-volume-value">35</span>
-                    </div>
-                  </div>
-                  <div class="ambient-noise-panel" data-ambient-panel="thunder" hidden>
-                    <div class="ambient-noise-panel-head">
-                      <span class="ambient-noise-name">Thunder</span>
-                    </div>
-                    <div class="ambient-noise-volume-row">
-                      <input class="editor-font-size-slider" id="ambient-thunder-volume" type="range" min="0" max="100" step="1" />
-                      <span class="sfx-volume-value" id="ambient-thunder-volume-value">35</span>
-                    </div>
-                  </div>
-                  <div class="ambient-noise-panel" data-ambient-panel="city" hidden>
-                    <div class="ambient-noise-panel-head">
-                      <span class="ambient-noise-name">City</span>
-                    </div>
-                    <div class="ambient-noise-volume-row">
-                      <input class="editor-font-size-slider" id="ambient-city-volume" type="range" min="0" max="100" step="1" />
-                      <span class="sfx-volume-value" id="ambient-city-volume-value">35</span>
-                    </div>
-                  </div>
-                  <div class="ambient-noise-panel" data-ambient-panel="white" hidden>
-                    <div class="ambient-noise-panel-head">
-                      <span class="ambient-noise-name">White Noise</span>
-                    </div>
-                    <div class="ambient-noise-volume-row">
-                      <input class="editor-font-size-slider" id="ambient-white-volume" type="range" min="0" max="100" step="1" />
-                      <span class="sfx-volume-value" id="ambient-white-volume-value">35</span>
-                    </div>
+                    <p class="field-subtext">Drag to reorder priority (top = strongest). Move blocks to distribute left/right.</p>
+                    <label class="append-number-wrap settings-checkbox audio-layers-use-toggle" for="audio-layers-use-toggle">
+                      <input type="checkbox" id="audio-layers-use-toggle" />
+                      <span>Use layers</span>
+                    </label>
+                    <label class="append-number-wrap settings-checkbox audio-layers-snap-toggle" for="audio-layers-snap-grid">
+                      <input type="checkbox" id="audio-layers-snap-grid" checked />
+                      <span>Snap to grid</span>
+                    </label>
+                    <div class="audio-layer-list" id="audio-layers-list"></div>
                   </div>
                 </div>
               </div>
@@ -2903,6 +3522,33 @@
           </div>
         </div>`;
       modalMainContentEl.insertBefore(radioPanel, shadow.querySelector("#page-about") || null);
+    }
+    if (modalMainContentEl && !shadow.querySelector('[data-page="todo"]')) {
+      const todoPanel = document.createElement("section");
+      todoPanel.className = "page-panel";
+      todoPanel.setAttribute("data-page", "todo");
+      todoPanel.id = "page-todo";
+      todoPanel.hidden = true;
+      todoPanel.innerHTML = `
+        <div class="page-scroll">
+          <div class="settings-page-content">
+            <section class="settings-section">
+              <div class="settings-label-row">
+                <p class="settings-section-title">Todo</p>
+                <button class="btn btn-secondary" id="todo-refresh-btn" type="button">
+                  <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+                  <span>Refresh</span>
+                </button>
+              </div>
+              <p class="field-subtext" id="todo-source-status">Loads from todo.md when available.</p>
+              <div class="note todo-markdown-content" id="todo-markdown-content" role="region" aria-live="polite">
+                <p class="field-subtext">No todo content loaded yet.</p>
+              </div>
+            </section>
+          </div>
+        </div>`;
+      const aboutPanel = shadow.querySelector("#page-about");
+      modalMainContentEl.insertBefore(todoPanel, aboutPanel ? aboutPanel.nextSibling : null);
     }
 
     // Safety net for stale/cached radio templates: ensure waveform preview block exists.
@@ -2956,6 +3602,54 @@
         <span class="material-symbols-outlined" aria-hidden="true">radio</span>
         <span>Radio</span>`;
       sidebarNavEl.insertBefore(radioBtn, sidebarNavEl.querySelector('[data-page-target="about"]') || null);
+    }
+    if (sidebarNavEl) {
+      const legacyFinalDoBtn = sidebarNavEl.querySelector("#sidebar-party-final-do");
+      if (legacyFinalDoBtn && legacyFinalDoBtn.parentNode === sidebarNavEl) {
+        sidebarNavEl.removeChild(legacyFinalDoBtn);
+      }
+    }
+    if (sidebarNavEl && !sidebarNavEl.querySelector('[data-page-target="todo"]')) {
+      const todoBtn = document.createElement("button");
+      todoBtn.className = "sidebar-page-btn";
+      todoBtn.type = "button";
+      todoBtn.setAttribute("data-page-target", "todo");
+      todoBtn.setAttribute("data-party-note", "do-high");
+      todoBtn.innerHTML = `
+        <span class="material-symbols-outlined" aria-hidden="true">checklist</span>
+        <span>Todo</span>`;
+      const aboutBtn = sidebarNavEl.querySelector('[data-page-target="about"]');
+      sidebarNavEl.insertBefore(todoBtn, aboutBtn ? aboutBtn.nextSibling : null);
+    }
+    const SIDEBAR_DRUM_PAD_CONFIGS = Object.freeze([
+      Object.freeze({ id: "kick", label: "Kick", variant: "1" }),
+      Object.freeze({ id: "snare", label: "Snare", variant: "2" }),
+      Object.freeze({ id: "hihat", label: "Hi-hat", variant: "3" }),
+      Object.freeze({ id: "clap", label: "Clap", variant: "4" }),
+      Object.freeze({ id: "tom-low", label: "Tom low", variant: "5" }),
+      Object.freeze({ id: "tom-mid", label: "Tom mid", variant: "6" }),
+      Object.freeze({ id: "tom-high", label: "Tom high", variant: "1" }),
+      Object.freeze({ id: "rim", label: "Rim", variant: "2" }),
+      Object.freeze({ id: "shaker", label: "Shaker", variant: "3" }),
+      Object.freeze({ id: "perc", label: "Perc", variant: "4" }),
+      Object.freeze({ id: "noise", label: "Noise", variant: "5" }),
+      Object.freeze({ id: "ride", label: "Ride", variant: "6" })
+    ]);
+    if (sidebarNavEl) {
+      const sidebarInnerEl = sidebarNavEl.closest(".settings-sidebar-inner");
+      if (sidebarInnerEl && !sidebarInnerEl.querySelector("#sidebar-drum-pad-grid")) {
+        const drumPadGridEl = document.createElement("div");
+        drumPadGridEl.className = "sidebar-drum-pad-grid";
+        drumPadGridEl.id = "sidebar-drum-pad-grid";
+        drumPadGridEl.setAttribute("role", "group");
+        drumPadGridEl.setAttribute("aria-label", "Drum pads");
+        drumPadGridEl.hidden = true;
+        drumPadGridEl.setAttribute("aria-hidden", "true");
+        drumPadGridEl.innerHTML = SIDEBAR_DRUM_PAD_CONFIGS.map((pad) => {
+          return `<button class="sidebar-drum-pad" type="button" data-sidebar-drum-pad="${pad.id}" data-pad-variant="${pad.variant}" aria-label="${pad.label}" title="${pad.label}"></button>`;
+        }).join("");
+        sidebarInnerEl.appendChild(drumPadGridEl);
+      }
     }
     const PARTY_SIDEBAR_HALF_KEY_CONFIGS = Object.freeze([
       Object.freeze({ id: "sidebar-party-half-cs", afterPage: "editor", note: "do-sharp" }),
@@ -3035,7 +3729,7 @@
     const settingsToggle = byId("settings-toggle");
     const pageButtons = Array.from(shadow.querySelectorAll("[data-page-target]"));
     const sidebarNav = byId("sidebar-nav");
-    let partySidebarFinalDoBtn = byId("sidebar-party-final-do");
+    const sidebarDrumPads = Array.from(shadow.querySelectorAll("[data-sidebar-drum-pad]"));
     let partySidebarHalfKeyButtons = sidebarNav
       ? Array.from(sidebarNav.querySelectorAll(".sidebar-page-btn--party-halfkey"))
       : [];
@@ -3102,7 +3796,61 @@
     const interpolatorWordWrapInput = byId("interpolator-word-wrap");
     const interpolatorAskAiLink = byId("interpolator-ask-ai-link");
     const interpolatorExplainExpressionLink = byId("interpolator-explain-expression-link");
-    const aiQueryProviderInputs = Array.from(shadow.querySelectorAll("[data-ai-query-provider]"));
+    const aiProviderSortButtons = Array.from(shadow.querySelectorAll("[data-ai-provider-sort-option]"));
+    const aiProviderGrid = shadow.querySelector(".ai-provider-grid");
+    const aiProviderDescription = byId("ai-provider-description");
+    const aiProviderOfficialLink = byId("ai-provider-official-link");
+    const aiProviderNote = byId("ai-provider-note");
+    const aiProviderTestInput = byId("ai-provider-test-input");
+    const aiProviderTestBtn = byId("ai-provider-test-btn");
+    const ensureAiProviderCard = (provider, cardMarkup, insertBeforeProvider) => {
+      if (!(aiProviderGrid instanceof HTMLElement)) return;
+      const hasProvider = aiProviderGrid.querySelector(`[data-ai-query-provider][value="${provider}"]`);
+      if (hasProvider) return;
+      const template = document.createElement("template");
+      template.innerHTML = cardMarkup.trim();
+      const card = template.content.firstElementChild;
+      if (!(card instanceof HTMLElement)) return;
+      const insertBeforeInput = insertBeforeProvider
+        ? aiProviderGrid.querySelector(`[data-ai-query-provider][value="${insertBeforeProvider}"]`)
+        : null;
+      const anchorCard = insertBeforeInput && typeof insertBeforeInput.closest === "function"
+        ? insertBeforeInput.closest(".ai-provider-card")
+        : null;
+      if (anchorCard && anchorCard.parentNode === aiProviderGrid) {
+        aiProviderGrid.insertBefore(card, anchorCard);
+      } else {
+        aiProviderGrid.appendChild(card);
+      }
+    };
+    if (aiProviderGrid instanceof HTMLElement) {
+      const legacyRedditInputs = Array.from(aiProviderGrid.querySelectorAll('[data-ai-query-provider][value="redditanswers"]'));
+      legacyRedditInputs.forEach((input) => {
+        const card = typeof input.closest === "function" ? input.closest(".ai-provider-card") : null;
+        if (card && card.parentNode === aiProviderGrid) {
+          card.remove();
+        }
+      });
+      ensureAiProviderCard(
+        "ernie",
+        `<label class="ai-provider-card">
+          <input type="radio" name="ai-query-provider" value="ernie" data-ai-query-provider />
+          <img class="ai-provider-logo ai-provider-logo--ernie" src="https://cdn.prod.website-files.com/673728fe79d73c09073776cb/696359cb1c7325da510f7bfa_baidu-earnie-4-5-logo.webp" alt="" aria-hidden="true" />
+          <span>Ernie</span>
+        </label>`,
+        "copilot"
+      );
+      ensureAiProviderCard(
+        "huggingchat",
+        `<label class="ai-provider-card">
+          <input type="radio" name="ai-query-provider" value="huggingchat" data-ai-query-provider />
+          <img class="ai-provider-logo ai-provider-logo--huggingchat" src="https://huggingface.co/chat/huggingchat/logo.svg" alt="" aria-hidden="true" />
+          <span>HuggingChat</span>
+        </label>`,
+        "copilot"
+      );
+    }
+    let aiQueryProviderInputs = Array.from(shadow.querySelectorAll("[data-ai-query-provider]"));
     const interpolatorExpressionValid = byId("interpolator-expression-valid");
     const interpolatorExpressionError = byId("interpolator-expression-error");
     const interpolatorModePreset = byId("interpolator-mode-preset");
@@ -3119,13 +3867,30 @@
     const lofi8dControlsBody = byId("lofi-8d-controls-body");
     const lofi8dRateInput = byId("lofi-8d-rate-input");
     const lofi8dRateSlider = byId("lofi-8d-rate-slider");
+    const qualityBitrateInput = byId("quality-bitrate-input");
+    const qualityBitrateSlider = byId("quality-bitrate-slider");
+    const qualityBitrateHz = byId("quality-bitrate-hz");
+    const equalizerPresetSelect = byId("equalizer-preset-select");
+    const equalizerCustomBody = byId("equalizer-custom-body");
+    const eqLowInput = byId("eq-low-input");
+    const eqLowSlider = byId("eq-low-slider");
+    const eqLowMidInput = byId("eq-low-mid-input");
+    const eqLowMidSlider = byId("eq-low-mid-slider");
+    const eqMidInput = byId("eq-mid-input");
+    const eqMidSlider = byId("eq-mid-slider");
+    const eqHighMidInput = byId("eq-high-mid-input");
+    const eqHighMidSlider = byId("eq-high-mid-slider");
+    const eqHighInput = byId("eq-high-input");
+    const eqHighSlider = byId("eq-high-slider");
     const audioStreamSourceButtons = Array.from(shadow.querySelectorAll("[data-audio-stream-source]"));
     const radioChannelSelect = byId("radio-channel-select");
     const radioChannelPrevBtn = byId("radio-channel-prev");
     const radioChannelNextBtn = byId("radio-channel-next");
     const radioChannelShuffleBtn = byId("radio-channel-shuffle");
+    const radioLearnAiBtn = byId("radio-learn-ai");
     const radioChannelStatus = byId("radio-channel-status");
     const radioPulseSection = byId("radio-pulse-section");
+    const radioPulseSections = Array.from(shadow.querySelectorAll(".audio-radio-pulse-section"));
     const radioPulseControlsBody = byId("radio-pulse-controls-body");
     const radioPulseStrengthInput = byId("radio-pulse-strength-input");
     const radioPulseStrengthSlider = byId("radio-pulse-strength-slider");
@@ -3136,6 +3901,12 @@
     const ambientTrackButtons = Array.from(shadow.querySelectorAll("[data-ambient-track-button]"));
     const ambientTrackPanels = Array.from(shadow.querySelectorAll("[data-ambient-panel]"));
     const ambientRandomizeBtn = byId("ambient-randomize-btn");
+    const audioLayersOpenBtn = byId("audio-layers-open-btn");
+    const audioLayersModal = byId("audio-layers-modal");
+    const audioLayersCloseBtn = byId("audio-layers-close-btn");
+    const audioLayersList = byId("audio-layers-list");
+    const audioLayersUseToggleInput = byId("audio-layers-use-toggle");
+    const audioLayersSnapGridInput = byId("audio-layers-snap-grid");
     const audioBpmInfluenceEnabledInput = byId("audio-bpm-influence-enabled");
     const audioBpmInfluenceBody = byId("audio-bpm-influence-body");
     const audioBpmInfluenceModeSlider = byId("audio-bpm-influence-mode-slider");
@@ -3181,6 +3952,9 @@
     const usageOthersFill = byId("usage-others-fill");
     const usageOthersText = byId("usage-others-text");
     const usageResetSettingsBtn = byId("usage-reset-settings-btn");
+    const todoRefreshBtn = byId("todo-refresh-btn");
+    const todoSourceStatus = byId("todo-source-status");
+    const todoMarkdownContent = byId("todo-markdown-content");
     const themeGroup = byId("theme-group");
     const densityGroup = byId("density-group");
     const resetSettingButtons = Array.from(shadow.querySelectorAll("[data-reset-setting]"));
@@ -3296,6 +4070,7 @@
     let onPartyCursorLeave = null;
     let partyHueCurrent = 0;
     let uiSfxAudioContext = null;
+    let ambientAudioContext = null;
     let uiSfxMasterGain = null;
     let uiSfxNoiseBuffer = null;
     let uiSfxLastTypingAt = 0;
@@ -3345,6 +4120,25 @@
     let interpolatorExpressionDraft = String(settingsState.interpolatorExpression || "");
     let interpolatorExpressionDirty = false;
     let activeCurveDrag = null;
+    let equalizerPresetAnimationFrame = 0;
+    let equalizerPresetAnimationToken = 0;
+    let audioLayersOrder = [];
+    const audioLayersPanMap = new Map();
+    const AUDIO_LAYERS_SNAP_STEP = 25;
+    let audioLayersSnapToGrid = true;
+    let audioLayerPointerDragState = null;
+    let sidebarPianoDragActive = false;
+    let sidebarPianoDragPointerId = null;
+    let sidebarPianoLastButton = null;
+    let todoLoadToken = 0;
+    let todoLastRenderedMarkdown = "";
+    const equalizerControlMap = [
+      { key: "eqLowGain", gainProp: "low", input: eqLowInput, slider: eqLowSlider },
+      { key: "eqLowMidGain", gainProp: "lowMid", input: eqLowMidInput, slider: eqLowMidSlider },
+      { key: "eqMidGain", gainProp: "mid", input: eqMidInput, slider: eqMidSlider },
+      { key: "eqHighMidGain", gainProp: "highMid", input: eqHighMidInput, slider: eqHighMidSlider },
+      { key: "eqHighGain", gainProp: "high", input: eqHighInput, slider: eqHighSlider }
+    ];
     const curveEditorCtx = curveEditorCanvas && typeof curveEditorCanvas.getContext === "function"
       ? curveEditorCanvas.getContext("2d")
       : null;
@@ -3362,6 +4156,416 @@
       element.dataset.tooltip = value;
       element.removeAttribute("title");
     };
+
+    const stopEqualizerPresetAnimation = () => {
+      equalizerPresetAnimationToken += 1;
+      if (equalizerPresetAnimationFrame) {
+        global.cancelAnimationFrame(equalizerPresetAnimationFrame);
+        equalizerPresetAnimationFrame = 0;
+      }
+    };
+
+    const pushEqualizerValuesToUi = (gainsLike) => {
+      const safe = gainsLike && typeof gainsLike === "object" ? gainsLike : resolveEqualizerGains(settingsState);
+      equalizerControlMap.forEach((entry) => {
+        const value = normalizeEqualizerGain(safe[entry.gainProp], 0);
+        if (entry.slider) {
+          entry.slider.value = String(value);
+          setElementTooltip(entry.slider, `${value} dB`);
+        }
+        if (entry.input) {
+          entry.input.value = String(value);
+          setElementTooltip(entry.input, `${value} dB`);
+        }
+      });
+    };
+
+    const animateEqualizerPresetTransition = (targetGains, presetName) => {
+      const target = {
+        low: normalizeEqualizerGain(targetGains && targetGains.low, 0),
+        lowMid: normalizeEqualizerGain(targetGains && targetGains.lowMid, 0),
+        mid: normalizeEqualizerGain(targetGains && targetGains.mid, 0),
+        highMid: normalizeEqualizerGain(targetGains && targetGains.highMid, 0),
+        high: normalizeEqualizerGain(targetGains && targetGains.high, 0)
+      };
+      const normalizedPresetName = EQUALIZER_PRESET_OPTIONS.has(String(presetName || "").trim().toLowerCase())
+        ? String(presetName).trim().toLowerCase()
+        : "flat";
+      const start = resolveEqualizerGains(settingsState);
+      const durationMs = 320;
+      const token = ++equalizerPresetAnimationToken;
+      const startedAt = global.performance ? global.performance.now() : Date.now();
+
+      const step = () => {
+        if (token !== equalizerPresetAnimationToken) return;
+        const now = global.performance ? global.performance.now() : Date.now();
+        const t = Math.max(0, Math.min(1, (now - startedAt) / durationMs));
+        const eased = 1 - Math.pow(1 - t, 3);
+        const current = {
+          low: start.low + ((target.low - start.low) * eased),
+          lowMid: start.lowMid + ((target.lowMid - start.lowMid) * eased),
+          mid: start.mid + ((target.mid - start.mid) * eased),
+          highMid: start.highMid + ((target.highMid - start.highMid) * eased),
+          high: start.high + ((target.high - start.high) * eased)
+        };
+        pushEqualizerValuesToUi(current);
+        if (app._lofiController && typeof app._lofiController.setPlaybackTuning === "function") {
+          app._lofiController.setPlaybackTuning({
+            equalizerPreset: "custom",
+            eqLowGain: current.low,
+            eqLowMidGain: current.lowMid,
+            eqMidGain: current.mid,
+            eqHighMidGain: current.highMid,
+            eqHighGain: current.high
+          });
+        }
+
+        if (t < 1) {
+          equalizerPresetAnimationFrame = global.requestAnimationFrame(step);
+          return;
+        }
+        equalizerPresetAnimationFrame = 0;
+        commitModalSettings({
+          equalizerPreset: normalizedPresetName,
+          eqLowGain: normalizeEqualizerGain(target.low, 0),
+          eqLowMidGain: normalizeEqualizerGain(target.lowMid, 0),
+          eqMidGain: normalizeEqualizerGain(target.mid, 0),
+          eqHighMidGain: normalizeEqualizerGain(target.highMid, 0),
+          eqHighGain: normalizeEqualizerGain(target.high, 0)
+        });
+      };
+
+      equalizerPresetAnimationFrame = global.requestAnimationFrame(step);
+    };
+
+    const ensureAudioLayersOrder = () => {
+      const base = [
+        { id: "radio", label: "Radio" },
+        { id: "sfx", label: "SFX" },
+        ...AMBIENT_NOISE_TRACKS
+          .filter((track) => settingsState[`ambient${track.id.charAt(0).toUpperCase()}${track.id.slice(1)}Enabled`] === true)
+          .map((track) => ({ id: `ambient-${track.id}`, label: `Ambient: ${track.label}` }))
+      ];
+      if (!audioLayersOrder.length) {
+        audioLayersOrder = base.map((entry) => entry.id);
+      } else {
+        const known = new Set(audioLayersOrder);
+        base.forEach((entry) => {
+          if (!known.has(entry.id)) {
+            audioLayersOrder.push(entry.id);
+          }
+        });
+      }
+      const baseIdSet = new Set(base.map((entry) => entry.id));
+      audioLayersOrder = audioLayersOrder.filter((id) => baseIdSet.has(id));
+      return base;
+    };
+
+    const normalizeAudioLayerPanValue = (value) => clampNumber(value, -100, 100, 0);
+
+    const isManualLayerPanEnabled = () => settingsState.useAudioLayers === true && settingsState.lofi8dEnabled !== true;
+
+    const isRadioLayerWideLocked = () => settingsState.useAudioLayers === true && settingsState.lofi8dEnabled === true;
+
+    const getRadioLayerPanValue = () => normalizeAudioLayerPanValue(audioLayersPanMap.get("radio"));
+
+    const getRadioLayerPanNormalized = () => clampNumber(getRadioLayerPanValue() / 100, -1, 1, 0);
+
+    const getAudioLayerPanNormalizedById = (layerId) => {
+      if (settingsState.useAudioLayers !== true) return 0;
+      const normalizedLayerId = String(layerId || "").trim().toLowerCase();
+      if (!normalizedLayerId) return 0;
+      return clampNumber(normalizeAudioLayerPanValue(audioLayersPanMap.get(normalizedLayerId)) / 100, -1, 1, 0);
+    };
+
+    const getAudioLayerPriorityGain = (layerId) => {
+      if (settingsState.useAudioLayers !== true) return 1;
+      const normalizedLayerId = String(layerId || "").trim().toLowerCase();
+      if (!normalizedLayerId) return 1;
+      ensureAudioLayersOrder();
+      const index = audioLayersOrder.indexOf(normalizedLayerId);
+      if (index < 0) return 1;
+      const total = Math.max(1, audioLayersOrder.length);
+      if (total <= 1) return 1;
+      const strongestGain = 1;
+      const weakestGain = 0.55;
+      const progress = index / (total - 1);
+      return weakestGain + ((strongestGain - weakestGain) * (1 - progress));
+    };
+
+    const normalizeAudioLayerPanForSnap = (value) => {
+      const clamped = normalizeAudioLayerPanValue(value);
+      if (!audioLayersSnapToGrid) return clamped;
+      return normalizeAudioLayerPanValue(Math.round(clamped / AUDIO_LAYERS_SNAP_STEP) * AUDIO_LAYERS_SNAP_STEP);
+    };
+
+    const syncAudioLayerRowPanUi = (row, value) => {
+      if (!row) return;
+      const safeValue = normalizeAudioLayerPanValue(value);
+      const ratio = (safeValue + 100) / 200;
+      const surfaceNode = row.querySelector(".audio-layer-pan-surface");
+      const blockNode = row.querySelector(".audio-layer-block");
+      if (blockNode && surfaceNode instanceof Element) {
+        const surfaceRect = surfaceNode.getBoundingClientRect();
+        const blockRect = blockNode.getBoundingClientRect();
+        const surfaceWidth = Math.max(0, surfaceRect.width);
+        const blockWidth = Math.max(0, blockRect.width);
+        if (!(surfaceWidth > 0) || !(blockWidth > 0)) {
+          blockNode.style.left = "50%";
+          return;
+        }
+        const halfBlockRatio = Math.min(0.5, (blockWidth / 2) / surfaceWidth);
+        const minRatio = halfBlockRatio;
+        const maxRatio = 1 - halfBlockRatio;
+        const clampedRatio = Math.max(0, Math.min(1, ratio));
+        const displayRatio = minRatio + ((maxRatio - minRatio) * clampedRatio);
+        blockNode.style.left = `${displayRatio * 100}%`;
+      }
+    };
+
+    const commitAudioLayerPanFromPointer = (row, clientX) => {
+      if (!row) return;
+      const layerId = String(row.getAttribute("data-layer-id") || "");
+      if (!layerId) return;
+      if (layerId === "radio" && isRadioLayerWideLocked()) {
+        audioLayersPanMap.set(layerId, 0);
+        syncAudioLayerRowPanUi(row, 0);
+        if (app._lofiController && typeof app._lofiController.setPlaybackTuning === "function") {
+          app._lofiController.setPlaybackTuning({
+            manualPanActive: isManualLayerPanEnabled(),
+            manualPan: 0
+          });
+        }
+        return;
+      }
+      const surface = row.querySelector(".audio-layer-pan-surface");
+      if (!(surface instanceof Element)) return;
+      const rect = surface.getBoundingClientRect();
+      if (!(rect.width > 0)) return;
+      const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      const rawValue = (ratio * 200) - 100;
+      const pan = normalizeAudioLayerPanForSnap(rawValue);
+      audioLayersPanMap.set(layerId, pan);
+      syncAudioLayerRowPanUi(row, pan);
+      if (layerId.startsWith("ambient-")) {
+        const trackId = layerId.slice("ambient-".length);
+        if (trackId) {
+          syncAmbientTrackPlayback(trackId);
+        }
+      }
+      if (layerId === "radio" && app._lofiController && typeof app._lofiController.setPlaybackTuning === "function") {
+        app._lofiController.setPlaybackTuning({
+          manualPanActive: isManualLayerPanEnabled(),
+          manualPan: getRadioLayerPanNormalized()
+        });
+      }
+    };
+
+    const renderAudioLayersModalList = () => {
+      if (!audioLayersList) return;
+      const entries = ensureAudioLayersOrder();
+      const byIdMap = new Map(entries.map((entry) => [entry.id, entry]));
+      const fragment = document.createDocumentFragment();
+      audioLayersOrder.forEach((id) => {
+        const entry = byIdMap.get(id);
+        if (!entry) return;
+        const row = document.createElement("div");
+        row.className = "audio-layer-item";
+        row.setAttribute("data-layer-id", entry.id);
+        row.classList.toggle("is-radio-wide", entry.id === "radio" && isRadioLayerWideLocked());
+        const pan = normalizeAudioLayerPanForSnap(audioLayersPanMap.get(entry.id));
+        audioLayersPanMap.set(entry.id, pan);
+        row.innerHTML = `
+          <div class="audio-layer-pan-surface" role="presentation">
+            <span class="audio-layer-guide" aria-hidden="true"></span>
+            <span class="audio-layer-block" draggable="false" aria-hidden="true">
+              <span class="audio-layer-block-label">${escapeHtml(entry.label)}</span>
+            </span>
+          </div>
+        `;
+        row.classList.toggle("is-disabled", settingsState.useAudioLayers !== true);
+        fragment.appendChild(row);
+      });
+      audioLayersList.innerHTML = "";
+      audioLayersList.appendChild(fragment);
+      audioLayersList.classList.toggle("is-disabled", settingsState.useAudioLayers !== true);
+
+      const getRows = () => Array.from(audioLayersList.querySelectorAll(".audio-layer-item"));
+      const findRowByLayerId = (layerId) => getRows().find((row) => String(row.getAttribute("data-layer-id") || "") === String(layerId || "")) || null;
+      getRows().forEach((row) => {
+        const layerId = String(row.getAttribute("data-layer-id") || "");
+        if (!layerId) return;
+        syncAudioLayerRowPanUi(row, normalizeAudioLayerPanForSnap(audioLayersPanMap.get(layerId)));
+      });
+      global.requestAnimationFrame(() => {
+        getRows().forEach((row) => {
+          const layerId = String(row.getAttribute("data-layer-id") || "");
+          if (!layerId) return;
+          syncAudioLayerRowPanUi(row, normalizeAudioLayerPanForSnap(audioLayersPanMap.get(layerId)));
+        });
+      });
+      const clearDropTargets = () => {
+        getRows().forEach((row) => row.classList.remove("is-drop-target"));
+      };
+      const getDropTargetId = (clientY, activeLayerId) => {
+        const rows = getRows();
+        if (!rows.length) return "";
+        let candidateId = String(rows[rows.length - 1].getAttribute("data-layer-id") || "");
+        for (let index = 0; index < rows.length; index += 1) {
+          const row = rows[index];
+          const rowId = String(row.getAttribute("data-layer-id") || "");
+          const rect = row.getBoundingClientRect();
+          const midpoint = rect.top + (rect.height / 2);
+          if (clientY <= midpoint) {
+            candidateId = rowId;
+            break;
+          }
+        }
+        if (!candidateId || candidateId === activeLayerId) return "";
+        return candidateId;
+      };
+
+      if (audioLayerPointerDragState && audioLayerPointerDragState.layerId) {
+        const activeRow = findRowByLayerId(audioLayerPointerDragState.layerId);
+        if (activeRow) {
+          activeRow.classList.add("is-dragging", "is-carrying", "is-panning");
+          const activeBlock = activeRow.querySelector(".audio-layer-block");
+          if (activeBlock) {
+            activeBlock.classList.add("is-carrying");
+          }
+          audioLayersList.classList.add("is-reordering");
+        }
+      }
+
+      const startCombinedLayerDrag = (event, row) => {
+        if (settingsState.useAudioLayers !== true) return;
+        if (event.button !== 0) return;
+        event.preventDefault();
+        const layerId = String(row.getAttribute("data-layer-id") || "");
+        if (!layerId) return;
+        const block = row.querySelector(".audio-layer-block");
+        row.classList.add("is-dragging", "is-carrying", "is-panning");
+        if (block) {
+          block.classList.add("is-carrying");
+        }
+        audioLayersList.classList.add("is-reordering");
+        audioLayerPointerDragState = {
+          layerId,
+          pointerId: Number.isFinite(event.pointerId) ? event.pointerId : null,
+          dropTargetId: "",
+          moveHandler: null,
+          endHandler: null
+        };
+
+        const moveHandler = (moveEvent) => {
+          if (!audioLayerPointerDragState) return;
+          if (Number.isFinite(audioLayerPointerDragState.pointerId) && audioLayerPointerDragState.pointerId !== moveEvent.pointerId) return;
+          const activeRow = findRowByLayerId(audioLayerPointerDragState.layerId);
+          if (!activeRow) return;
+          moveEvent.preventDefault();
+          commitAudioLayerPanFromPointer(activeRow, moveEvent.clientX);
+          const targetId = getDropTargetId(moveEvent.clientY, audioLayerPointerDragState.layerId);
+          if (targetId && targetId !== audioLayerPointerDragState.layerId) {
+            const fromIndex = audioLayersOrder.indexOf(audioLayerPointerDragState.layerId);
+            const toIndex = audioLayersOrder.indexOf(targetId);
+            if (fromIndex >= 0 && toIndex >= 0 && fromIndex !== toIndex) {
+              audioLayersOrder.splice(fromIndex, 1);
+              audioLayersOrder.splice(toIndex, 0, audioLayerPointerDragState.layerId);
+              audioLayerPointerDragState.dropTargetId = targetId;
+              renderAudioLayersModalList();
+              return;
+            }
+          }
+          clearDropTargets();
+          audioLayerPointerDragState.dropTargetId = targetId;
+          if (targetId) {
+            const targetRow = findRowByLayerId(targetId);
+            if (targetRow) {
+              targetRow.classList.add("is-drop-target");
+            }
+          }
+        };
+
+        const endHandler = (endEvent) => {
+          if (!audioLayerPointerDragState) return;
+          if (Number.isFinite(audioLayerPointerDragState.pointerId) && audioLayerPointerDragState.pointerId !== endEvent.pointerId) return;
+          const activeLayerId = audioLayerPointerDragState.layerId;
+          audioLayerPointerDragState = null;
+          if (typeof global.removeEventListener === "function") {
+            global.removeEventListener("pointermove", moveHandler);
+            global.removeEventListener("pointerup", endHandler);
+            global.removeEventListener("pointercancel", endHandler);
+          }
+          clearDropTargets();
+          audioLayersList.classList.remove("is-reordering");
+          const activeRow = findRowByLayerId(activeLayerId);
+          if (activeRow) {
+            activeRow.classList.remove("is-dragging", "is-carrying", "is-panning");
+            const activeBlock = activeRow.querySelector(".audio-layer-block");
+            if (activeBlock) {
+              activeBlock.classList.remove("is-carrying");
+            }
+          }
+          renderAudioLayersModalList();
+        };
+
+        audioLayerPointerDragState.moveHandler = moveHandler;
+        audioLayerPointerDragState.endHandler = endHandler;
+        if (typeof global.addEventListener === "function") {
+          global.addEventListener("pointermove", moveHandler);
+          global.addEventListener("pointerup", endHandler);
+          global.addEventListener("pointercancel", endHandler);
+        }
+
+        commitAudioLayerPanFromPointer(row, event.clientX);
+      };
+
+      getRows().forEach((row) => {
+        const block = row.querySelector(".audio-layer-block");
+        if (!block) return;
+        block.addEventListener("pointerdown", (event) => startCombinedLayerDrag(event, row));
+      });
+
+      AMBIENT_NOISE_TRACKS.forEach((track) => {
+        if (isAmbientTrackEnabled(track.id)) {
+          syncAmbientTrackPlayback(track.id);
+        }
+      });
+    };
+
+    if (audioLayersSnapGridInput) {
+      audioLayersSnapToGrid = audioLayersSnapGridInput.checked === true;
+      audioLayersSnapGridInput.addEventListener("change", () => {
+        audioLayersSnapToGrid = audioLayersSnapGridInput.checked === true;
+        if (audioLayersSnapToGrid) {
+          audioLayersPanMap.forEach((value, id) => {
+            audioLayersPanMap.set(id, normalizeAudioLayerPanForSnap(value));
+          });
+        }
+        if (audioLayersModal && audioLayersModal.hidden === false) {
+          renderAudioLayersModalList();
+        }
+      });
+    }
+
+    if (audioLayersUseToggleInput) {
+      audioLayersUseToggleInput.checked = settingsState.useAudioLayers === true;
+      audioLayersUseToggleInput.addEventListener("change", () => {
+        const enableLayers = audioLayersUseToggleInput.checked === true;
+        if (audioLayersUseToggleInput.checked === true) {
+          const entries = ensureAudioLayersOrder();
+          entries.forEach((entry) => {
+            audioLayersPanMap.set(entry.id, 0);
+          });
+        }
+        commitModalSettings({
+          useAudioLayers: enableLayers
+        });
+        if (audioLayersModal && audioLayersModal.hidden === false) {
+          renderAudioLayersModalList();
+        }
+      });
+    }
 
     const migrateTitleTooltips = () => {
       const elementsWithTitle = Array.from(shadow.querySelectorAll("[title]"));
@@ -3520,12 +4724,22 @@
       };
       const getAiProviderLogoUrl = (providerKey) => {
         const key = String(providerKey || "").trim().toLowerCase();
-        if (key === "chatgpt") return "https://www.google.com/s2/favicons?domain=chatgpt.com&sz=64";
-        if (key === "claude") return "https://cdn.simpleicons.org/anthropic/ffffff";
-        if (key === "perplexity") return "https://cdn.simpleicons.org/perplexity/ffffff";
-        if (key === "grok") return "https://cdn.simpleicons.org/x/ffffff";
-        if (key === "gemini") return "https://cdn.simpleicons.org/googlegemini/ffffff";
-        if (key === "copilot") return "https://www.google.com/s2/favicons?domain=bing.com&sz=64";
+        if (key === "chatgpt") return "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/chatgpt-icon.png";
+        if (key === "claude") return "https://upload.wikimedia.org/wikipedia/commons/b/b0/Claude_AI_symbol.svg";
+        if (key === "perplexity") return "https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/perplexity-color.png";
+        if (key === "grok") return "https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/grok.png";
+        if (key === "gemini") return "https://brandlogos.net/wp-content/uploads/2025/03/gemini_icon-logo_brandlogos.net_aacx5.png";
+        if (key === "qwen") return "https://img.alicdn.com/imgextra/i1/O1CN013ltlI61OTOnTStXfj_!!6000000001706-55-tps-330-327.svg";
+        if (key === "ernie") return "https://cdn.prod.website-files.com/673728fe79d73c09073776cb/696359cb1c7325da510f7bfa_baidu-earnie-4-5-logo.webp";
+        if (key === "huggingchat") return "https://huggingface.co/chat/huggingchat/logo.svg";
+        if (key === "copilot") return "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/copilot-icon.png";
+        if (key === "githubcopilot") return "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/github-copilot-icon.png";
+        if (key === "duckai") return "https://upload.wikimedia.org/wikipedia/en/9/90/The_DuckDuckGo_Duck.png";
+        if (key === "mistral") return "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Mistral_AI_logo_%282025%E2%80%93%29.svg/3840px-Mistral_AI_logo_%282025%E2%80%93%29.svg.png";
+        if (key === "meta") return "https://static.wikia.nocookie.net/logopedia/images/7/7e/Meta_AI.png/revision/latest/scale-to-width-down/250?cb=20250528183159";
+        if (key === "brave") return "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/brave-browser-icon.png";
+        if (key === "you") return "https://upload.wikimedia.org/wikipedia/en/archive/8/8f/20250331135537%21Youcom_new_logo.jpg";
+        if (key === "zai") return "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Z.ai_%28company_logo%29.svg/250px-Z.ai_%28company_logo%29.svg.png";
         return "";
       };
       const appendTooltipTokens = (container, lineText) => {
@@ -3866,7 +5080,11 @@
       if (uiSfxAudioContext && uiSfxAudioContext.state !== "closed") {
         uiSfxAudioContext.close().catch(() => {});
       }
+      if (ambientAudioContext && ambientAudioContext.state !== "closed") {
+        ambientAudioContext.close().catch(() => {});
+      }
       uiSfxAudioContext = null;
+      ambientAudioContext = null;
       uiSfxMasterGain = null;
       uiSfxNoiseBuffer = null;
       uiSfxLastTypingAt = 0;
@@ -3999,6 +5217,26 @@
       }
     };
 
+    const getAmbientAudioContext = () => {
+      const AudioContextCtor = global.AudioContext || global.webkitAudioContext;
+      if (!AudioContextCtor) return null;
+      if (ambientAudioContext && ambientAudioContext.state !== "closed") return ambientAudioContext;
+      try {
+        ambientAudioContext = new AudioContextCtor({ latencyHint: "interactive" });
+      } catch {
+        ambientAudioContext = null;
+      }
+      return ambientAudioContext;
+    };
+
+    const resumeAmbientAudioContext = () => {
+      const ctx = getAmbientAudioContext();
+      if (!ctx) return;
+      if (ctx.state === "suspended") {
+        ctx.resume().catch(() => {});
+      }
+    };
+
     const getEffectiveSfxGainScale = () => {
       if (settingsState.sfxMuted === true) return 0;
       const sfxRatio = clampNumber(
@@ -4007,11 +5245,12 @@
         SFX_VOLUME_MAX,
         DEFAULT_MODAL_SETTINGS.sfxVolume
       ) / 100;
-      if (settingsState.sfxAdaptiveBlend !== true) return sfxRatio;
-      if (!lofiPlaybackSnapshot.playing || lofiPlaybackSnapshot.failed) return sfxRatio;
+      const layeredSfxRatio = sfxRatio * getAudioLayerPriorityGain("sfx");
+      if (settingsState.sfxAdaptiveBlend !== true) return layeredSfxRatio;
+      if (!lofiPlaybackSnapshot.playing || lofiPlaybackSnapshot.failed) return layeredSfxRatio;
       const musicRatio = clampNumber(lofiPlaybackSnapshot.volume, 0, 1, 0);
       const blendScale = clampNumber(1 - (musicRatio * 0.45), 0.4, 1, 1);
-      return sfxRatio * blendScale;
+      return layeredSfxRatio * blendScale;
     };
 
     const pulseWaveformSfx = (strength = 1) => {
@@ -4029,7 +5268,20 @@
       AMBIENT_NOISE_TRACKS.forEach((track) => {
         const enabled = isAmbientTrackEnabled(track.id);
         if (!enabled) return;
-        const ratio = clampNumber(getAmbientTrackVolumePercent(track.id) / 100, 0, 1, 0);
+        const entry = ambientTrackState.get(track.id);
+        const audio = entry && entry.audio ? entry.audio : null;
+        const isPlaying = Boolean(audio && audio.paused === false && audio.ended !== true && audio.readyState >= 2);
+        if (!isPlaying) return;
+        const ratio = clampNumber(
+          entry && entry.gainNode && Number.isFinite(Number(entry.gainNode.gain.value))
+            ? Number(entry.gainNode.gain.value)
+            : (audio && Number.isFinite(Number(audio.volume))
+              ? Number(audio.volume)
+              : (getAmbientTrackVolumePercent(track.id) / 100)),
+          0,
+          1,
+          0
+        );
         if (ratio <= 0.0001) return;
         activeCount += 1;
         activeVolumeRatioSum += ratio;
@@ -4259,6 +5511,63 @@
           });
           break;
       }
+    };
+
+    const playUiSidebarDrumPadSfx = (target) => {
+      if (!(target instanceof Element)) return;
+      const padId = String(target.getAttribute("data-sidebar-drum-pad") || "").trim().toLowerCase();
+      if (!padId) return;
+      resumeUiSfxAudioContext();
+      switch (padId) {
+        case "kick":
+          playUiSfxTone({ frequency: 156, endFrequency: 46, type: "sine", gain: 0.1, attackMs: 1, holdMs: 10, releaseMs: 136 });
+          break;
+        case "snare":
+          playUiSfxNoiseHit({ gain: 0.05, attackMs: 1, holdMs: 8, releaseMs: 114, highpassHz: 1300, lowpassHz: 7600 });
+          playUiSfxTone({ frequency: 220, endFrequency: 140, type: "triangle", gain: 0.02, attackMs: 1, holdMs: 5, releaseMs: 70 });
+          break;
+        case "hihat":
+          playUiSfxNoiseHit({ gain: 0.028, attackMs: 1, holdMs: 2, releaseMs: 46, highpassHz: 5600, lowpassHz: 12000 });
+          break;
+        case "clap":
+          playUiSfxNoiseHit({ gain: 0.028, attackMs: 1, holdMs: 2, releaseMs: 48, highpassHz: 2000, lowpassHz: 9400 });
+          playUiSfxNoiseHit({ gain: 0.018, attackMs: 1, holdMs: 2, releaseMs: 42, highpassHz: 2000, lowpassHz: 9400, delayMs: 16 });
+          break;
+        case "tom-low":
+          playUiSfxTone({ frequency: 180, endFrequency: 86, type: "triangle", gain: 0.062, attackMs: 1, holdMs: 8, releaseMs: 138 });
+          break;
+        case "tom-mid":
+          playUiSfxTone({ frequency: 238, endFrequency: 106, type: "triangle", gain: 0.058, attackMs: 1, holdMs: 8, releaseMs: 126 });
+          break;
+        case "tom-high":
+          playUiSfxTone({ frequency: 312, endFrequency: 136, type: "triangle", gain: 0.052, attackMs: 1, holdMs: 7, releaseMs: 116 });
+          break;
+        case "rim":
+          playUiSfxTone({ frequency: 840, endFrequency: 620, type: "square", gain: 0.022, attackMs: 1, holdMs: 4, releaseMs: 44 });
+          playUiSfxNoiseHit({ gain: 0.01, attackMs: 1, holdMs: 1, releaseMs: 26, highpassHz: 3400, lowpassHz: 12000 });
+          break;
+        case "shaker":
+          playUiSfxNoiseHit({ gain: 0.02, attackMs: 1, holdMs: 3, releaseMs: 62, highpassHz: 4400, lowpassHz: 11200 });
+          break;
+        case "perc":
+          playUiSfxTone({ frequency: 488, endFrequency: 286, type: "triangle", gain: 0.024, attackMs: 1, holdMs: 5, releaseMs: 72 });
+          playUiSfxNoiseHit({ gain: 0.012, attackMs: 1, holdMs: 2, releaseMs: 38, highpassHz: 2600, lowpassHz: 10400 });
+          break;
+        case "noise":
+          playUiSfxNoiseHit({ gain: 0.034, attackMs: 1, holdMs: 10, releaseMs: 96, highpassHz: 320, lowpassHz: 6200 });
+          break;
+        case "ride":
+          playUiSfxNoiseHit({ gain: 0.022, attackMs: 1, holdMs: 6, releaseMs: 170, highpassHz: 3800, lowpassHz: 12000 });
+          playUiSfxTone({ frequency: 936, endFrequency: 820, type: "sine", gain: 0.01, attackMs: 1, holdMs: 10, releaseMs: 150 });
+          break;
+        default:
+          playUiPartyDrumSfx();
+          break;
+      }
+      target.classList.add("is-playing");
+      global.setTimeout(() => {
+        target.classList.remove("is-playing");
+      }, 120);
     };
 
     const playUiConfettiSfx = () => {
@@ -4544,6 +5853,27 @@
           delayMs: 4
         });
       }
+    };
+
+    const playUiSidebarPianoFromButton = (button) => {
+      if (!(button instanceof Element)) return;
+      if (settingsState.accentPartyMode !== true) return;
+      if (!button.closest(".sidebar-page-btn")) return;
+      playUiSidebarPianoSfx(button);
+    };
+
+    const stopSidebarPianoDrag = () => {
+      sidebarPianoDragActive = false;
+      sidebarPianoDragPointerId = null;
+      sidebarPianoLastButton = null;
+    };
+
+    const maybeTriggerSidebarPianoDragNote = (button) => {
+      if (!(button instanceof Element)) return;
+      if (button.disabled) return;
+      if (sidebarPianoLastButton === button) return;
+      sidebarPianoLastButton = button;
+      playUiSidebarPianoFromButton(button);
     };
 
     const playUiClickSfx = (target = null) => {
@@ -5456,6 +6786,14 @@
       }
     };
 
+    const syncSidebarDrumPadVisibility = () => {
+      const sidebarDrumPadGrid = byId("sidebar-drum-pad-grid") || shadow.querySelector(".sidebar-drum-pad-grid");
+      if (!sidebarDrumPadGrid) return;
+      const visible = settingsState.accentPartyMode === true;
+      sidebarDrumPadGrid.hidden = !visible;
+      sidebarDrumPadGrid.setAttribute("aria-hidden", visible ? "false" : "true");
+    };
+
     const ensureGoldenSparkleOverlay = () => {
       if (!modalCard) return null;
       if (!goldenSparkleOverlay) {
@@ -5527,17 +6865,6 @@
 
     const ensurePartySidebarKeys = () => {
       if (!sidebarNav) return;
-      if (!partySidebarFinalDoBtn || !sidebarNav.contains(partySidebarFinalDoBtn)) {
-        const partyFinalDo = document.createElement("button");
-        partyFinalDo.className = "sidebar-page-btn sidebar-page-btn--party-final";
-        partyFinalDo.type = "button";
-        partyFinalDo.id = "sidebar-party-final-do";
-        partyFinalDo.setAttribute("aria-label", "Party easter egg final Do key");
-        partyFinalDo.setAttribute("data-party-note", "do-high");
-        partyFinalDo.innerHTML = `<span aria-hidden="true">&nbsp;</span>`;
-        sidebarNav.appendChild(partyFinalDo);
-        partySidebarFinalDoBtn = partyFinalDo;
-      }
       PARTY_SIDEBAR_HALF_KEY_CONFIGS.forEach((config) => {
         if (!config || !config.id || !config.afterPage || !config.note) return;
         if (sidebarNav.querySelector(`#${config.id}`)) return;
@@ -5557,13 +6884,12 @@
 
     const removePartySidebarKeys = () => {
       if (!sidebarNav) return;
-      const keys = Array.from(sidebarNav.querySelectorAll(".sidebar-page-btn--party-halfkey, #sidebar-party-final-do"));
+      const keys = Array.from(sidebarNav.querySelectorAll(".sidebar-page-btn--party-halfkey"));
       keys.forEach((node) => {
         if (node && node.parentNode === sidebarNav) {
           sidebarNav.removeChild(node);
         }
       });
-      partySidebarFinalDoBtn = null;
       partySidebarHalfKeyButtons = [];
     };
 
@@ -5645,19 +6971,20 @@
     };
 
     const SIDEBAR_NOTE_LABELS = Object.freeze({
-      editor: "Do/C",
-      settings: "Re/D",
-      variables: "Mi/E",
-      drafts: "Fa/F",
-      usage: "Sol/G",
-      radio: "La/A",
-      about: "Ti/B",
-      "do-sharp": "Do#/C#",
-      "re-sharp": "Re#/D#",
-      "fa-sharp": "Fa#/F#",
-      "sol-sharp": "Sol#/G#",
-      "la-sharp": "La#/A#",
-      "do-high": "Do/C (high)"
+      editor: "Do / C",
+      settings: "Re / D",
+      variables: "Mi / E",
+      drafts: "Fa / F",
+      usage: "Sol / G",
+      radio: "La / A",
+      todo: "Do / C (high)",
+      about: "Ti / B",
+      "do-sharp": "Do# / C#",
+      "re-sharp": "Re# / D#",
+      "fa-sharp": "Fa# / F#",
+      "sol-sharp": "Sol# / G#",
+      "la-sharp": "La# / A#",
+      "do-high": "Do / C (high)"
     });
 
     const syncSidebarPianoTooltips = () => {
@@ -5699,6 +7026,7 @@
         case "drafts": return "fa";
         case "usage": return "sol";
         case "radio": return "la";
+        case "todo": return "do-high";
         case "about": return "ti";
         default: return "";
       }
@@ -6070,9 +7398,18 @@
         speedRate: settingsState.lofiSpeedRate,
         pitchRate: settingsState.lofiPitchRate,
         ratePitchSync: settingsState.lofiRatePitchSync,
+        audioBitrateKbps: settingsState.audioBitrateKbps,
+        equalizerPreset: settingsState.equalizerPreset,
+        eqLowGain: settingsState.eqLowGain,
+        eqLowMidGain: settingsState.eqLowMidGain,
+        eqMidGain: settingsState.eqMidGain,
+        eqHighMidGain: settingsState.eqHighMidGain,
+        eqHighGain: settingsState.eqHighGain,
         spatialEnabled: settingsState.lofi8dEnabled !== false,
-        spatialDepth: DEFAULT_MODAL_SETTINGS.lofi8dDepth / 100,
-        spatialRate: clampNumber(settingsState.lofi8dRate, LOFI_8D_RATE_MIN, LOFI_8D_RATE_MAX, DEFAULT_MODAL_SETTINGS.lofi8dRate)
+        spatialDepth: clampNumber(settingsState.lofi8dDepth, LOFI_8D_DEPTH_MIN, LOFI_8D_DEPTH_MAX, DEFAULT_MODAL_SETTINGS.lofi8dDepth) / 100,
+        spatialRate: clampNumber(settingsState.lofi8dRate, LOFI_8D_RATE_MIN, LOFI_8D_RATE_MAX, DEFAULT_MODAL_SETTINGS.lofi8dRate),
+        manualPanActive: isManualLayerPanEnabled(),
+        manualPan: getRadioLayerPanNormalized()
       });
       return () => {
         lofiToggleBtn.removeEventListener("click", onToggleClick);
@@ -6197,6 +7534,9 @@
       audio.src = config.url;
       const entry = {
         audio,
+        sourceNode: null,
+        gainNode: null,
+        panNode: null,
         restartTimer: 0,
         gmRetryTimer: 0,
         objectUrl: "",
@@ -6205,6 +7545,46 @@
         lastGmAttemptAt: 0,
         playWithFallback: null,
         unavailableNotified: false
+      };
+
+      const ensureAmbientSpatialNodes = () => {
+        if (entry.sourceNode && entry.gainNode && entry.panNode) {
+          return true;
+        }
+        const ctx = getAmbientAudioContext();
+        if (!ctx || typeof ctx.createStereoPanner !== "function") return false;
+        try {
+          const sourceNode = ctx.createMediaElementSource(audio);
+          const gainNode = ctx.createGain();
+          const panNode = ctx.createStereoPanner();
+          sourceNode.connect(gainNode);
+          gainNode.connect(panNode);
+          panNode.connect(ctx.destination);
+          entry.sourceNode = sourceNode;
+          entry.gainNode = gainNode;
+          entry.panNode = panNode;
+          return true;
+        } catch {
+          entry.sourceNode = null;
+          entry.gainNode = null;
+          entry.panNode = null;
+          return false;
+        }
+      };
+
+      const applyAmbientMix = () => {
+        const baseVolumeRatio = clampNumber(getAmbientTrackVolumePercent(trackId) / 100, 0, 1, 0);
+        const layerGain = getAudioLayerPriorityGain(`ambient-${trackId}`);
+        const finalVolumeRatio = clampNumber(baseVolumeRatio * layerGain, 0, 1, 0);
+        const pan = getAudioLayerPanNormalizedById(`ambient-${trackId}`);
+        if (ensureAmbientSpatialNodes()) {
+          if (entry.gainNode) entry.gainNode.gain.value = finalVolumeRatio;
+          if (entry.panNode) entry.panNode.pan.value = pan;
+          audio.volume = 1;
+          return finalVolumeRatio;
+        }
+        audio.volume = finalVolumeRatio;
+        return finalVolumeRatio;
       };
 
       const scheduleGmRetry = () => {
@@ -6220,7 +7600,8 @@
 
       const playAmbientAudio = () => {
         if (closed || !isAmbientTrackEnabled(trackId)) return;
-        audio.volume = clampNumber(getAmbientTrackVolumePercent(trackId) / 100, 0, 1, 0);
+        applyAmbientMix();
+        resumeAmbientAudioContext();
         try {
           const playPromise = audio.play();
           if (playPromise && typeof playPromise.catch === "function") {
@@ -6332,14 +7713,23 @@
       const config = getAmbientTrackConfig(trackId);
       if (!config) return;
       const enabled = isAmbientTrackEnabled(trackId);
-      const volumeRatio = clampNumber(getAmbientTrackVolumePercent(trackId) / 100, 0, 1, 0);
+      const baseVolumeRatio = clampNumber(getAmbientTrackVolumePercent(trackId) / 100, 0, 1, 0);
+      const layerGain = getAudioLayerPriorityGain(`ambient-${trackId}`);
+      const volumeRatio = clampNumber(baseVolumeRatio * layerGain, 0, 1, 0);
+      const pan = getAudioLayerPanNormalizedById(`ambient-${trackId}`);
       const entry = ensureAmbientTrackEntry(trackId);
       if (!entry || !entry.audio) return;
       if (entry.restartTimer) {
         global.clearTimeout(entry.restartTimer);
         entry.restartTimer = 0;
       }
-      entry.audio.volume = volumeRatio;
+      if (entry.gainNode && entry.panNode) {
+        entry.gainNode.gain.value = volumeRatio;
+        entry.panNode.pan.value = pan;
+        entry.audio.volume = 1;
+      } else {
+        entry.audio.volume = volumeRatio;
+      }
       if (!enabled || volumeRatio <= 0.0001) {
         stopAmbientTrack(trackId);
         updateWaveformAmbientLevel();
@@ -6363,6 +7753,7 @@
     const stopAllAmbientNoise = () => {
       detachAmbientUnlockListeners();
       AMBIENT_NOISE_TRACKS.forEach((track) => stopAmbientTrack(track.id));
+      updateWaveformAmbientLevel();
     };
 
     const createStreamValidationResult = (ok, pingMs = null, method = "") => ({
@@ -6608,7 +7999,7 @@
         const station = getRadioStationByUrl(normalizedStationUrl);
         showToast(`Radio channel switched: ${station.label}`, "success");
       } else if (sourceChanged) {
-        showToast("Music source switched to Default stream.", "success");
+        showToast("Music source switched to Lo-fi stream.", "success");
       }
       return true;
     };
@@ -7008,7 +8399,16 @@
         const pageScroll = activePanel.querySelector(".page-scroll") || activePanel;
         const chromeHeight = modalCard.offsetHeight - modalMainContent.offsetHeight;
         const viewportAllowance = Math.max(280, global.innerHeight - chromeHeight - 24);
-        const desiredHeight = Math.max(260, Math.min(viewportAllowance, pageScroll.scrollHeight + 4));
+        const sidebarVisible = settingsSidebar
+          && modalBodyLayout
+          && !modalBodyLayout.classList.contains("is-sidebar-collapsed");
+        const sidebarHeight = sidebarVisible ? settingsSidebar.scrollHeight : 0;
+        const anchorRailVisible = settingsAnchorRail
+          && settingsState.activePage === "settings"
+          && settingsAnchorRail.getAttribute("aria-hidden") !== "true";
+        const anchorRailHeight = anchorRailVisible ? settingsAnchorRail.scrollHeight : 0;
+        const contentHeight = Math.max(pageScroll.scrollHeight, sidebarHeight, anchorRailHeight) + 4;
+        const desiredHeight = Math.max(260, Math.min(viewportAllowance, contentHeight));
         modalMainContent.style.height = `${Math.round(desiredHeight)}px`;
       });
     };
@@ -7385,6 +8785,9 @@
       if (activePage === "usage") {
         updateUsagePanel();
       }
+      if (activePage === "todo") {
+        loadTodoMarkdown({ forceRemote: false });
+      }
       if (settingsAnchorRail) {
         settingsAnchorRail.setAttribute("aria-hidden", activePage === "settings" ? "false" : "true");
       }
@@ -7758,6 +9161,191 @@
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
 
+    const renderTodoMarkdownInline = (value) => {
+      const escaped = escapeHtml(String(value || ""));
+      return escaped
+        .replace(/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+        .replace(/`([^`]+)`/g, "<code>$1</code>");
+    };
+
+    const renderTodoMarkdown = (markdownText) => {
+      if (!todoMarkdownContent) return;
+      const source = String(markdownText || "").replace(/\r\n/g, "\n").trim();
+      if (!source) {
+        todoMarkdownContent.innerHTML = `<p class="field-subtext">No todo content available.</p>`;
+        return;
+      }
+      const lines = source.split("\n");
+      const htmlParts = [];
+      let listOpen = false;
+
+      const closeList = () => {
+        if (!listOpen) return;
+        htmlParts.push("</ul>");
+        listOpen = false;
+      };
+
+      lines.forEach((line) => {
+        const trimmed = String(line || "").trim();
+        if (!trimmed) {
+          closeList();
+          return;
+        }
+        const headingMatch = /^(#{1,3})\s+(.+)$/.exec(trimmed);
+        if (headingMatch) {
+          closeList();
+          const level = headingMatch[1].length;
+          const headingText = renderTodoMarkdownInline(headingMatch[2]);
+          if (level === 1) {
+            htmlParts.push(`<p class="settings-label">${headingText}</p>`);
+          } else {
+            htmlParts.push(`<p class="field-subtext"><strong>${headingText}</strong></p>`);
+          }
+          return;
+        }
+        const checkboxMatch = /^[-*]\s+\[( |x|X)\]\s+(.+)$/.exec(trimmed);
+        if (checkboxMatch) {
+          if (!listOpen) {
+            htmlParts.push('<ul class="audio-todo-list">');
+            listOpen = true;
+          }
+          const checked = checkboxMatch[1].toLowerCase() === "x";
+          htmlParts.push(`<li><label class="settings-checkbox"><input type="checkbox" disabled ${checked ? "checked" : ""} /><span>${renderTodoMarkdownInline(checkboxMatch[2])}</span></label></li>`);
+          return;
+        }
+        const bulletMatch = /^[-*]\s+(.+)$/.exec(trimmed);
+        if (bulletMatch) {
+          if (!listOpen) {
+            htmlParts.push('<ul class="audio-todo-list">');
+            listOpen = true;
+          }
+          htmlParts.push(`<li>${renderTodoMarkdownInline(bulletMatch[1])}</li>`);
+          return;
+        }
+        closeList();
+        htmlParts.push(`<p class="field-subtext">${renderTodoMarkdownInline(trimmed)}</p>`);
+      });
+
+      closeList();
+      todoMarkdownContent.innerHTML = htmlParts.join("\n") || `<p class="field-subtext">No todo content available.</p>`;
+    };
+
+    const setTodoSourceStatus = (message) => {
+      if (!todoSourceStatus) return;
+      todoSourceStatus.textContent = String(message || "Loads from todo.md when available.");
+    };
+
+    const setTodoLoading = (loading) => {
+      if (!todoRefreshBtn) return;
+      const isLoading = loading === true;
+      todoRefreshBtn.disabled = isLoading;
+      if (isLoading) {
+        todoRefreshBtn.setAttribute("aria-busy", "true");
+      } else {
+        todoRefreshBtn.removeAttribute("aria-busy");
+      }
+    };
+
+    const readTodoMarkdownResource = () => {
+      if (typeof global.GM_getResourceText !== "function") return "";
+      try {
+        return String(global.GM_getResourceText("modalTodoMarkdown") || "");
+      } catch {
+        return "";
+      }
+    };
+
+    const fetchTodoMarkdownViaGm = (url) => new Promise((resolve) => {
+      if (typeof global.GM_xmlhttpRequest !== "function") {
+        resolve("");
+        return;
+      }
+      try {
+        global.GM_xmlhttpRequest({
+          method: "GET",
+          url,
+          timeout: TODO_MARKDOWN_REFRESH_TIMEOUT_MS,
+          onload: (response) => {
+            const status = Number(response && response.status);
+            if (!Number.isFinite(status) || status < 200 || status >= 400) {
+              resolve("");
+              return;
+            }
+            resolve(String(response && response.responseText || ""));
+          },
+          onerror: () => resolve(""),
+          ontimeout: () => resolve(""),
+          onabort: () => resolve("")
+        });
+      } catch {
+        resolve("");
+      }
+    });
+
+    const fetchTodoMarkdownRemote = async () => {
+      if (typeof global.fetch === "function") {
+        try {
+          const controller = typeof AbortController === "function" ? new AbortController() : null;
+          const timeoutId = controller
+            ? global.setTimeout(() => {
+              try { controller.abort(); } catch {}
+            }, TODO_MARKDOWN_REFRESH_TIMEOUT_MS)
+            : 0;
+          const response = await global.fetch(TODO_MARKDOWN_REMOTE_URL, {
+            cache: "no-store",
+            signal: controller ? controller.signal : undefined
+          });
+          if (timeoutId) {
+            global.clearTimeout(timeoutId);
+          }
+          if (response && response.ok) {
+            return String(await response.text());
+          }
+        } catch {
+          // Fall back to GM request.
+        }
+      }
+      return fetchTodoMarkdownViaGm(TODO_MARKDOWN_REMOTE_URL);
+    };
+
+    const loadTodoMarkdown = async ({ forceRemote = false } = {}) => {
+      if (!todoMarkdownContent) return;
+      const token = ++todoLoadToken;
+      setTodoLoading(true);
+      setTodoSourceStatus(forceRemote ? "Refreshing todo.md..." : "Loading todo.md...");
+      try {
+        let markdown = "";
+        let sourceLabel = "";
+        if (!forceRemote) {
+          markdown = readTodoMarkdownResource();
+          if (String(markdown || "").trim()) {
+            sourceLabel = "Loaded from bundled todo.md.";
+          }
+        }
+        if (!String(markdown || "").trim()) {
+          markdown = await fetchTodoMarkdownRemote();
+          if (String(markdown || "").trim()) {
+            sourceLabel = "Loaded from remote todo.md.";
+          }
+        }
+        if (!String(markdown || "").trim() && String(todoLastRenderedMarkdown || "").trim()) {
+          markdown = todoLastRenderedMarkdown;
+          sourceLabel = "Using last loaded todo content.";
+        }
+        if (token !== todoLoadToken) return;
+        todoLastRenderedMarkdown = String(markdown || "");
+        renderTodoMarkdown(markdown);
+        setTodoSourceStatus(sourceLabel || "todo.md not found yet. Add one to the repo root.");
+      } finally {
+        if (token === todoLoadToken) {
+          setTodoLoading(false);
+          if (settingsState.activePage === "todo") {
+            syncActivePageHeight();
+          }
+        }
+      }
+    };
+
     const INTERPOLATOR_HIGHLIGHT_FUNCTIONS = new Set([
       "sin", "cos", "tan", "asin", "acos", "atan", "atan2",
       "sqrt", "pow", "abs", "min", "max", "round", "floor", "ceil",
@@ -7911,14 +9499,41 @@
       );
     };
 
+    const getAiProviderOfficialUrl = (provider) => {
+      const selectedProvider = AI_QUERY_PROVIDER_OPTIONS.has(provider)
+        ? provider
+        : DEFAULT_MODAL_SETTINGS.aiQueryProvider;
+      return AI_QUERY_PROVIDER_OFFICIAL_LINKS[selectedProvider]
+        || AI_QUERY_PROVIDER_OFFICIAL_LINKS[DEFAULT_MODAL_SETTINGS.aiQueryProvider]
+        || "https://chatgpt.com/";
+    };
+
     const buildAiQueryUrl = (provider, promptText) => {
       const selectedProvider = AI_QUERY_PROVIDER_OPTIONS.has(provider)
         ? provider
         : DEFAULT_MODAL_SETTINGS.aiQueryProvider;
       const encodedQuery = encodeURIComponent(String(promptText || "").trim());
       switch (selectedProvider) {
+        case "duckai":
+          return `https://duck.ai/chat?ia=chat&origin=funnel_home_website&t=h_&duckai=1&home=1&prompt=1&chip-select=chat&q=${encodedQuery}`;
+        case "mistral":
+          return `https://chat.mistral.ai/chat/?q=${encodedQuery}`;
+        case "meta":
+          return `https://www.meta.ai/?prompt=${encodedQuery}`;
+        case "brave":
+          return `https://search.brave.com/ask?q=${encodedQuery}`;
+        case "you":
+          return `https://you.com/search?q=${encodedQuery}&fromSearchBar=true&tbm=youchat`;
+        case "zai":
+          return `https://chat.z.ai/?q=${encodedQuery}`;
+        case "ernie":
+          return `https://ernie.baidu.com/?q=${encodedQuery}`;
+        case "huggingchat":
+          return `https://huggingface.co/chat/?q=${encodedQuery}`;
         case "copilot":
           return `https://www.bing.com/copilotsearch?q=${encodedQuery}`;
+        case "githubcopilot":
+          return `https://github.com/copilot?prompt=${encodedQuery}`;
         case "claude":
           return `https://claude.ai/new?q=${encodedQuery}`;
         case "perplexity":
@@ -7927,6 +9542,8 @@
           return `https://grok.com/?q=${encodedQuery}`;
         case "gemini":
           return `https://google.ai/?q=${encodedQuery}`;
+        case "qwen":
+          return `https://chat.qwen.ai/?text=${encodedQuery}`;
         case "chatgpt":
         default:
           return `https://chatgpt.com/?q=${encodedQuery}`;
@@ -7938,6 +9555,77 @@
     const buildInterpolatorExplainQueryUrl = (provider, expressionText) => (
       buildAiQueryUrl(provider, getInterpolatorExplainQueryPrompt(expressionText))
     );
+
+    const runAiProviderTestQuery = () => {
+      if (!(aiProviderTestInput instanceof HTMLInputElement)) return;
+      const promptText = String(aiProviderTestInput.value || "").trim();
+      if (!promptText) {
+        aiProviderTestInput.focus();
+        setActionFeedback("Type a prompt first to test the selected AI engine.", "error");
+        return;
+      }
+      const provider = AI_QUERY_PROVIDER_OPTIONS.has(settingsState.aiQueryProvider)
+        ? settingsState.aiQueryProvider
+        : DEFAULT_MODAL_SETTINGS.aiQueryProvider;
+      const label = AI_QUERY_PROVIDER_LABELS[provider] || (provider.charAt(0).toUpperCase() + provider.slice(1));
+      const url = buildAiQueryUrl(provider, promptText);
+      if (!url) return;
+      const opened = openAiPopup(url, "ai-provider-test");
+      if (!opened) {
+        setActionFeedback("Popup blocked. Allow popups for this site.", "error");
+        return;
+      }
+      setActionFeedback(`Opened ${label} in a new window.`, "success");
+    };
+
+    const sortAiProviderCards = (sortMode) => {
+      if (!aiProviderGrid) return;
+      const mode = AI_PROVIDER_SORT_OPTIONS.has(sortMode)
+        ? sortMode
+        : DEFAULT_MODAL_SETTINGS.aiQueryProviderSort;
+      const cards = Array.from(aiProviderGrid.querySelectorAll(".ai-provider-card"));
+      if (!cards.length) return;
+      const sortedCards = [...cards].sort((leftCard, rightCard) => {
+        if (mode === "popularity") {
+          const leftProvider = String(leftCard.querySelector("[data-ai-query-provider]")?.getAttribute("value") || "").trim().toLowerCase();
+          const rightProvider = String(rightCard.querySelector("[data-ai-query-provider]")?.getAttribute("value") || "").trim().toLowerCase();
+          const leftRank = AI_PROVIDER_POPULARITY_RANKS[leftProvider] || 999;
+          const rightRank = AI_PROVIDER_POPULARITY_RANKS[rightProvider] || 999;
+          if (leftRank !== rightRank) return leftRank - rightRank;
+        }
+        const leftLabel = String(leftCard.querySelector("span:last-child")?.textContent || "").trim();
+        const rightLabel = String(rightCard.querySelector("span:last-child")?.textContent || "").trim();
+        return leftLabel.localeCompare(rightLabel, undefined, { sensitivity: "base", numeric: true });
+      });
+      sortedCards.forEach((card) => {
+        aiProviderGrid.appendChild(card);
+      });
+    };
+
+    const getRadioLearnQueryPrompt = () => {
+      const provider = AI_QUERY_PROVIDER_OPTIONS.has(settingsState.aiQueryProvider)
+        ? settingsState.aiQueryProvider
+        : DEFAULT_MODAL_SETTINGS.aiQueryProvider;
+      const source = settingsState.audioStreamSource === "radio" ? "radio" : "lofi";
+      const stationUrl = source === "radio"
+        ? getRequestedRadioStationUrl()
+        : LOFI_STREAM_URL;
+      const station = source === "radio"
+        ? getRadioStationByUrl(stationUrl)
+        : { label: LOFI_STREAM_LABEL, url: LOFI_STREAM_URL };
+      const stationLabel = String(station && station.label ? station.label : (source === "radio" ? "Selected Radio Station" : LOFI_STREAM_LABEL));
+      const safeUrl = String(stationUrl || station.url || "").trim();
+      return {
+        provider,
+        prompt:
+          "Help me learn about the audio stream I am listening to right now. "
+          + `Source mode: ${source}. `
+          + `Station/stream name: ${stationLabel}. `
+          + `Stream URL: ${safeUrl || "(not available)"}. `
+          + "Explain likely genre(s), country/region, format, and what kind of listeners would enjoy it. "
+          + "If exact details are uncertain, clearly say what is inferred and suggest how to verify."
+      };
+    };
 
     const compileInterpolatorExpression = (expressionText) => {
       const rawExpression = String(expressionText || "").trim();
@@ -8209,6 +9897,49 @@
           input.checked = value === settingsState.aiQueryProvider;
         });
       }
+      if (aiProviderSortButtons.length) {
+        setSegmentedSelection(aiProviderSortButtons, "data-ai-provider-sort-option", settingsState.aiQueryProviderSort);
+      }
+      sortAiProviderCards(settingsState.aiQueryProviderSort);
+      if (aiProviderDescription || aiProviderOfficialLink) {
+        const provider = AI_QUERY_PROVIDER_OPTIONS.has(settingsState.aiQueryProvider)
+          ? settingsState.aiQueryProvider
+          : DEFAULT_MODAL_SETTINGS.aiQueryProvider;
+        const label = AI_QUERY_PROVIDER_LABELS[provider] || (provider.charAt(0).toUpperCase() + provider.slice(1));
+        const officialUrl = getAiProviderOfficialUrl(provider);
+        let officialHost = officialUrl;
+        try {
+          officialHost = new URL(officialUrl).host;
+        } catch {
+          officialHost = officialUrl;
+        }
+        if (aiProviderOfficialLink instanceof HTMLAnchorElement) {
+          aiProviderOfficialLink.href = officialUrl;
+          aiProviderOfficialLink.textContent = officialHost;
+          aiProviderOfficialLink.setAttribute("aria-label", `Open ${label} official site`);
+        }
+        if (aiProviderNote) {
+          let providerNote = "";
+          if (provider === "gemini") {
+            providerNote = " This one uses Google's AI mode instead which is still powered by Gemini.";
+          } else if (provider === "copilot") {
+            providerNote = " This one uses Bing Search with Copilot instead.";
+          } else if (provider === "ernie") {
+            providerNote = " This one may be slower.";
+          } else if (provider === "huggingchat") {
+            providerNote = " This one requires initial login.";
+          }
+          aiProviderNote.textContent = providerNote;
+        }
+        if (aiProviderTestInput instanceof HTMLInputElement) {
+          aiProviderTestInput.placeholder = `Ask ${label}...`;
+          aiProviderTestInput.setAttribute("aria-label", `Prompt to test with ${label}`);
+        }
+        if (aiProviderTestBtn) {
+          aiProviderTestBtn.setAttribute("aria-label", `Open test prompt with ${label}`);
+          setElementTooltip(aiProviderTestBtn, `Test with ${label}\n---\nOpens in a new window`);
+        }
+      }
       if (interpolatorAskAiLink) {
         const provider = AI_QUERY_PROVIDER_OPTIONS.has(settingsState.aiQueryProvider)
           ? settingsState.aiQueryProvider
@@ -8397,7 +10128,7 @@
         : "Unknown station";
       const baseText = settingsState.audioStreamSource === "radio"
         ? `Live source: ${stationLabel}`
-        : `Live source: Default stream. Ready radio: ${stationLabel}`;
+        : `Live source: Lo-fi stream. Ready radio: ${stationLabel}`;
       const details = [];
 
       const normalizedLiveUrl = String(lofiPlaybackSnapshot.streamUrl || "").trim().toLowerCase();
@@ -8428,7 +10159,7 @@
           details.push("Live URL differs from selected station");
         }
         if (normalizedLiveUrl === String(LOFI_STREAM_URL).toLowerCase() && selectedNormalized !== String(LOFI_STREAM_URL).toLowerCase()) {
-          details.push("Fallback to default stream");
+          details.push("Fallback to Lo-fi stream");
         }
       }
 
@@ -8683,6 +10414,7 @@
       }
 
       syncAccentPartyMode();
+      syncSidebarDrumPadVisibility();
       syncPartySidebarFinalDoVisibility();
       syncSidebarPianoTooltips();
       syncAccentSettingUi(resolvedAccentHue);
@@ -8722,18 +10454,26 @@
 
       if (lofiAutoplayInput) {
         lofiAutoplayInput.checked = settingsState.musicAutoplay !== false;
-        setElementTooltip(lofiAutoplayInput, "Autoplay music when opening modal\n---\nDouble-tap [Space] quickly to toggle");
-        lofiAutoplayInput.setAttribute("aria-label", "Autoplay music when opening modal. Double-tap Space quickly to toggle.");
+        setElementTooltip(lofiAutoplayInput, "Autoplay music when opening modal\n---\nPress [Space] x2 quickly to toggle");
+        lofiAutoplayInput.setAttribute("aria-label", "Autoplay music when opening modal. Press Space twice quickly to toggle.");
       }
       if (keepRadioOnInput) {
         keepRadioOnInput.checked = settingsState.keepRadioOn === true;
       }
       if (lofi8dEnabledInput) {
+        const lofi8dSwitchEl = lofi8dEnabledInput.closest(".settings-switch");
         lofi8dEnabledInput.checked = settingsState.lofi8dEnabled !== false;
+        lofi8dEnabledInput.disabled = false;
+        setElementTooltip(lofi8dEnabledInput, "Sweep audio around you with surround/proximity movement");
+        if (lofi8dSwitchEl) {
+          setElementTooltip(lofi8dSwitchEl, "Sweep audio around you with surround/proximity movement");
+        }
+        lofi8dEnabledInput.setAttribute("aria-label", "Enable 8D audio spatial sweep");
       }
       if (lofi8dControlsBody) {
-        lofi8dControlsBody.hidden = settingsState.lofi8dEnabled === false;
-        lofi8dControlsBody.setAttribute("aria-hidden", settingsState.lofi8dEnabled === false ? "true" : "false");
+        const hide8dControls = settingsState.lofi8dEnabled === false;
+        lofi8dControlsBody.hidden = hide8dControls;
+        lofi8dControlsBody.setAttribute("aria-hidden", hide8dControls ? "true" : "false");
       }
       if (lofi8dRateSlider) {
         lofi8dRateSlider.value = String(clampNumber(settingsState.lofi8dRate, LOFI_8D_RATE_MIN, LOFI_8D_RATE_MAX, DEFAULT_MODAL_SETTINGS.lofi8dRate));
@@ -8753,14 +10493,62 @@
           button.setAttribute("tabindex", isActive ? "0" : "-1");
         });
       }
+      if (qualityBitrateSlider) {
+        const bitrate = normalizeAudioBitrate(settingsState.audioBitrateKbps, DEFAULT_MODAL_SETTINGS.audioBitrateKbps);
+        const cutoff = Math.round(getApproxCutoffHzFromBitrate(bitrate));
+        qualityBitrateSlider.value = String(bitrate);
+        setElementTooltip(qualityBitrateSlider, `${bitrate} kbps\n~${cutoff} Hz cutoff`);
+        qualityBitrateSlider.setAttribute("aria-label", `Audio bitrate ${bitrate} kilobits per second.`);
+      }
+      if (qualityBitrateInput) {
+        const bitrate = normalizeAudioBitrate(settingsState.audioBitrateKbps, DEFAULT_MODAL_SETTINGS.audioBitrateKbps);
+        const cutoff = Math.round(getApproxCutoffHzFromBitrate(bitrate));
+        qualityBitrateInput.value = String(bitrate);
+        setElementTooltip(qualityBitrateInput, `${bitrate} kbps\n~${cutoff} Hz cutoff`);
+      }
+      if (qualityBitrateHz) {
+        const bitrate = normalizeAudioBitrate(settingsState.audioBitrateKbps, DEFAULT_MODAL_SETTINGS.audioBitrateKbps);
+        const cutoff = Math.round(getApproxCutoffHzFromBitrate(bitrate));
+        qualityBitrateHz.textContent = `Approx ${bitrate} kbps · low-pass near ${cutoff} Hz.`;
+      }
+      if (equalizerPresetSelect) {
+        const preset = EQUALIZER_PRESET_OPTIONS.has(String(settingsState.equalizerPreset || "").trim().toLowerCase())
+          ? String(settingsState.equalizerPreset).trim().toLowerCase()
+          : DEFAULT_MODAL_SETTINGS.equalizerPreset;
+        equalizerPresetSelect.value = preset;
+      }
+      const resolvedEqGains = resolveEqualizerGains(settingsState);
+      if (equalizerCustomBody) {
+        equalizerCustomBody.hidden = false;
+        equalizerCustomBody.setAttribute("aria-hidden", "false");
+      }
+      equalizerControlMap.forEach((entry) => {
+        const gainValue = normalizeEqualizerGain(resolvedEqGains[entry.gainProp], 0);
+        if (entry.slider) {
+          entry.slider.value = String(gainValue);
+          entry.slider.disabled = false;
+          setElementTooltip(entry.slider, `${gainValue} dB`);
+        }
+        if (entry.input) {
+          entry.input.value = String(gainValue);
+          entry.input.disabled = false;
+          setElementTooltip(entry.input, `${gainValue} dB`);
+        }
+      });
+      if (equalizerCustomBody) {
+        equalizerCustomBody.style.opacity = "1";
+      }
       const normalizedRadioStationUrl = normalizeRadioStationUrl(
         settingsState.radioStationUrl,
         DEFAULT_MODAL_SETTINGS.radioStationUrl
       );
       const selectedRadioStation = getRadioStationByUrl(normalizedRadioStationUrl);
       if (radioChannelSelect) {
-        if (radioChannelSelect.value !== normalizedRadioStationUrl) {
-          radioChannelSelect.value = normalizedRadioStationUrl;
+        const selectedChannelUrl = settingsState.audioStreamSource === "lofi"
+          ? LOFI_STREAM_URL
+          : normalizedRadioStationUrl;
+        if (radioChannelSelect.value !== selectedChannelUrl) {
+          radioChannelSelect.value = selectedChannelUrl;
         }
         radioChannelSelect.disabled = radioStationApplyPending === true;
       }
@@ -8788,6 +10576,12 @@
         radioPulseSection.hidden = settingsState.accentPartyMode !== true;
         radioPulseSection.setAttribute("aria-hidden", settingsState.accentPartyMode !== true ? "true" : "false");
       }
+      if (radioPulseSections.length) {
+        radioPulseSections.forEach((section) => {
+          section.hidden = settingsState.accentPartyMode !== true;
+          section.setAttribute("aria-hidden", settingsState.accentPartyMode !== true ? "true" : "false");
+        });
+      }
       if (radioPulseStrengthSlider) {
         radioPulseStrengthSlider.value = String(Math.round(clampNumber(
           settingsState.radioPulseStrength,
@@ -8812,6 +10606,7 @@
           DEFAULT_MODAL_SETTINGS.sfxVolume
         );
         sfxVolumeSlider.value = String(currentSfxVolume);
+        sfxVolumeSlider.disabled = false;
         const sfxTooltip = `SFX volume ${currentSfxVolume}%${settingsState.sfxAdaptiveBlend === true ? "\nAdaptive blend: on" : ""}`;
         setElementTooltip(sfxVolumeSlider, sfxTooltip);
         sfxVolumeSlider.setAttribute("aria-label", `SFX volume ${currentSfxVolume} percent.`);
@@ -8826,6 +10621,7 @@
       if (sfxMuteBtn) {
         const isMuted = settingsState.sfxMuted === true;
         sfxMuteBtn.textContent = isMuted ? "Unmute" : "Mute";
+        sfxMuteBtn.disabled = false;
         sfxMuteBtn.setAttribute("aria-pressed", isMuted ? "true" : "false");
         sfxMuteBtn.setAttribute("aria-label", isMuted ? "Unmute SFX" : "Mute SFX");
         sfxMuteBtn.classList.toggle("is-active", isMuted);
@@ -8833,6 +10629,10 @@
       }
       if (sfxAdaptiveBlendInput) {
         sfxAdaptiveBlendInput.checked = settingsState.sfxAdaptiveBlend === true;
+        sfxAdaptiveBlendInput.disabled = false;
+      }
+      if (audioLayersUseToggleInput) {
+        audioLayersUseToggleInput.checked = settingsState.useAudioLayers === true;
       }
       let enabledAmbientCount = 0;
       if (ambientTrackButtons.length) {
@@ -8921,9 +10721,18 @@
           speedRate: settingsState.lofiSpeedRate,
           pitchRate: settingsState.lofiPitchRate,
           ratePitchSync: settingsState.lofiRatePitchSync,
+          audioBitrateKbps: settingsState.audioBitrateKbps,
+          equalizerPreset: settingsState.equalizerPreset,
+          eqLowGain: settingsState.eqLowGain,
+          eqLowMidGain: settingsState.eqLowMidGain,
+          eqMidGain: settingsState.eqMidGain,
+          eqHighMidGain: settingsState.eqHighMidGain,
+          eqHighGain: settingsState.eqHighGain,
           spatialEnabled: settingsState.lofi8dEnabled !== false,
-          spatialDepth: DEFAULT_MODAL_SETTINGS.lofi8dDepth / 100,
-          spatialRate: clampNumber(settingsState.lofi8dRate, LOFI_8D_RATE_MIN, LOFI_8D_RATE_MAX, DEFAULT_MODAL_SETTINGS.lofi8dRate)
+          spatialDepth: clampNumber(settingsState.lofi8dDepth, LOFI_8D_DEPTH_MIN, LOFI_8D_DEPTH_MAX, DEFAULT_MODAL_SETTINGS.lofi8dDepth) / 100,
+          spatialRate: clampNumber(settingsState.lofi8dRate, LOFI_8D_RATE_MIN, LOFI_8D_RATE_MAX, DEFAULT_MODAL_SETTINGS.lofi8dRate),
+          manualPanActive: isManualLayerPanEnabled(),
+          manualPan: getRadioLayerPanNormalized()
         });
       }
 
@@ -9128,6 +10937,7 @@
             interpolatorExpression: DEFAULT_MODAL_SETTINGS.interpolatorExpression,
             interpolatorWordWrap: DEFAULT_MODAL_SETTINGS.interpolatorWordWrap,
             aiQueryProvider: DEFAULT_MODAL_SETTINGS.aiQueryProvider,
+            aiQueryProviderSort: DEFAULT_MODAL_SETTINGS.aiQueryProviderSort,
             interpolatorCurve: { ...DEFAULT_INTERPOLATOR_CURVE },
             interpolatorCurvePoints: []
           });
@@ -9157,6 +10967,21 @@
             lofiSpeedRate: DEFAULT_MODAL_SETTINGS.lofiSpeedRate,
             lofiPitchRate: DEFAULT_MODAL_SETTINGS.lofiPitchRate,
             lofiRatePitchSync: DEFAULT_MODAL_SETTINGS.lofiRatePitchSync
+          });
+          break;
+        case "audioBitrate":
+          commitModalSettings({
+            audioBitrateKbps: DEFAULT_MODAL_SETTINGS.audioBitrateKbps
+          });
+          break;
+        case "equalizer":
+          commitModalSettings({
+            equalizerPreset: DEFAULT_MODAL_SETTINGS.equalizerPreset,
+            eqLowGain: DEFAULT_MODAL_SETTINGS.eqLowGain,
+            eqLowMidGain: DEFAULT_MODAL_SETTINGS.eqLowMidGain,
+            eqMidGain: DEFAULT_MODAL_SETTINGS.eqMidGain,
+            eqHighMidGain: DEFAULT_MODAL_SETTINGS.eqHighMidGain,
+            eqHighGain: DEFAULT_MODAL_SETTINGS.eqHighGain
           });
           break;
         case "lofi8d":
@@ -9341,6 +11166,11 @@
     });
 
     shadow.addEventListener("pointerup", (event) => {
+      if (sidebarPianoDragActive) {
+        if (!Number.isFinite(sidebarPianoDragPointerId) || sidebarPianoDragPointerId === event.pointerId) {
+          stopSidebarPianoDrag();
+        }
+      }
       const switchRoot = event.target && typeof event.target.closest === "function"
         ? event.target.closest(".settings-switch")
         : null;
@@ -9350,6 +11180,11 @@
         : null;
       if (!target) return;
       if (target.disabled) return;
+      if (target.closest("[data-sidebar-drum-pad]")) return;
+      if (settingsState.accentPartyMode === true && target.closest(".sidebar-page-btn")) {
+        stopSidebarPianoDrag();
+        return;
+      }
       playUiClickSfx(target);
       if (target === incBtn || target === decBtn) return;
       if (target.closest(".copy-menu, .banner-popover, .accent-custom-popover")) return;
@@ -9357,6 +11192,15 @@
     }, true);
 
     shadow.addEventListener("click", (event) => {
+      const drumPad = event.target && typeof event.target.closest === "function"
+        ? event.target.closest("[data-sidebar-drum-pad]")
+        : null;
+      if (drumPad) {
+        if (!drumPad.disabled && event.detail === 0) {
+          playUiSidebarDrumPadSfx(drumPad);
+        }
+        return;
+      }
       const target = event.target && typeof event.target.closest === "function"
         ? event.target.closest("button, a.btn, [role='button']")
         : null;
@@ -9366,6 +11210,47 @@
       if (event.detail === 0) {
         playUiClickSfx(target);
       }
+    }, true);
+
+    shadow.addEventListener("pointerdown", (event) => {
+      const drumPad = event.target && typeof event.target.closest === "function"
+        ? event.target.closest("[data-sidebar-drum-pad]")
+        : null;
+      if (drumPad && !drumPad.disabled) {
+        playUiSidebarDrumPadSfx(drumPad);
+        return;
+      }
+      const sidebarButton = event.target && typeof event.target.closest === "function"
+        ? event.target.closest(".sidebar-page-btn")
+        : null;
+      if (!sidebarButton || sidebarButton.disabled || settingsState.accentPartyMode !== true) {
+        return;
+      }
+      sidebarPianoDragActive = true;
+      sidebarPianoDragPointerId = Number.isFinite(event.pointerId) ? event.pointerId : null;
+      sidebarPianoLastButton = null;
+      maybeTriggerSidebarPianoDragNote(sidebarButton);
+    }, true);
+
+    shadow.addEventListener("pointermove", (event) => {
+      if (!sidebarPianoDragActive || settingsState.accentPartyMode !== true) return;
+      if (Number.isFinite(sidebarPianoDragPointerId) && sidebarPianoDragPointerId !== event.pointerId) return;
+      if ((event.buttons & 1) !== 1) {
+        stopSidebarPianoDrag();
+        return;
+      }
+      const hitTarget = typeof shadow.elementFromPoint === "function"
+        ? shadow.elementFromPoint(event.clientX, event.clientY)
+        : (event.target instanceof Element ? event.target : null);
+      const sidebarButton = hitTarget && typeof hitTarget.closest === "function"
+        ? hitTarget.closest(".sidebar-page-btn")
+        : null;
+      if (!sidebarButton) return;
+      maybeTriggerSidebarPianoDragNote(sidebarButton);
+    }, true);
+
+    shadow.addEventListener("pointercancel", () => {
+      stopSidebarPianoDrag();
     }, true);
 
     shadow.addEventListener("pointerdown", (event) => {
@@ -9494,6 +11379,22 @@
         if (!target) return;
         if (target.hasAttribute("data-page-target")) return;
         handlePartySidebarEasterEggInput(target);
+      });
+    }
+
+    if (sidebarDrumPads.length) {
+      sidebarDrumPads.forEach((pad) => {
+        pad.addEventListener("pointerdown", (event) => {
+          if (pad.disabled) return;
+          event.preventDefault();
+          playUiSidebarDrumPadSfx(pad);
+        });
+        pad.addEventListener("click", (event) => {
+          if (pad.disabled) return;
+          if (event.detail === 0) {
+            playUiSidebarDrumPadSfx(pad);
+          }
+        });
       });
     }
 
@@ -9893,6 +11794,31 @@
       });
     }
 
+    if (aiProviderSortButtons.length) {
+      aiProviderSortButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const value = String(button.getAttribute("data-ai-provider-sort-option") || "").trim().toLowerCase();
+          if (!AI_PROVIDER_SORT_OPTIONS.has(value)) return;
+          if (value === settingsState.aiQueryProviderSort) return;
+          commitModalSettings({ aiQueryProviderSort: value });
+        });
+      });
+    }
+
+    if (aiProviderTestInput instanceof HTMLInputElement) {
+      aiProviderTestInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        runAiProviderTestQuery();
+      });
+    }
+
+    if (aiProviderTestBtn) {
+      aiProviderTestBtn.addEventListener("click", () => {
+        runAiProviderTestQuery();
+      });
+    }
+
     if (interpolatorAskAiLink) {
       interpolatorAskAiLink.addEventListener("click", (event) => {
         event.preventDefault();
@@ -10038,9 +11964,19 @@
         settingsState.radioStationUrl,
         DEFAULT_MODAL_SETTINGS.radioStationUrl
       );
+      const sourceSelectedUrl = settingsState.audioStreamSource === "lofi"
+        ? LOFI_STREAM_URL
+        : selectedUrl;
       const fragment = document.createDocumentFragment();
+
+      const lofiOption = document.createElement("option");
+      lofiOption.value = LOFI_STREAM_URL;
+      lofiOption.textContent = LOFI_STREAM_LABEL;
+      fragment.appendChild(lofiOption);
+
       stations.forEach((station) => {
         if (!station || !station.url) return;
+        if (String(station.url).trim().toLowerCase() === String(LOFI_STREAM_URL).toLowerCase()) return;
         const option = document.createElement("option");
         option.value = station.url;
         option.textContent = String(station.label || station.url);
@@ -10048,9 +11984,9 @@
       });
       radioChannelSelect.innerHTML = "";
       radioChannelSelect.appendChild(fragment);
-      radioChannelSelect.value = selectedUrl;
-      if (!radioChannelSelect.value && stations[0] && stations[0].url) {
-        radioChannelSelect.value = stations[0].url;
+      radioChannelSelect.value = sourceSelectedUrl;
+      if (!radioChannelSelect.value) {
+        radioChannelSelect.value = LOFI_STREAM_URL;
       }
     };
 
@@ -10067,6 +12003,148 @@
             stationUrl: getRequestedRadioStationUrl()
           });
         });
+      });
+    }
+
+    if (qualityBitrateSlider) {
+      qualityBitrateSlider.addEventListener("input", () => {
+        const bitrate = normalizeAudioBitrate(
+          qualityBitrateSlider.value,
+          settingsState.audioBitrateKbps
+        );
+        commitModalSettings({ audioBitrateKbps: bitrate });
+      });
+    }
+
+    if (qualityBitrateInput) {
+      const syncBitrateFromInput = () => {
+        const bitrate = normalizeAudioBitrate(
+          qualityBitrateInput.value,
+          settingsState.audioBitrateKbps
+        );
+        commitModalSettings({ audioBitrateKbps: bitrate });
+      };
+      qualityBitrateInput.addEventListener("change", syncBitrateFromInput);
+      qualityBitrateInput.addEventListener("blur", syncBitrateFromInput);
+      qualityBitrateInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          syncBitrateFromInput();
+          qualityBitrateInput.blur();
+        }
+      });
+    }
+
+    if (equalizerPresetSelect) {
+      equalizerPresetSelect.addEventListener("change", () => {
+        const preset = String(equalizerPresetSelect.value || "").trim().toLowerCase();
+        if (!EQUALIZER_PRESET_OPTIONS.has(preset)) return;
+        if (preset === "custom") {
+          stopEqualizerPresetAnimation();
+          commitModalSettings({ equalizerPreset: "custom" });
+          return;
+        }
+        const gains = EQUALIZER_PRESET_GAINS[preset] || EQUALIZER_PRESET_GAINS.flat;
+        stopEqualizerPresetAnimation();
+        animateEqualizerPresetTransition(gains, preset);
+      });
+    }
+
+    const commitEqualizerGain = (key, rawValue) => {
+      stopEqualizerPresetAnimation();
+      const safeKey = String(key || "").trim();
+      if (!safeKey) return;
+      const currentGain = normalizeEqualizerGain(settingsState[safeKey], 0);
+      const gain = normalizeEqualizerGain(rawValue, currentGain);
+      const gainProp = (
+        equalizerControlMap.find((entry) => entry.key === safeKey)
+        || { gainProp: "" }
+      ).gainProp;
+      const base = resolveEqualizerGains(settingsState);
+      const next = {
+        low: base.low,
+        lowMid: base.lowMid,
+        mid: base.mid,
+        highMid: base.highMid,
+        high: base.high
+      };
+      if (gainProp && Object.prototype.hasOwnProperty.call(next, gainProp)) {
+        next[gainProp] = gain;
+      }
+
+      let shouldSwitchToCustom = false;
+      if (settingsState.equalizerPreset !== "custom") {
+        const presetKey = EQUALIZER_PRESET_OPTIONS.has(String(settingsState.equalizerPreset || "").trim().toLowerCase())
+          ? String(settingsState.equalizerPreset).trim().toLowerCase()
+          : "flat";
+        const presetGains = EQUALIZER_PRESET_GAINS[presetKey] || EQUALIZER_PRESET_GAINS.flat;
+        shouldSwitchToCustom = (
+          normalizeEqualizerGain(next.low, 0) !== normalizeEqualizerGain(presetGains.low, 0)
+          || normalizeEqualizerGain(next.lowMid, 0) !== normalizeEqualizerGain(presetGains.lowMid, 0)
+          || normalizeEqualizerGain(next.mid, 0) !== normalizeEqualizerGain(presetGains.mid, 0)
+          || normalizeEqualizerGain(next.highMid, 0) !== normalizeEqualizerGain(presetGains.highMid, 0)
+          || normalizeEqualizerGain(next.high, 0) !== normalizeEqualizerGain(presetGains.high, 0)
+        );
+      }
+
+      if (gain === currentGain && !shouldSwitchToCustom) {
+        return;
+      }
+
+      const updates = { [safeKey]: gain };
+      if (shouldSwitchToCustom) {
+        updates.equalizerPreset = "custom";
+      }
+      commitModalSettings(updates);
+    };
+
+    equalizerControlMap.forEach((entry) => {
+      if (entry.slider) {
+        entry.slider.addEventListener("input", () => {
+          commitEqualizerGain(entry.key, entry.slider.value);
+        });
+      }
+      if (entry.input) {
+        const syncEqInput = () => {
+          commitEqualizerGain(entry.key, entry.input.value);
+        };
+        entry.input.addEventListener("change", syncEqInput);
+        entry.input.addEventListener("blur", syncEqInput);
+        entry.input.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            syncEqInput();
+            entry.input.blur();
+          }
+        });
+      }
+    });
+
+    const openAudioLayersModal = () => {
+      if (!audioLayersModal) return;
+      audioLayersModal.hidden = false;
+      renderAudioLayersModalList();
+      global.requestAnimationFrame(() => {
+        renderAudioLayersModalList();
+      });
+    };
+
+    const closeAudioLayersModal = () => {
+      if (!audioLayersModal) return;
+      audioLayersModal.hidden = true;
+    };
+
+    if (audioLayersOpenBtn) {
+      audioLayersOpenBtn.addEventListener("click", openAudioLayersModal);
+    }
+    if (audioLayersCloseBtn) {
+      audioLayersCloseBtn.addEventListener("click", closeAudioLayersModal);
+    }
+    if (audioLayersModal) {
+      audioLayersModal.addEventListener("click", (event) => {
+        if (event.target === audioLayersModal) {
+          closeAudioLayersModal();
+        }
       });
     }
 
@@ -10135,6 +12213,19 @@
           nextIndex = Math.floor(Math.random() * total);
         }
         applyRadioSelectionByIndex(nextIndex);
+      });
+    }
+
+    if (radioLearnAiBtn) {
+      radioLearnAiBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        const query = getRadioLearnQueryPrompt();
+        const url = buildAiQueryUrl(query.provider, query.prompt);
+        if (!url) return;
+        const opened = openAiPopup(url, "ai-radio-learn");
+        if (!opened) {
+          setActionFeedback("Popup blocked. Allow popups for this site.", "error");
+        }
       });
     }
 
@@ -10253,6 +12344,9 @@
     if (lofi8dEnabledInput) {
       lofi8dEnabledInput.addEventListener("change", () => {
         commitModalSettingsFromSwitch({ lofi8dEnabled: lofi8dEnabledInput.checked });
+        if (audioLayersModal && audioLayersModal.hidden === false) {
+          renderAudioLayersModalList();
+        }
       });
     }
 
@@ -10722,6 +12816,12 @@
         );
         syncStorageUsage();
         showToast("Settings cleared from local storage.", "success");
+      });
+    }
+
+    if (todoRefreshBtn) {
+      todoRefreshBtn.addEventListener("click", () => {
+        loadTodoMarkdown({ forceRemote: true });
       });
     }
 

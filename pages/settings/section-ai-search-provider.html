@@ -7,38 +7,105 @@
               <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
             </button>
           </div>
+          <div class="ai-provider-sort-row">
+            <span class="field-subtext ai-provider-sort-label">Sort:</span>
+            <div class="ai-provider-sort-chip-group" aria-label="Sort AI providers">
+              <button class="ai-provider-sort-chip" type="button" data-ai-provider-sort-option="alphabetical">A-Z</button>
+              <button class="ai-provider-sort-chip" type="button" data-ai-provider-sort-option="popularity">Popularity</button>
+            </div>
+          </div>
+          <p class="field-subtext ai-provider-sort-reference">Popularity reference: <a class="settings-inline-link" href="https://www.demandsage.com/chatbot-statistics/" target="_blank" rel="noopener noreferrer">DemandSage</a> · <a class="settings-inline-link" href="https://gs.statcounter.com/ai-chatbot-market-share" target="_blank" rel="noopener noreferrer">StatCounter</a></p>
           <div class="ai-provider-grid" role="radiogroup" aria-label="AI Search Engine">
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="chatgpt" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=64" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/chatgpt-icon.png" alt="" aria-hidden="true" />
               <span>ChatGPT</span>
             </label>
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="claude" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/anthropic/ffffff" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo" src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Claude_AI_symbol.svg" alt="" aria-hidden="true" />
               <span>Claude</span>
             </label>
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="perplexity" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/perplexity/ffffff" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo" src="https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/perplexity-color.png" alt="" aria-hidden="true" />
               <span>Perplexity</span>
             </label>
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="grok" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/x/ffffff" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo ai-provider-logo--grok ai-provider-logo--grok-light" src="https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/light/grok.png" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo ai-provider-logo--grok ai-provider-logo--grok-dark" src="https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/grok.png" alt="" aria-hidden="true" />
               <span>Grok</span>
             </label>
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="gemini" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://cdn.simpleicons.org/googlegemini/ffffff" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo" src="https://brandlogos.net/wp-content/uploads/2025/03/gemini_icon-logo_brandlogos.net_aacx5.png" alt="" aria-hidden="true" />
               <span>Gemini</span>
             </label>
             <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="qwen" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://img.alicdn.com/imgextra/i1/O1CN013ltlI61OTOnTStXfj_!!6000000001706-55-tps-330-327.svg" alt="" aria-hidden="true" />
+              <span>Qwen</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="ernie" data-ai-query-provider />
+              <img class="ai-provider-logo ai-provider-logo--ernie" src="https://cdn.prod.website-files.com/673728fe79d73c09073776cb/696359cb1c7325da510f7bfa_baidu-earnie-4-5-logo.webp" alt="" aria-hidden="true" />
+              <span>Ernie</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="huggingchat" data-ai-query-provider />
+              <img class="ai-provider-logo ai-provider-logo--huggingchat" src="https://huggingface.co/chat/huggingchat/logo.svg" alt="" aria-hidden="true" />
+              <span>HuggingChat</span>
+            </label>
+            <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="copilot" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://www.google.com/s2/favicons?domain=bing.com&sz=64" alt="" aria-hidden="true" />
-              <span>Bing Copilot</span>
+              <img class="ai-provider-logo" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/copilot-icon.png" alt="" aria-hidden="true" />
+              <span>Microsoft Copilot</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="githubcopilot" data-ai-query-provider />
+              <img class="ai-provider-logo ai-provider-logo--githubcopilot ai-provider-logo--githubcopilot-light" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/github-copilot-white-icon.png" alt="" aria-hidden="true" />
+              <img class="ai-provider-logo ai-provider-logo--githubcopilot ai-provider-logo--githubcopilot-dark" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/github-copilot-icon.png" alt="" aria-hidden="true" />
+              <span>GitHub Copilot</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="duckai" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://upload.wikimedia.org/wikipedia/en/9/90/The_DuckDuckGo_Duck.png" alt="" aria-hidden="true" />
+              <span>Duck AI</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="mistral" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Mistral_AI_logo_%282025%E2%80%93%29.svg/3840px-Mistral_AI_logo_%282025%E2%80%93%29.svg.png" alt="" aria-hidden="true" />
+              <span>Mistral</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="meta" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://static.wikia.nocookie.net/logopedia/images/7/7e/Meta_AI.png/revision/latest/scale-to-width-down/250?cb=20250528183159" alt="" aria-hidden="true" />
+              <span>Meta</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="brave" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/brave-browser-icon.png" alt="" aria-hidden="true" />
+              <span>Brave Leo</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="you" data-ai-query-provider />
+              <img class="ai-provider-logo ai-provider-logo--you" src="https://upload.wikimedia.org/wikipedia/en/archive/8/8f/20250331135537%21Youcom_new_logo.jpg" alt="" aria-hidden="true" />
+              <span>You</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="zai" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Z.ai_%28company_logo%29.svg/250px-Z.ai_%28company_logo%29.svg.png" alt="" aria-hidden="true" />
+              <span>Z.Ai</span>
             </label>
           </div>
-          <p class="field-subtext">Currently used for interpolation Ask/Explain actions.</p>
+          <div class="ai-provider-test-row">
+            <input class="field ai-provider-test-input" id="ai-provider-test-input" type="text" placeholder="Type a prompt to test this AI engine" />
+            <button class="btn btn-secondary ai-provider-test-btn" id="ai-provider-test-btn" type="button">
+              <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+              <span>Test</span>
+            </button>
+          </div>
+          <p class="field-subtext" id="ai-provider-description">Currently used for interpolation Ask/Explain actions. Official: <a id="ai-provider-official-link" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">chatgpt.com</a><span id="ai-provider-note"></span></p>
         </div>
       </section>

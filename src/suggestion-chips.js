@@ -4,6 +4,8 @@
   const app = (global.ClickUpUpdateApp = global.ClickUpUpdateApp || {});
 
   const DEFAULT_LABEL_SUGGESTION_CHIPS = [
+    "Conceptboard",
+    "Storyboard",
     "Design Update",
     "Feedback Application",
     "Dev Beta Update",
