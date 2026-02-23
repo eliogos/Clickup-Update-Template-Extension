@@ -1,5 +1,4 @@
-# ClickUp Task Update Template
-
+# Clickup Update Template Extension
 Userscript that opens a modal in ClickUp using a configurable trigger, then inserts a formatted task update template.
 
 ## What's New
