@@ -3828,13 +3828,9 @@
       }
     };
     if (aiProviderGrid instanceof HTMLElement) {
-      const legacyRedditInputs = Array.from(aiProviderGrid.querySelectorAll('[data-ai-query-provider][value="redditanswers"]'));
-      legacyRedditInputs.forEach((input) => {
-        const card = typeof input.closest === "function" ? input.closest(".ai-provider-card") : null;
-        if (card && card.parentNode === aiProviderGrid) {
-          card.remove();
-        }
-      });
+      // Intentionally keep any existing provider cards (including Reddit Answers).
+      // Previous versions removed legacy 'redditanswers' inputs here; that prevented
+      // the provider from appearing when a static settings section exists.
       ensureAiProviderCard(
         "ernie",
         `<label class="ai-provider-card">
