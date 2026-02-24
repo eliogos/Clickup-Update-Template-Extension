@@ -2,6 +2,7 @@
   "use strict";
 
   const app = (global.ClickUpUpdateApp = global.ClickUpUpdateApp || {});
+  console.log
 
   app.getVisibleEditor = function getVisibleEditor() {
     const selector = ".ql-editor, [contenteditable='true'], .editor";

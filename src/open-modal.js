@@ -346,7 +346,7 @@
   const ANIMATION_SPEED_SCALES = Object.freeze([0.1, 0.5, 1, 1.5, 3, 0]);
   const REDUCED_MOTION_SCALE_CAP = 0.4;
   const INTERPOLATOR_MODE_OPTIONS = new Set(["preset", "expression", "curve"]);
-  const AI_QUERY_PROVIDER_OPTIONS = new Set(["chatgpt", "claude", "perplexity", "grok", "gemini", "qwen", "ernie", "huggingchat", "copilot", "githubcopilot", "duckai", "mistral", "meta", "brave", "you", "zai"]);
+  const AI_QUERY_PROVIDER_OPTIONS = new Set(["chatgpt", "claude", "perplexity", "grok", "gemini", "qwen", "ernie", "huggingchat", "copilot", "githubcopilot", "duckai", "mistral", "brave", "you", "zai", "redditanswers"]);
   const AI_PROVIDER_SORT_OPTIONS = new Set(["alphabetical", "popularity"]);
   const AI_QUERY_PROVIDER_LABELS = Object.freeze({
     chatgpt: "ChatGPT",
@@ -361,10 +361,11 @@
     githubcopilot: "GitHub Copilot",
     duckai: "Duck AI",
     mistral: "Mistral",
-    meta: "Meta",
+    
     brave: "Brave Leo",
     you: "You",
     zai: "Z.Ai"
+    ,redditanswers: "Reddit Answers"
   });
   const AI_QUERY_PROVIDER_OFFICIAL_LINKS = Object.freeze({
     chatgpt: "https://chatgpt.com/",
@@ -379,10 +380,11 @@
     githubcopilot: "https://github.com/features/copilot",
     duckai: "https://duck.ai/",
     mistral: "https://chat.mistral.ai/",
-    meta: "https://www.meta.ai/",
+    
     brave: "https://brave.com/leo/",
     you: "https://you.com/",
     zai: "https://chat.z.ai/"
+    ,redditanswers: "https://www.reddit.com/answers/"
   });
   const AI_PROVIDER_POPULARITY_RANKS = Object.freeze({
     chatgpt: 1,
@@ -391,7 +393,7 @@
     claude: 4,
     perplexity: 5,
     grok: 6,
-    meta: 7,
+    
     qwen: 8,
     ernie: 9,
     huggingchat: 10,
@@ -401,6 +403,7 @@
     duckai: 14,
     mistral: 15,
     zai: 16
+    ,redditanswers: 17
   });
   const AUDIO_BPM_INFLUENCE_MODE_OPTIONS = new Set(["animation", "both", "physics"]);
   const AUDIO_STREAM_SOURCE_OPTIONS = new Set(["lofi", "radio"]);
@@ -3036,11 +3039,7 @@
               <img class="ai-provider-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Mistral_AI_logo_%282025%E2%80%93%29.svg/3840px-Mistral_AI_logo_%282025%E2%80%93%29.svg.png" alt="" aria-hidden="true" />
               <span>Mistral</span>
             </label>
-            <label class="ai-provider-card">
-              <input type="radio" name="ai-query-provider" value="meta" data-ai-query-provider />
-              <img class="ai-provider-logo" src="https://static.wikia.nocookie.net/logopedia/images/7/7e/Meta_AI.png/revision/latest/scale-to-width-down/250?cb=20250528183159" alt="" aria-hidden="true" />
-              <span>Meta</span>
-            </label>
+            
             <label class="ai-provider-card">
               <input type="radio" name="ai-query-provider" value="brave" data-ai-query-provider />
               <img class="ai-provider-logo" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/brave-browser-icon.png" alt="" aria-hidden="true" />
@@ -3055,6 +3054,11 @@
               <input type="radio" name="ai-query-provider" value="zai" data-ai-query-provider />
               <img class="ai-provider-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Z.ai_%28company_logo%29.svg/250px-Z.ai_%28company_logo%29.svg.png" alt="" aria-hidden="true" />
               <span>Z.Ai</span>
+            </label>
+            <label class="ai-provider-card">
+              <input type="radio" name="ai-query-provider" value="redditanswers" data-ai-query-provider />
+              <img class="ai-provider-logo" src="https://www.redditstatic.com/shreddit/assets/reddit_answers_logo_icon.png" alt="" aria-hidden="true" />
+              <span>Reddit Answers</span>
             </label>
           </div>
           <div class="ai-provider-test-row">
@@ -4736,10 +4740,10 @@
         if (key === "githubcopilot") return "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/github-copilot-icon.png";
         if (key === "duckai") return "https://upload.wikimedia.org/wikipedia/en/9/90/The_DuckDuckGo_Duck.png";
         if (key === "mistral") return "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Mistral_AI_logo_%282025%E2%80%93%29.svg/3840px-Mistral_AI_logo_%282025%E2%80%93%29.svg.png";
-        if (key === "meta") return "https://static.wikia.nocookie.net/logopedia/images/7/7e/Meta_AI.png/revision/latest/scale-to-width-down/250?cb=20250528183159";
         if (key === "brave") return "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/brave-browser-icon.png";
         if (key === "you") return "https://upload.wikimedia.org/wikipedia/en/archive/8/8f/20250331135537%21Youcom_new_logo.jpg";
         if (key === "zai") return "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Z.ai_%28company_logo%29.svg/250px-Z.ai_%28company_logo%29.svg.png";
+        if (key === "redditanswers") return "https://www.redditstatic.com/shreddit/assets/reddit_answers_logo_icon.png";
         return "";
       };
       const appendTooltipTokens = (container, lineText) => {
@@ -9518,8 +9522,6 @@
           return `https://duck.ai/chat?ia=chat&origin=funnel_home_website&t=h_&duckai=1&home=1&prompt=1&chip-select=chat&q=${encodedQuery}`;
         case "mistral":
           return `https://chat.mistral.ai/chat/?q=${encodedQuery}`;
-        case "meta":
-          return `https://www.meta.ai/?prompt=${encodedQuery}`;
         case "brave":
           return `https://search.brave.com/ask?q=${encodedQuery}`;
         case "you":
@@ -9544,6 +9546,15 @@
           return `https://google.ai/?q=${encodedQuery}`;
         case "qwen":
           return `https://chat.qwen.ai/?text=${encodedQuery}`;
+        case "redditanswers":
+          try {
+            const id = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+              ? crypto.randomUUID()
+              : String(Date.now());
+            return `https://www.reddit.com/answers/${id}/?q=${encodedQuery}&source=ANSWERS`;
+          } catch (err) {
+            return `https://www.reddit.com/answers/?q=${encodedQuery}&source=ANSWERS`;
+          }
         case "chatgpt":
         default:
           return `https://chatgpt.com/?q=${encodedQuery}`;
