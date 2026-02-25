@@ -174,7 +174,7 @@
     Object.freeze({
       id: "nightcoreradio-laut",
       label: "Nightcore Radio",
-      url: "https://nightcoreradio.stream.laut.fm/nightcoreradio?ref=web-app&aw_0_req.userConsentV2=%5Bobject+Object%5D"
+      url: "https://stream-179.zeno.fm/vr95tuwdzs8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ2cjk1dHV3ZHpzOHV2IiwiaG9zdCI6InN0cmVhbS0xNzkuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6ImpkUGhpLXNEVDJ5ZkpTblhSa1Vmc1EiLCJpYXQiOjE3NzE5ODYwOTYsImV4cCI6MTc3MTk4NjE1Nn0.LlGU9DyiDna2zuxn6LF61Q7h15sYwitZXC3dcacYNqw"
     }),
     Object.freeze({
       id: "musicalradiode-laut",
