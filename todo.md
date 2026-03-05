@@ -10,3 +10,5 @@
 - [ ] Look for another white noise sound because Clickup doesnt play it
 - [ ] Adjust gain for ambient noise
 - [ ] Create themes for: Medieval, Tarot, Space, Superhero, Candy, Anime, Vaporwave, and Winter as well as Festive themes (in the future lol)
+- [ ] Fix google fonts not loading (Preload Google Icon Fonts)
+- [ ] Template editor
