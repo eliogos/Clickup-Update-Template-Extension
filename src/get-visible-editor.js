@@ -11,6 +11,10 @@
       "[contenteditable='true']",
       "[contenteditable='plaintext-only']",
       ".editor",
+      ".comment-bar__editor",
+      ".cu-comment__editor",
+      ".cu-comment-editor-content",
+      "[data-test*='editor']",
       "textarea",
       "input[type='text']",
       "[role='textbox']",
@@ -58,6 +62,20 @@
           }
         } catch (err) {
           continue;
+        }
+      }
+    } catch (err) {
+      // ignore
+    }
+
+    // Fallback: use current selection's focus node to find editable ancestor
+    try {
+      const sel = document.getSelection && document.getSelection();
+      if (sel && sel.focusNode) {
+        let focusEl = sel.focusNode.nodeType === Node.TEXT_NODE ? sel.focusNode.parentElement : sel.focusNode;
+        if (focusEl) {
+          const editableAncestor = focusEl.closest(selector) || focusEl.closest('[contenteditable]');
+          if (editableAncestor && isVisible(editableAncestor)) return editableAncestor;
         }
       }
     } catch (err) {
