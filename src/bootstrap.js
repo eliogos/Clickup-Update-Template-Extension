@@ -68,7 +68,17 @@
 
   function shouldOpenFromEditor(editor, triggerText) {
     if (!editor) return false;
-    const text = String(editor.innerText || "").trim();
+    let text = "";
+    try {
+      if (editor instanceof HTMLInputElement || editor instanceof HTMLTextAreaElement) {
+        text = String(editor.value || "").trim();
+      } else {
+        text = String(editor.innerText || editor.textContent || "").trim();
+      }
+    } catch (err) {
+      text = String(editor.innerText || editor.textContent || "").trim();
+    }
+
     return text === triggerText;
   }
 
